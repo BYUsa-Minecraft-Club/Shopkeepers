@@ -40,6 +40,8 @@ public class OfferGui extends MerchantGui {
     }
 
     private final Entity shopkeeper;
+    private final boolean isAdmin;
+    private final boolean isOwner;
 
     public OfferGui(ServerPlayerEntity player, Entity shopkeeper) {
         super(player, false);
@@ -47,9 +49,16 @@ public class OfferGui extends MerchantGui {
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
 
         if(player.getServer() != null && player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
+            isAdmin = true;
+            isOwner = false;
             addTrade(new TradeOffer(adminEditTradeBuyItem, adminEditTradeSellItem, 1, 0, 0));
         } else if(shopkeeperData.owners().contains(player.getUuid())) {
+            isAdmin = false;
+            isOwner = true;
             addTrade(new TradeOffer(ownerEditTradeBuyItem, ownerEditTradeSellItem, 1, 0, 0));
+        } else {
+            isAdmin = false;
+            isOwner = false;
         }
 
         for (TradeData trade : shopkeeperData.trades()) {
@@ -62,18 +71,20 @@ public class OfferGui extends MerchantGui {
     public void onSelectTrade(TradeOffer offer) {
         super.onSelectTrade(offer);
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
-        if(player.getServer() != null && player.getServer().getPlayerManager().isOperator(player.getGameProfile()) &&
-            ItemStack.areEqual(offer.getSellItem(), adminEditTradeSellItem) && offer.getFirstBuyItem().matches(adminEditTradeSellItem)) {
+        if(isAdmin && ItemStack.areEqual(offer.getSellItem(), adminEditTradeSellItem) &&
+                offer.getFirstBuyItem().matches(adminEditTradeSellItem)) {
             this.close();
             if(shopkeeperData.isAdmin()) {
                 new AdminShopTradeSetupGui(player, shopkeeper).open();
             } else {
                 new PlayerShopTradeSetupGui(player, shopkeeper).open();
             }
-        } else if(shopkeeperData.owners().contains(player.getUuid()) &&
-                ItemStack.areEqual(offer.getSellItem(), ownerEditTradeSellItem) && offer.getFirstBuyItem().matches(ownerEditTradeSellItem)) {
+            Shopkeepers.getInteractionLocks().tryAcquireLock(shopkeeper.getUuid(), player.getUuid());
+        } else if(isOwner && ItemStack.areEqual(offer.getSellItem(), ownerEditTradeSellItem) &&
+                offer.getFirstBuyItem().matches(ownerEditTradeSellItem)) {
             this.close();
             new PlayerShopTradeSetupGui(player, shopkeeper).open();
+            Shopkeepers.getInteractionLocks().tryAcquireLock(shopkeeper.getUuid(), player.getUuid());
         }
     }
 
@@ -106,7 +117,7 @@ public class OfferGui extends MerchantGui {
                 if (tradeOffer == offer) continue;
                 TradeOffer modifiedOffer = getOfferWithCorrectMaxUses(shopkeeperData.trades().get(i), shopkeeperData);
                 if (modifiedOffer.getMaxUses() != tradeOffer.getMaxUses() - tradeOffer.getUses()) {
-                    this.merchant.getOffers().set(i, modifiedOffer);
+                    this.merchant.getOffers().set((isAdmin || isOwner) ? i + 1 : i, modifiedOffer);
                     changedTrades = true;
                 }
             }
