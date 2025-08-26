@@ -1,13 +1,14 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
 import edu.byu.minecraft.Shopkeepers;
+import edu.byu.minecraft.shopkeepers.customization.CustomizationButtonOptions;
+import edu.byu.minecraft.shopkeepers.customization.CustomizationManager;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import edu.byu.minecraft.shopkeepers.data.TradeData;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -72,10 +73,13 @@ public abstract class TradeSetupGui extends SimpleGui {
         this.setSlot(slot, builder.build());
     }
 
-    protected void villagerOptions(int slot) {
-        if (shopkeeper instanceof VillagerEntity ve) {
-            setSlot(slot, new GuiElementBuilder(Items.VILLAGER_SPAWN_EGG).setItemName(Text.of("Edit Villager Options"))
-                    .setCallback(() -> new VillagerSettingsGui(player, ve, this).open()).build());
+    protected void mobOptions(int slot) {
+        CustomizationButtonOptions<?> buttonOptions =
+                CustomizationManager.getCustomizationButtonOptions(shopkeeper, player, this);
+        if (buttonOptions != null) {
+            setSlot(slot, new GuiElementBuilder(buttonOptions.mobSpawnEgg())
+                    .setItemName(Text.of("Edit " + buttonOptions.mobName() + " Options"))
+                    .setCallback(() -> buttonOptions.settingsGui().open()).build());
         } else {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
         }

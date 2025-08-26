@@ -29,7 +29,7 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
 
         babyToggle(27);
         setName(28);
-        villagerOptions(29);
+        mobOptions(29);
         setSlot(30, GuiUtils.EMPTY_SLOT);
         disbandShopkeeper(31);
         setSlot(32, GuiUtils.EMPTY_SLOT);
