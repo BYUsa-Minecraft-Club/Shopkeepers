@@ -15,7 +15,7 @@ public class CustomSuggestionProviders {
     }
 
     public static CompletableFuture<Suggestions> approvedShopkeeperEntities(CommandContext<ServerCommandSource> ctx, SuggestionsBuilder builder) {
-        Shopkeepers.getData().getAllowedShopkeepers().forEach(entityType -> builder.suggest(entityType.getName().getString().toLowerCase()));
+        Shopkeepers.getData().getAllowedShopkeepers().forEach(entityType -> builder.suggest(entityType.getUntranslatedName()));
         return builder.buildFuture();
     }
 }

@@ -191,7 +191,6 @@ public class Commands {
         nbt.putBoolean("IsImmuneToZombification", true);
         nbt.putBoolean("CannotBeHunted", true);
 
-
         return nbt;
     }
 
