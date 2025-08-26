@@ -4,6 +4,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import edu.byu.minecraft.Shopkeepers;
+import net.minecraft.command.CommandSource;
+import net.minecraft.entity.EntityType;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.concurrent.CompletableFuture;
@@ -15,7 +17,9 @@ public class CustomSuggestionProviders {
     }
 
     public static CompletableFuture<Suggestions> approvedShopkeeperEntities(CommandContext<ServerCommandSource> ctx, SuggestionsBuilder builder) {
-        Shopkeepers.getData().getAllowedShopkeepers().forEach(entityType -> builder.suggest(entityType.getUntranslatedName()));
+        Shopkeepers.getData().getAllowedShopkeepers().stream().map(EntityType::getUntranslatedName)
+                .filter(s -> CommandSource.shouldSuggest(builder.getRemaining(), s))
+                .forEach(builder::suggest);
         return builder.buildFuture();
     }
 }
