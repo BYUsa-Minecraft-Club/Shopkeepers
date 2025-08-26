@@ -32,27 +32,46 @@ public class Commands {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess,
                                 CommandManager.RegistrationEnvironment environment) {
-        dispatcher.register(literal("shopkeepers").requires(((Predicate<ServerCommandSource>) ServerCommandSource::isExecutedByPlayer))
+        dispatcher.register(literal("shopkeepers")
+            .requires(((Predicate<ServerCommandSource>) ServerCommandSource::isExecutedByPlayer))
+            .executes(Commands::documentation)
+                .then(literal("help")).executes(Commands::documentation)
                 .then(literal("make")
-                        .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
-                                .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
-                                .executes(Commands::makeNormal)))
+                    .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
+                            .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
+                            .executes(Commands::makeNormal)))
+                .then(literal("shopentities").executes(Commands::listShopEntities))
                 .then(literal("admin").requires(Permissions.require("shopkeepers.admin", 3))
-                        .then(literal("shopentities")
-                            .then(literal("list").executes(Commands::listShopEntities))
-                            .then(literal("add")
-                                .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
-                                    .suggests(SuggestionProviders.byId(Identifier.ofVanilla("summonable_entities")))
-                                                .executes(Commands::addShopEntity)))
-                            .then(literal("remove")
-                                .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
-                                        .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
-                                        .executes(Commands::removeShopEntity))))
-                        .then(literal("make")
+                    .then(literal("shopentities")
+                        .then(literal("list").executes(Commands::listShopEntities))
+                        .then(literal("add")
                             .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
+                                    .suggests(SuggestionProviders.byId(Identifier.ofVanilla("summonable_entities")))
+                                    .executes(Commands::addShopEntity)))
+                        .then(literal("remove")
+                            .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
+                                    .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
+                                    .executes(Commands::removeShopEntity))))
+                    .then(literal("make")
+                        .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
                                 .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
                                 .executes(Commands::makeAdmin)))
                 ));
+    }
+
+    private static int documentation(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        StringBuilder builder = new StringBuilder("Shopkeepers usage:\n");
+        String tab = "    "; //actual tab characters (\t) don't display correctly
+        builder.append(tab).append("/shopkeepers make <approved entity type>   - Creates a new shopkeeper, owned by you\n");
+        builder.append(tab).append("/shopkeepers shopentities   - lists out the entity types approved by admins\n");
+        if(Permissions.check(context.getSource(), "shopkeepers.admin", 3)) {
+            builder.append(tab).append("/shopkeepers admin make <approved entity type>   - Creates a new admin shop\n");
+            builder.append(tab).append("/shopkeepers admin shopentities list   - lists out the approved entity types\n");
+            builder.append(tab).append("/shopkeepers admin shopentities add <summonable entity type>   - Adds entity type to approved list");
+            builder.append(tab).append("/shopkeepers admin shopentities remove <summonable entity type>   - Removes entity type from approved list. Does not disband existing shops with removed type");
+        }
+        context.getSource().sendMessage(Text.of(builder.toString()));
+        return 1;
     }
 
     private static int removeShopEntity(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
