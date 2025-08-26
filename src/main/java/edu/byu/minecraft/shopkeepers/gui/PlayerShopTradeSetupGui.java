@@ -1,0 +1,51 @@
+package edu.byu.minecraft.shopkeepers.gui;
+
+import edu.byu.minecraft.Shopkeepers;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.Items;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+
+public class PlayerShopTradeSetupGui extends TradeSetupGui {
+
+
+    public PlayerShopTradeSetupGui(ServerPlayerEntity player, Entity shopkeeper) {
+        super(ScreenHandlerType.GENERIC_9X4, player, shopkeeper, 8);
+        this.setTitle(Text.of("Player shop setup"));
+    }
+
+    protected void setupSlots() {
+        for(int i = 0; i < 27; i++) {
+            if(i % 9 == 8) continue;
+            this.setSlotRedirect(i, new Slot(tradeItems, i, 0, 0));
+        }
+
+        this.setSlot(8, new GuiElementBuilder(Items.YELLOW_STAINED_GLASS_PANE).setItemName(Text.of("← Price #1")).build());
+        this.setSlot(17, new GuiElementBuilder(Items.ORANGE_STAINED_GLASS_PANE).setItemName(Text.of("← Price #2 (Optional)")).build());
+        this.setSlot(26, new GuiElementBuilder(Items.LIME_STAINED_GLASS_PANE).setItemName(Text.of("← Product ")).build());
+
+        babyToggle(27);
+        setName(28);
+        villagerOptions(29);
+        setSlot(30, GuiUtils.EMPTY_SLOT);
+        disbandShopkeeper(31);
+        setSlot(32, GuiUtils.EMPTY_SLOT);
+        setSlot(33, GuiUtils.EMPTY_SLOT);
+
+        this.setSlot(34, new GuiElementBuilder(Items.CHEST)
+                .setItemName(Text.of("Open Shopkeeper Inventory"))
+                .setCallback(() -> {
+                    this.close();
+                    Shopkeepers.getInteractionLocks().tryAcquireLock(shopkeeper.getUuid(), player.getUuid());
+                    new MerchantInventoryGui(player, shopkeeper).open();
+                })
+                .build());
+
+        openTradeMenu(35);
+    }
+
+
+}

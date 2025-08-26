@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "edu.byu.minecraft.shopkeepers.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "EntityMixin",
+    "LviningEntityMixin",
+    "PlayerEntityMixin",
+    "PlayerManagerMixin",
+    "SimpleMerchantMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

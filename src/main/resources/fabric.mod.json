@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "shopkeepers",
+	"version": "${version}",
+	"name": "Shopkeepers",
+	"description": "Custom NPCs that admins/players can set up to trade items",
+	"authors": [
+		"TransientChicken"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/shopkeepers/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"edu.byu.minecraft.Shopkeepers"
+		]
+	},
+	"mixins": [
+		"shopkeepers.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.3",
+		"minecraft": "~1.21.8",
+		"java": ">=21",
+		"fabric-api": "*",
+		"luckperms": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
