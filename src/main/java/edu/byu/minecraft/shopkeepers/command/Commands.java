@@ -56,25 +56,20 @@ public class Commands {
     }
 
     private static int removeShopEntity(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity executor = context.getSource().getPlayer();
-        if(executor == null) {
-            Shopkeepers.LOGGER.error("removeShopEntity: executor is null");
-            return 0;
-        }
         RegistryEntry.Reference<EntityType<?>>
                 entity = RegistryEntryReferenceArgumentType.getSummonableEntityType(context, "entity");
         if(entity == null) {
-            executor.sendMessage(Text.of("That doesn't seem to be a valid entity type"));
+            context.getSource().sendMessage(Text.of("That doesn't seem to be a valid entity type"));
             return 0;
         }
 
         if(Shopkeepers.getData().getAllowedShopkeepers().contains(entity.value())) {
             Shopkeepers.getData().getAllowedShopkeepers().remove(entity.value());
             Shopkeepers.getData().markDirty();
-            executor.sendMessage(Text.of(entity.value().getName().getString() + " removed"));
+            context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " removed"));
             return 1;
         } else {
-            executor.sendMessage(Text.of(entity.value().getName().getString() + " wasn't already approved, doesn't need to be removed"));
+            context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " wasn't already approved, doesn't need to be removed"));
             return 0;
         }
     }
@@ -82,28 +77,28 @@ public class Commands {
     private static int addShopEntity(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity executor = context.getSource().getPlayer();
         if(executor == null) {
-            Shopkeepers.LOGGER.error("addShopEntity: executor is null");
+            context.getSource().sendMessage(Text.of("this command must be executed by a player"));
             return 0;
         }
         try {
             RegistryEntry.Reference<EntityType<?>>
                     entity = RegistryEntryReferenceArgumentType.getSummonableEntityType(context, "entity");
             if(entity == null) {
-                executor.sendMessage(Text.of("That doesn't seem to be a valid entity type"));
+                context.getSource().sendMessage(Text.of("That doesn't seem to be a valid entity type"));
                 return 0;
             }
 
             Entity testEntity = SummonCommand.summon(context.getSource(), entity, executor.getPos().add(0, 1000, 0),
                     shopkeeperSummonNbt(), true);
             if(!(testEntity instanceof MobEntity)) {
-                executor.sendMessage(Text.of(entity.value().getName().getString() + " is not a mob, not adding"));
+                context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " is not a mob, not adding"));
                 testEntity.kill(executor.getWorld());
                 return 0;
             }
             else {
                 Shopkeepers.getData().getAllowedShopkeepers().add(entity.value());
                 Shopkeepers.getData().markDirty();
-                executor.sendMessage(Text.of(entity.value().getName().getString() + " added"));
+                context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " added"));
                 testEntity.kill(executor.getWorld());
                 return 1;
             }
@@ -114,11 +109,6 @@ public class Commands {
     }
 
     private static int listShopEntities(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity executor = context.getSource().getPlayer();
-        if (executor == null) {
-            Shopkeepers.LOGGER.error("listShopEntities: executor is null");
-            return 0;
-        }
         StringBuilder sb = new StringBuilder("Approved Shopkeepers:\n");
         List<EntityType<?>> approvedEntities = new ArrayList<>(Shopkeepers.getData().getAllowedShopkeepers());
         if(approvedEntities.isEmpty()) {
@@ -130,7 +120,7 @@ public class Commands {
             }
             sb.deleteCharAt(sb.length() - 1);
         }
-        executor.sendMessage(Text.of(sb.toString()));
+        context.getSource().sendMessage(Text.of(sb.toString()));
         return 1;
     }
 
@@ -146,7 +136,7 @@ public class Commands {
     private static int make(CommandContext<ServerCommandSource> context, boolean isAdmin) throws CommandSyntaxException {
         ServerPlayerEntity executor = context.getSource().getPlayer();
         if (executor == null) {
-            Shopkeepers.LOGGER.error("make shopkeeper: executor is null");
+            context.getSource().sendMessage(Text.of("this command must be executed by a player"));
             return 0;
         }
         try {
@@ -158,7 +148,7 @@ public class Commands {
             }
 
             if(!Shopkeepers.getData().getAllowedShopkeepers().contains(entity.value())) {
-                executor.sendMessage(Text.of("That's not an approved shopkeeper entity"));
+                context.getSource().sendMessage(Text.of("That's not an approved shopkeeper entity"));
                 return 0;
             }
 
