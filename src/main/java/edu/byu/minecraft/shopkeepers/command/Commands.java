@@ -197,6 +197,9 @@ public class Commands {
         nbt.putBoolean("NoAI", true);
         nbt.putBoolean("Invulnerable", true);
         nbt.putBoolean("Silent", true);
+        nbt.putBoolean("NoGravity", true); //If you want to remove the no gravity, remove the move prevention from
+        // EntityMixin (and you may need to find a new way to do that otherwise shopkeepers will be movable by
+        // pistons), otherwise the game will become a lag-fest when any shopkeepers are loaded and not on the ground
         nbt.putBoolean("CanPickUpLoot", false);
         nbt.putBoolean("PersistenceRequired", true);
         nbt.putBoolean("IsImmuneToZombification", true);
