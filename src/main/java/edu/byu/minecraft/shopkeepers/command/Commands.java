@@ -23,10 +23,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static net.minecraft.server.command.CommandManager.literal;
@@ -169,8 +166,13 @@ public class Commands {
             shopkeeper.teleport(executor.getWorld(), executor.getX(), executor.getY(), executor.getZ(),
                     new HashSet<>(), executor.getYaw(), executor.getPitch(), true);
 
+            List<UUID> owners = new ArrayList<>();
+            if(!isAdmin) {
+                owners.add(executor.getUuid());
+            }
+
             Shopkeepers.getData().getData().put(shopkeeper.getUuid(), new ShopkeeperData(new ArrayList<>(),
-                    new ArrayList<>(), isAdmin, new ArrayList<>(List.of(executor.getUuid()))));
+                    new ArrayList<>(), isAdmin, owners));
             Shopkeepers.getData().markDirty();
             return 1;
         } catch (Exception e) {
