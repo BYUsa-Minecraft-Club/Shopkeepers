@@ -34,9 +34,7 @@ public class EntityMixin {
 
     @Inject(method = "move", at = @At("HEAD"), cancellable = true)
     private void move(MovementType type, Vec3d movement, CallbackInfo ci) {
-        ifShopkeeperEntity(() -> {
-            ci.cancel();
-        });
+        ifShopkeeperEntity(ci::cancel);
     }
 
     @Unique
