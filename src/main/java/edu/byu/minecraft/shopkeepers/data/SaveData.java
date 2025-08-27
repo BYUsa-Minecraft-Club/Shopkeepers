@@ -25,7 +25,7 @@ public class SaveData extends PersistentState {
     ).apply(instance, SaveData::new));
 
     private static final List<EntityType<?>> DEFAULT_ALLOWED_ENTITIES = List.of(EntityType.VILLAGER);
-    private static final int DEFAULT_MAX_SHOPS = 5;
+    private static final int DEFAULT_MAX_SHOPS = 15;
 
     private final Map<UUID, ShopkeeperData> data;
 

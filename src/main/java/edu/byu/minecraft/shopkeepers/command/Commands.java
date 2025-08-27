@@ -1,6 +1,7 @@
 package edu.byu.minecraft.shopkeepers.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import edu.byu.minecraft.Shopkeepers;
@@ -36,7 +37,7 @@ public class Commands {
         dispatcher.register(literal("shopkeepers")
             .requires(((Predicate<ServerCommandSource>) ServerCommandSource::isExecutedByPlayer))
             .executes(Commands::documentation)
-                .then(literal("help")).executes(Commands::documentation)
+                .then(literal("help").executes(Commands::documentation))
                 .then(literal("make")
                     .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
                             .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
@@ -57,21 +58,42 @@ public class Commands {
                         .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
                                 .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
                                 .executes(Commands::makeAdmin)))
+                    .then(literal("playershoplimit").executes(Commands::playerShopLimitGet)
+                        .then(literal("get").executes(Commands::playerShopLimitGet))
+                        .then(literal("set").then(CommandManager.argument("max", IntegerArgumentType.integer())
+                                .executes(Commands::playerShopLimitSet))))
                 ));
     }
 
     private static int documentation(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         StringBuilder builder = new StringBuilder("Shopkeepers usage:\n");
         String tab = "    "; //actual tab characters (\t) don't display correctly
+
         builder.append(tab).append("/shopkeepers make <approved entity type>   - Creates a new shopkeeper, owned by you\n");
         builder.append(tab).append("/shopkeepers shopentities   - lists out the entity types approved by admins\n");
+
         if(Permissions.check(context.getSource(), "shopkeepers.admin", 3)) {
             builder.append(tab).append("/shopkeepers admin make <approved entity type>   - Creates a new admin shop\n");
             builder.append(tab).append("/shopkeepers admin shopentities list   - lists out the approved entity types\n");
-            builder.append(tab).append("/shopkeepers admin shopentities add <summonable entity type>   - Adds entity type to approved list");
-            builder.append(tab).append("/shopkeepers admin shopentities remove <summonable entity type>   - Removes entity type from approved list. Does not disband existing shops with removed type");
+            builder.append(tab).append("/shopkeepers admin shopentities add <summonable entity type>   - Adds entity type to approved list\n");
+            builder.append(tab).append("/shopkeepers admin shopentities remove <summonable entity type>   - Removes entity type from approved list. Does not disband existing shops with removed type\n");
+            builder.append(tab).append("/shopkeepers admin playershoplimit get   - displays the current maximum number of shops players can own\n");
+            builder.append(tab).append("/shopkeepers admin playershoplimit set <integer>   - sets the maximum number of shops players can own\n");
         }
+
         context.getSource().sendMessage(Text.of(builder.toString()));
+        return 1;
+    }
+
+    private static int playerShopLimitGet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        context.getSource().sendMessage(Text.of("The current limit is " + Shopkeepers.getData().getMaxOwnedShops()));
+        return 1;
+    }
+
+    private static int playerShopLimitSet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        int newMax = IntegerArgumentType.getInteger(context, "max");
+        Shopkeepers.getData().setMaxOwnedShops(newMax);
+        context.getSource().sendMessage(Text.of("New limit set to " + Shopkeepers.getData().getMaxOwnedShops()));
         return 1;
     }
 
