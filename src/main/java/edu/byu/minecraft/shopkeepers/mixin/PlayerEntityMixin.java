@@ -40,9 +40,9 @@ public abstract class PlayerEntityMixin {
         // stuff that matters only happens once.
         if (hand == Hand.OFF_HAND) return;
 
-
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(entity.getUuid());
         if (shopkeeperData != null && player.getServer() != null) {
+
             UUID lockedPlayer = Shopkeepers.getInteractionLocks().tryAcquireLock(entity.getUuid(), player.getUuid());
             if(lockedPlayer != null && !lockedPlayer.equals(player.getUuid())) {
                 player.sendMessage(Text.of(Shopkeepers.getData().getPlayers().get(lockedPlayer) + " is currently " +
@@ -50,22 +50,14 @@ public abstract class PlayerEntityMixin {
                 return;
             }
 
-
-            if(shopkeeperData.isAdmin()) {
-                if(player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
-                    new AdminShopTradeSetupGui(player, entity).open();
-                }
-                else {
-                    new OfferGui(player, entity).open();
-                }
+            if(shopkeeperData.isAdmin() && player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
+                new AdminShopTradeSetupGui(player, entity).open();
+            } else if (shopkeeperData.owners().contains(player.getUuid())) {
+                new PlayerShopTradeSetupGui(player, entity).open();
             } else {
-                if(shopkeeperData.owners().contains(player.getUuid()) ||
-                        player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
-                    new PlayerShopTradeSetupGui(player, entity).open();
-                } else {
-                    new OfferGui(player, entity).open();
-                }
+                new OfferGui(player, entity).open();
             }
+
             cir.setReturnValue(ActionResult.CONSUME);
             cir.cancel();
         }
