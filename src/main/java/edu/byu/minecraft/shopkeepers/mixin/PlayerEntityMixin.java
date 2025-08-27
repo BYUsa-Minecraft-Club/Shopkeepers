@@ -37,8 +37,8 @@ public abstract class PlayerEntityMixin {
 
             UUID lockedPlayer = Shopkeepers.getInteractionLocks().tryAcquireLock(entity.getUuid(), player.getUuid());
             if(lockedPlayer != null && !lockedPlayer.equals(player.getUuid())) {
-                player.sendMessage(Text.of(Shopkeepers.getData().getPlayers().get(lockedPlayer) + " is currently " +
-                        "interacting with this shopkeeper. Please wait for them to finish."));
+                player.sendMessage(Text.of(Shopkeepers.getData().getPlayers().get(lockedPlayer) +
+                        " is currently interacting with this shopkeeper. Please wait for them to finish."));
                 return;
             }
 
