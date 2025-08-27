@@ -23,10 +23,13 @@ public class AdminShopTradeSetupGui extends TradeSetupGui {
     protected void setupSlots() {
         setupPage(0);
 
-        this.setSlot(34, new GuiElementBuilder(Items.LIGHT).setItemName(Text.of("Open Trade Menu")).setCallback(() -> {
-            this.close();
-            new OfferGui(player, shopkeeper).open();
-        }).build());
+        babyToggle(28);
+        setName(29);
+        mobOptions(30);
+        disbandShopkeeper(31);
+        this.setSlot(32, GuiUtils.EMPTY_SLOT);
+        this.setSlot(33, GuiUtils.EMPTY_SLOT);
+        openTradeMenu(34);
     }
 
     private void setupPage(int page) {
@@ -41,9 +44,5 @@ public class AdminShopTradeSetupGui extends TradeSetupGui {
         this.setSlot(35, page < 4 ?
                 new GuiElementBuilder(Items.ARROW).setItemName(Text.of("Next Page")).setCallback(() -> setupPage(page + 1)).build() :
                 GuiUtils.EMPTY_SLOT);
-
-        babyToggle(28);
-        setName(29);
-        disbandShopkeeper(31);
     }
 }
