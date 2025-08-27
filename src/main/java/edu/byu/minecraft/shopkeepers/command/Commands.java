@@ -25,6 +25,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.ToDoubleFunction;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -145,6 +146,30 @@ public class Commands {
 
 
     private static int makeNormal(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        ServerPlayerEntity executor = context.getSource().getPlayer();
+        if (executor == null) {
+            context.getSource().sendMessage(Text.of("this command must be executed by a player"));
+            return 0;
+        }
+        double ownedShops = Shopkeepers.getData().getData().values().stream()
+                .filter(sd -> sd.owners().contains(executor.getUuid()))
+                .mapToDouble(sd -> 1.0 / sd.owners().size())
+                .sum();
+        int maxShops = Shopkeepers.getData().getMaxOwnedShops();
+        if (ownedShops >= maxShops) {
+            String relationshipDescription = (ownedShops == maxShops) ? "at" : "greater than";
+            if(executor.getServer() != null && executor.getServer().getPlayerManager().isOperator(executor.getGameProfile())) {
+                executor.sendMessage(Text.of(String.format("Warning: you already own %.2f current shops (adjusted for multiple owners)," +
+                        " %s the normal max of %d. Since you are a server operator," +
+                        " you are allowed to bypass the limit. Continuing with shop creation.",
+                        ownedShops, relationshipDescription, maxShops)));
+            } else {
+                executor.sendMessage(Text.of(String.format("You already own %.2f current shops (adjusted for multiple owners)," +
+                                " %s the max of %d. Disband another shop if you want to make a new one",
+                        ownedShops, relationshipDescription, maxShops)));
+                return 0;
+            }
+        }
         return make(context, false);
     }
 

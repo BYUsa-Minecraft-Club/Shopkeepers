@@ -20,10 +20,12 @@ public class SaveData extends PersistentState {
     public static final Codec<SaveData> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.unboundedMap(Uuids.CODEC, ShopkeeperData.CODEC).fieldOf("data").forGetter(SaveData::getData),
             EntityType.CODEC.listOf().fieldOf("allowedShopkeepers").forGetter(SaveData::getAllowedShopkeepers),
-            Codec.unboundedMap(Uuids.CODEC, Codec.STRING).fieldOf("players").forGetter(SaveData::getPlayers)
+            Codec.unboundedMap(Uuids.CODEC, Codec.STRING).fieldOf("players").forGetter(SaveData::getPlayers),
+            Codec.INT.fieldOf("maxOwnedShops").forGetter(SaveData::getMaxOwnedShops)
     ).apply(instance, SaveData::new));
 
     private static final List<EntityType<?>> DEFAULT_ALLOWED_ENTITIES = List.of(EntityType.VILLAGER);
+    private static final int DEFAULT_MAX_SHOPS = 5;
 
     private final Map<UUID, ShopkeeperData> data;
 
@@ -31,14 +33,18 @@ public class SaveData extends PersistentState {
 
     private final Map<UUID, String> players;
 
-    public SaveData(Map<UUID, ShopkeeperData> data, List<EntityType<?>> allowedShopkeepers, Map<UUID, String> players) {
+    private int maxOwnedShops;
+
+    public SaveData(Map<UUID, ShopkeeperData> data, List<EntityType<?>> allowedShopkeepers, Map<UUID, String> players,
+                    int maxOwnedShops) {
         this.data = new HashMap<>(data);
         this.allowedShopkeepers = new ArrayList<>(allowedShopkeepers);
         this.players = new HashMap<>(players);
+        this.maxOwnedShops = maxOwnedShops;
     }
 
     private SaveData() {
-        this(Map.of(), DEFAULT_ALLOWED_ENTITIES, Map.of());
+        this(Map.of(), DEFAULT_ALLOWED_ENTITIES, Map.of(), DEFAULT_MAX_SHOPS);
     }
 
     public static SaveData getServerState(MinecraftServer server) {
@@ -64,5 +70,13 @@ public class SaveData extends PersistentState {
 
     public Map<UUID, String> getPlayers() {
         return players;
+    }
+
+    public int getMaxOwnedShops() {
+        return maxOwnedShops;
+    }
+
+    public void setMaxOwnedShops(int maxOwnedShops) {
+        this.maxOwnedShops = maxOwnedShops;
     }
 }
