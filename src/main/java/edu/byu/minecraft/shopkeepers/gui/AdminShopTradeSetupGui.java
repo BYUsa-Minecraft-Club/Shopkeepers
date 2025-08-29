@@ -26,8 +26,8 @@ public class AdminShopTradeSetupGui extends TradeSetupGui {
         babyToggle(28);
         setName(29);
         mobOptions(30);
-        disbandShopkeeper(31);
-        this.setSlot(32, GuiUtils.EMPTY_SLOT);
+        this.setSlot(31, GuiUtils.EMPTY_SLOT);
+        disbandShopkeeper(32);
         this.setSlot(33, GuiUtils.EMPTY_SLOT);
         openTradeMenu(34);
     }

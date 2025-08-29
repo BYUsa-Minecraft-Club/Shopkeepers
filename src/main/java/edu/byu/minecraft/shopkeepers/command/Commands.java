@@ -43,7 +43,7 @@ public class Commands {
                             .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
                             .executes(Commands::makeNormal)))
                 .then(literal("shopentities").executes(Commands::listShopEntities))
-                .then(literal("admin").requires(Permissions.require("shopkeepers.admin", 3))
+                .then(literal("admin").requires(Permissions.require("shopkeepers.admin", 4))
                     .then(literal("shopentities")
                         .then(literal("list").executes(Commands::listShopEntities))
                         .then(literal("add")

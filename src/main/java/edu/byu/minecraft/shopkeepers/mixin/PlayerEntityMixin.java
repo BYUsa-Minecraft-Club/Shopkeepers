@@ -43,7 +43,11 @@ public abstract class PlayerEntityMixin {
             }
 
             if(shopkeeperData.isAdmin() && player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
-                new AdminShopTradeSetupGui(player, entity).open();
+                if(shopkeeperData.trades().isEmpty()) {
+                    new AdminShopTradeSetupGui(player, entity).open();
+                } else {
+                    new OfferGui(player, entity).open();
+                }
             } else if (shopkeeperData.owners().contains(player.getUuid())) {
                 new PlayerShopTradeSetupGui(player, entity).open();
             } else {
