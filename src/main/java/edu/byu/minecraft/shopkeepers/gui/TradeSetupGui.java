@@ -180,9 +180,15 @@ public abstract class TradeSetupGui extends SimpleGui {
                 if (shopkeeperData.trades().size() <= i) {
                     shopkeeperData.trades().add(newTrade);
                     changed = true;
-                } else if (!shopkeeperData.trades().get(i).equalsIgnoreUses(newTrade)) {
-                    shopkeeperData.trades().set(i, newTrade);
-                    changed = true;
+                } else {
+                    TradeData oldTrade = shopkeeperData.trades().get(i);
+                    if (!oldTrade.equalsIgnoreUses(newTrade)) {
+                        if(oldTrade.equalsIgnoreUsesAndCounts(newTrade)) {
+                            newTrade = newTrade.withUses(oldTrade.uses());
+                        }
+                        shopkeeperData.trades().set(i, newTrade);
+                        changed = true;
+                    }
                 }
             }
             else if (shopkeeperData.trades().size() > i && shopkeeperData.trades().get(i) != null) {

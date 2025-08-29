@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 public record TradeData(ItemStack firstBuyItem, Optional<ItemStack> secondBuyItem, ItemStack sellItem,
                         Map<UUID, Integer> uses) {
@@ -24,11 +25,23 @@ public record TradeData(ItemStack firstBuyItem, Optional<ItemStack> secondBuyIte
         return new TradeData(firstBuyItem, secondBuyItem, sellItem, new HashMap<>(uses));
     }
 
+    public TradeData withUses(Map<UUID, Integer> uses) {
+        return new TradeData(firstBuyItem, secondBuyItem, sellItem, uses);
+    }
+
     public boolean equalsIgnoreUses(TradeData other) {
-        return ItemStack.areEqual(firstBuyItem(), other.firstBuyItem()) &&
+        return areEqualIgnoreUses(other, ItemStack::areEqual);
+    }
+
+    public boolean equalsIgnoreUsesAndCounts(TradeData other) {
+        return areEqualIgnoreUses(other, ItemStack::areItemsAndComponentsEqual);
+    }
+
+    private boolean areEqualIgnoreUses(TradeData other, BiFunction<ItemStack, ItemStack, Boolean> compare) {
+        return compare.apply(firstBuyItem(), other.firstBuyItem()) &&
                 ((secondBuyItem().isEmpty() && other.secondBuyItem().isEmpty()) ||
                         (secondBuyItem().isPresent() && other.secondBuyItem().isPresent() &&
-                                ItemStack.areEqual(secondBuyItem().get(), other.secondBuyItem().get()))) &&
-                ItemStack.areEqual(sellItem(), other.sellItem());
+                                compare.apply(secondBuyItem().get(), other.secondBuyItem().get()))) &&
+                compare.apply(sellItem(), other.sellItem());
     }
 }
