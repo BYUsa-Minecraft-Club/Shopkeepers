@@ -18,7 +18,9 @@ import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradedItem;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class OfferGui extends MerchantGui {
 
@@ -125,6 +127,9 @@ public class OfferGui extends MerchantGui {
                 sendUpdate();
             }
         }
+
+        Map<UUID, Integer> uses = shopkeeperData.trades().get((isAdmin || isOwner) ? index - 1 : index).uses();
+        uses.put(player.getUuid(), uses.getOrDefault(player.getUuid(), 0) + 1);
     }
 
     private TradeOffer getOfferWithCorrectMaxUses(TradeData base, ShopkeeperData shopkeeperData) {
