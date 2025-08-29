@@ -1,22 +1,22 @@
 package edu.byu.minecraft.shopkeepers.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import edu.byu.minecraft.Shopkeepers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LightningEntity;
-import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(LightningEntity.class)
 public class LightningEntityMixin {
 
-    @Redirect(method = "tick", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/entity/Entity;onStruckByLightning(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/LightningEntity;)V"))
-    private void redirectOnStruckByLightning(Entity instance, ServerWorld world, LightningEntity lightning) {
-        if (!Shopkeepers.getData().getData().containsKey(instance.getUuid())) {
-            instance.onStruckByLightning(world, lightning);
-        }
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
+    private void filterLightningTargets(CallbackInfo ci, @Local List<Entity> list) {
+        list.removeIf(entity -> Shopkeepers.getData().getData().containsKey(entity.getUuid()));
     }
 
 }
