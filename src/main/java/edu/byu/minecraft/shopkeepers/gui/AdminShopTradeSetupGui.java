@@ -45,24 +45,7 @@ public class AdminShopTradeSetupGui extends TradeSetupGui {
 
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
         for(int i = 0; i < 9; i++) {
-            int trade = (9 * page) + i;
-            if(shopkeeperData.trades().size() > trade && shopkeeperData.trades().get(trade) != null) {
-                TradeData tradeData = shopkeeperData.trades().get(trade);
-                List<Text> users = tradeData.uses().entrySet().stream()
-                        .map(entry -> Map.entry(Shopkeepers.getData().getPlayers().get(entry.getKey()),
-                                entry.getValue())).sorted((o1, o2) -> {
-                            if (Objects.equals(o1.getValue(), o2.getValue())) return o1.getKey().compareTo(o2.getKey());
-                            return o2.getValue().compareTo(o1.getValue());
-                        }).map(entry -> Text.of(String.format("%s: %d", entry.getKey(), entry.getValue())))
-                        .toList();
-                int totalUses = tradeData.uses().values().stream().mapToInt(v -> v).sum();
-
-                setSlot(27 + i, new GuiElementBuilder(totalUses == 0 ? Items.BOOK : Items.WRITTEN_BOOK)
-                        .setItemName(Text.of(String.format("Trade used %d times", totalUses)))
-                        .setLore(users));
-            } else {
-                setSlot(27 + i, new GuiElementBuilder(Items.PAPER).setItemName(Text.of("Create trade to track uses")));
-            }
+            showUses(27 + i, (9 * page) + i, true);
         }
 
         this.setSlot(36, page > 0 ?

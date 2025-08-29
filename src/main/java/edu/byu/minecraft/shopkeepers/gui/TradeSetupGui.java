@@ -50,6 +50,31 @@ public abstract class TradeSetupGui extends SimpleGui {
 
     protected abstract void setupSlots();
 
+    protected void showUses(int slot, int trade, boolean showPlayerNames) {
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
+        if(shopkeeperData.trades().size() > trade && shopkeeperData.trades().get(trade) != null) {
+            TradeData tradeData = shopkeeperData.trades().get(trade);
+
+            int totalUses = tradeData.uses().values().stream().mapToInt(v -> v).sum();
+            var guiBuilder = new GuiElementBuilder(totalUses == 0 ? Items.BOOK : Items.WRITTEN_BOOK)
+                    .setItemName(Text.of(String.format("Trade used %d times", totalUses)));
+
+            if(showPlayerNames) {
+                guiBuilder.setLore(tradeData.uses().entrySet().stream()
+                        .map(entry -> Map.entry(Shopkeepers.getData().getPlayers().get(entry.getKey()),
+                                entry.getValue())).sorted((o1, o2) -> {
+                            if (Objects.equals(o1.getValue(), o2.getValue())) return o1.getKey().compareTo(o2.getKey());
+                            return o2.getValue().compareTo(o1.getValue());
+                        }).map(entry -> Text.of(String.format("%s: %d", entry.getKey(), entry.getValue())))
+                        .toList());
+            }
+
+            setSlot(slot, guiBuilder.build());
+        } else {
+            setSlot(slot, new GuiElementBuilder(Items.PAPER).setItemName(Text.of("Create trade to track uses")));
+        }
+    }
+
     protected void babyToggle(int slot) {
         MobEntity asMob = (MobEntity) shopkeeper;
         boolean currentlyBaby = asMob.isBaby();

@@ -13,7 +13,7 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
 
 
     public PlayerShopTradeSetupGui(ServerPlayerEntity player, Entity shopkeeper) {
-        super(ScreenHandlerType.GENERIC_9X4, player, shopkeeper, 8);
+        super(ScreenHandlerType.GENERIC_9X5, player, shopkeeper, 8);
         this.setTitle(Text.of("Player shop setup"));
     }
 
@@ -27,15 +27,20 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
         this.setSlot(17, new GuiElementBuilder(Items.ORANGE_STAINED_GLASS_PANE).setItemName(Text.of("← Price #2 (Optional)")).build());
         this.setSlot(26, new GuiElementBuilder(Items.LIME_STAINED_GLASS_PANE).setItemName(Text.of("← Product ")).build());
 
-        babyToggle(27);
-        setName(28);
-        mobOptions(29);
-        setSlot(30, GuiUtils.EMPTY_SLOT);
-        disbandShopkeeper(31);
-        setSlot(32, GuiUtils.EMPTY_SLOT);
-        setSlot(33, GuiUtils.EMPTY_SLOT);
+        for(int i = 0; i < 8; i++) {
+            showUses(27 + i, i, false);
+        }
+        setSlot(35, GuiUtils.EMPTY_SLOT);
 
-        this.setSlot(34, new GuiElementBuilder(Items.CHEST)
+        babyToggle(36);
+        setName(37);
+        mobOptions(38);
+        setSlot(39, GuiUtils.EMPTY_SLOT);
+        disbandShopkeeper(40);
+        setSlot(41, GuiUtils.EMPTY_SLOT);
+        setSlot(42, GuiUtils.EMPTY_SLOT);
+
+        this.setSlot(43, new GuiElementBuilder(Items.CHEST)
                 .setItemName(Text.of("Open Shopkeeper Inventory"))
                 .setCallback(() -> {
                     this.close();
@@ -44,7 +49,7 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
                 })
                 .build());
 
-        openTradeMenu(35);
+        openTradeMenu(44);
     }
 
 
