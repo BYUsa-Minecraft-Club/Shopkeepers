@@ -2,6 +2,7 @@ package edu.byu.minecraft.shopkeepers.gui;
 
 import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
+import edu.byu.minecraft.shopkeepers.data.ShopkeeperInventoryEntry;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.SimpleInventory;
@@ -25,16 +26,18 @@ public class MerchantInventoryGui extends SimpleGui {
         this.shopkeeper = shopkeeper;
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
         List<ItemStack> inventoryStacks = shopkeeperData.inventory().stream()
-                .mapMulti((BiConsumer<ItemStack, Consumer<ItemStack>>) (stack, consumer) -> {
-                    int maxCount = stack.getMaxCount();
-                    ItemStack copy = stack.copy();
-                    while (copy.getCount() > maxCount) {
+                .mapMulti((BiConsumer<ShopkeeperInventoryEntry, Consumer<ItemStack>>) (entry, consumer) -> {
+                    int numItems = entry.getAmount();
+                    int maxCount = entry.getStack().getMaxCount();
+                    ItemStack copy = entry.getStack().copy();
+                    while (numItems > maxCount) {
                         ItemStack newStack = copy.copy();
                         newStack.setCount(maxCount);
                         consumer.accept(newStack);
-                        copy.setCount(copy.getCount() - maxCount);
+                        numItems -= maxCount;
                     }
-                    if (copy.getCount() > 0) {
+                    if (numItems > 0) {
+                        copy.setCount(numItems);
                         consumer.accept(copy);
                     }
                 }).toList();

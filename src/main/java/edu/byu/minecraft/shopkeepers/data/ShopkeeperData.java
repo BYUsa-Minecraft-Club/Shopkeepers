@@ -1,30 +1,19 @@
 package edu.byu.minecraft.shopkeepers.data;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Uuids;
-import net.minecraft.village.TradeOffer;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-public record ShopkeeperData (List<TradeData> trades, List<ItemStack> inventory, boolean isAdmin, List<UUID> owners) {
-    private static final Codec<ItemStack> FAKE_ITEMSTACK_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            ItemStack.MAP_CODEC.fieldOf("itemStack").forGetter(stack -> {
-                stack = stack.copy();
-                stack.setCount(1);
-                return stack;
-            }),
-            Codec.INT.fieldOf("numItems").forGetter(ItemStack::getCount)
-    ).apply(instance, ItemStack::copyWithCount));
+public record ShopkeeperData (List<TradeData> trades, List<ShopkeeperInventoryEntry> inventory, boolean isAdmin, List<UUID> owners) {
 
     public static final Codec<ShopkeeperData> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             TradeData.CODEC.listOf().fieldOf("trades").forGetter(ShopkeeperData::trades),
-            FAKE_ITEMSTACK_CODEC.listOf().fieldOf("inventory").forGetter(ShopkeeperData::inventory),
+            ShopkeeperInventoryEntry.CODEC.listOf().fieldOf("inventory").forGetter(ShopkeeperData::inventory),
             Codec.BOOL.fieldOf("isAdmin").forGetter(ShopkeeperData::isAdmin),
             Uuids.CODEC.listOf().fieldOf("owners").forGetter(ShopkeeperData::owners)
     ).apply(instance, (trades, inventory, isAdmin, owners) ->
@@ -33,7 +22,7 @@ public record ShopkeeperData (List<TradeData> trades, List<ItemStack> inventory,
 
     public int inventoryIndexOf(ItemStack stack) {
         for (int i = 0; i < inventory.size(); i++) {
-            if (ItemStack.areItemsAndComponentsEqual(inventory.get(i), stack)) {
+            if (ItemStack.areItemsAndComponentsEqual(inventory.get(i).getStack(), stack)) {
                 return i;
             }
         }
@@ -43,7 +32,7 @@ public record ShopkeeperData (List<TradeData> trades, List<ItemStack> inventory,
     public Integer inventoryGet(ItemStack stack) {
         int index = inventoryIndexOf(stack);
         if (index == -1) return null;
-        return inventory.get(index).getCount();
+        return inventory.get(index).getAmount();
     }
 
     public void inventoryPut(ItemStack stack) {
@@ -52,10 +41,10 @@ public record ShopkeeperData (List<TradeData> trades, List<ItemStack> inventory,
         }
         int index = inventoryIndexOf(stack);
         if (index == -1) {
-            inventory.add(stack.copy());
+            inventory.add(new ShopkeeperInventoryEntry(stack.copy(), stack.getCount()));
         }
         else {
-            inventory.set(index, stack.copy());
+            inventory.get(index).setAmount(stack.getCount());
         }
     }
 

@@ -95,8 +95,8 @@ public class OfferGui extends MerchantGui {
         // from sgui so I can't change it myself
         ShopkeeperData data = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
         return data.isAdmin() || data.inventory().stream().anyMatch(
-                stack -> ItemStack.areItemsAndComponentsEqual(stack, offer.getSellItem()) &&
-                        stack.getCount() >= offer.getSellItem().getCount());
+                entry -> ItemStack.areItemsAndComponentsEqual(entry.getStack(), offer.getSellItem()) &&
+                        entry.getAmount() >= offer.getSellItem().getCount());
     }
 
     public void afterTrade(TradeOffer offer) {

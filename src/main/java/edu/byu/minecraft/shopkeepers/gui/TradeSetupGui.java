@@ -4,6 +4,7 @@ import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.customization.CustomizationButtonOptions;
 import edu.byu.minecraft.shopkeepers.customization.CustomizationManager;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
+import edu.byu.minecraft.shopkeepers.data.ShopkeeperInventoryEntry;
 import edu.byu.minecraft.shopkeepers.data.TradeData;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
@@ -116,15 +117,20 @@ public abstract class TradeSetupGui extends SimpleGui {
                             }
                         }
 
-                        for(ItemStack itemStack : shopkeeperData.inventory()) {
-                            ItemStack copy = itemStack.copy();
-                            while(copy.getCount() > copy.getMaxCount()) {
+                        for(ShopkeeperInventoryEntry entry : shopkeeperData.inventory()) {
+                            int numItems = entry.getAmount();
+                            ItemStack copy = entry.getStack().copy();
+                            int maxCount = copy.getCount();
+                            while(numItems > maxCount) {
                                 ItemStack copy2 = copy.copy();
-                                copy2.setCount(copy.getMaxCount());
-                                copy.setCount(copy.getCount() - copy2.getCount());
+                                copy2.setCount(maxCount);
+                                numItems -= maxCount;
                                 player.giveOrDropStack(copy2);
                             }
-                            player.giveOrDropStack(copy);
+                            if(numItems > 0) {
+                                copy.setCount(numItems);
+                                player.giveOrDropStack(copy);
+                            }
                         }
 
                         Shopkeepers.getData().getShopkeeperData().remove(shopkeeper.getUuid());
