@@ -149,12 +149,12 @@ public abstract class TradeSetupGui extends SimpleGui {
                 if (shopkeeperData.trades().size() <= i) {
                     shopkeeperData.trades().add(newTrade);
                     changed = true;
-                } else if (!shopkeeperData.trades().get(i).equals(newTrade)) {
+                } else if (!shopkeeperData.trades().get(i).equalsIgnoreUses(newTrade)) {
                     shopkeeperData.trades().set(i, newTrade);
                     changed = true;
                 }
             }
-            else if (shopkeeperData.trades().size() > i) {
+            else if (shopkeeperData.trades().size() > i && shopkeeperData.trades().get(i) != null) {
                 shopkeeperData.trades().set(i, null);
                 changed = true;
             }
@@ -175,7 +175,7 @@ public abstract class TradeSetupGui extends SimpleGui {
             Optional<ItemStack> secondBuyItem =
                     secondBuyItemPresent ? Optional.of(tradeItems.getStack(i + 9)) : Optional.empty();
             ItemStack sellItem = tradeItems.getStack(i + 18);
-            return new TradeData(firstBuyItem, secondBuyItem, sellItem);
+            return new TradeData(firstBuyItem, secondBuyItem, sellItem, new HashMap<>());
         }
         else {
             if(firstBuyItemPresent) {

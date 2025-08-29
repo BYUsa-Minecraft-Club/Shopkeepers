@@ -10,16 +10,21 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public record TradeData(ItemStack firstBuyItem, Optional<ItemStack> secondBuyItem, ItemStack sellItem) {
+public record TradeData(ItemStack firstBuyItem, Optional<ItemStack> secondBuyItem, ItemStack sellItem,
+                        Map<UUID, Integer> uses) {
     public static final Codec<TradeData> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
         ItemStack.CODEC.fieldOf("firstBuyItem").forGetter(TradeData::firstBuyItem),
         ItemStack.CODEC.optionalFieldOf("secondBuyItem").forGetter(TradeData::secondBuyItem),
-        ItemStack.CODEC.fieldOf("sellItem").forGetter(TradeData::sellItem)
-    ).apply(instance, TradeData::new));
+        ItemStack.CODEC.fieldOf("sellItem").forGetter(TradeData::sellItem),
+        Codec.unboundedMap(Uuids.CODEC, Codec.INT).fieldOf("uses").forGetter(TradeData::uses)
+    ).apply(instance, TradeData::newMutableTradeData));
 
-    public boolean equals(Object o) {
-        if(!(o instanceof TradeData other)) return false;
-        if(o == this) return true;
+    private static TradeData newMutableTradeData(ItemStack firstBuyItem, Optional<ItemStack> secondBuyItem,
+                                                 ItemStack sellItem, Map<UUID, Integer> uses) {
+        return new TradeData(firstBuyItem, secondBuyItem, sellItem, new HashMap<>(uses));
+    }
+
+    public boolean equalsIgnoreUses(TradeData other) {
         return ItemStack.areEqual(firstBuyItem(), other.firstBuyItem()) &&
                 ((secondBuyItem().isEmpty() && other.secondBuyItem().isEmpty()) ||
                         (secondBuyItem().isPresent() && other.secondBuyItem().isPresent() &&
