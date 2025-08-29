@@ -3,13 +3,9 @@ package edu.byu.minecraft.shopkeepers.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import edu.byu.minecraft.Shopkeepers;
-import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Uuids;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateType;
@@ -18,7 +14,7 @@ import java.util.*;
 
 public class SaveData extends PersistentState {
     public static final Codec<SaveData> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.unboundedMap(Uuids.CODEC, ShopkeeperData.CODEC).fieldOf("data").forGetter(SaveData::getData),
+            Codec.unboundedMap(Uuids.CODEC, ShopkeeperData.CODEC).fieldOf("data").forGetter(SaveData::getShopkeeperData),
             EntityType.CODEC.listOf().fieldOf("allowedShopkeepers").forGetter(SaveData::getAllowedShopkeepers),
             Codec.unboundedMap(Uuids.CODEC, Codec.STRING).fieldOf("players").forGetter(SaveData::getPlayers),
             Codec.INT.fieldOf("maxOwnedShops").forGetter(SaveData::getMaxOwnedShops)
@@ -27,7 +23,7 @@ public class SaveData extends PersistentState {
     private static final List<EntityType<?>> DEFAULT_ALLOWED_ENTITIES = List.of(EntityType.VILLAGER);
     private static final int DEFAULT_MAX_SHOPS = 15;
 
-    private final Map<UUID, ShopkeeperData> data;
+    private final Map<UUID, ShopkeeperData> shopkeeperData;
 
     private final List<EntityType<?>> allowedShopkeepers;
 
@@ -35,9 +31,9 @@ public class SaveData extends PersistentState {
 
     private int maxOwnedShops;
 
-    public SaveData(Map<UUID, ShopkeeperData> data, List<EntityType<?>> allowedShopkeepers, Map<UUID, String> players,
+    public SaveData(Map<UUID, ShopkeeperData> shopkeeperData, List<EntityType<?>> allowedShopkeepers, Map<UUID, String> players,
                     int maxOwnedShops) {
-        this.data = new HashMap<>(data);
+        this.shopkeeperData = new HashMap<>(shopkeeperData);
         this.allowedShopkeepers = new ArrayList<>(allowedShopkeepers);
         this.players = new HashMap<>(players);
         this.maxOwnedShops = maxOwnedShops;
@@ -60,8 +56,8 @@ public class SaveData extends PersistentState {
         }
     }
 
-    public Map<UUID, ShopkeeperData> getData() {
-        return data;
+    public Map<UUID, ShopkeeperData> getShopkeeperData() {
+        return shopkeeperData;
     }
 
     public List<EntityType<?>> getAllowedShopkeepers() {

@@ -16,11 +16,11 @@ public class LviningEntityMixin {
     @Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)
     public void injectOnDeath(DamageSource damageSource, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
-        if (Shopkeepers.getData().getData().containsKey(self.getUuid())) {
+        if (Shopkeepers.getData().getShopkeeperData().containsKey(self.getUuid())) {
             self.setHealth(Float.MAX_VALUE);
             String warning = String.format("Shopkeeper entity %s owned by %s was attempted to be killed (likely by a command). " +
                             "Please disband the shop first. Location: X: %.0f, Y:%.0f, Z:%.0f",
-                    self.getName().getString(), Shopkeepers.getData().getData().get(self.getUuid()).owners(),
+                    self.getName().getString(), Shopkeepers.getData().getShopkeeperData().get(self.getUuid()).owners(),
                     self.getPos().getX(), self.getPos().getY(), self.getPos().getZ());
 
             if(self.getServer() != null) {

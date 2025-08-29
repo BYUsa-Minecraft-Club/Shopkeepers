@@ -48,7 +48,7 @@ public class OfferGui extends MerchantGui {
     public OfferGui(ServerPlayerEntity player, Entity shopkeeper) {
         super(player, false);
         this.shopkeeper = shopkeeper;
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
 
         if(player.getServer() != null && player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
             isAdmin = true;
@@ -72,7 +72,7 @@ public class OfferGui extends MerchantGui {
     @Override
     public void onSelectTrade(TradeOffer offer) {
         super.onSelectTrade(offer);
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
         if(isAdmin && ItemStack.areEqual(offer.getSellItem(), adminEditTradeSellItem) &&
                 offer.getFirstBuyItem().matches(adminEditTradeSellItem)) {
             this.close();
@@ -93,7 +93,7 @@ public class OfferGui extends MerchantGui {
     @Override
     public boolean onTrade(TradeOffer offer) { //method should be called something more like "should trade", but it's
         // from sgui so I can't change it myself
-        ShopkeeperData data = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
+        ShopkeeperData data = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
         return data.isAdmin() || data.inventory().stream().anyMatch(
                 stack -> ItemStack.areItemsAndComponentsEqual(stack, offer.getSellItem()) &&
                         stack.getCount() >= offer.getSellItem().getCount());
@@ -101,7 +101,7 @@ public class OfferGui extends MerchantGui {
 
     public void afterTrade(TradeOffer offer) {
         int index = getOfferIndex(offer);
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
 
         if(!shopkeeperData.isAdmin()) {
             shopkeeperData.addItems(offer.getFirstBuyItem().itemStack(), offer.getFirstBuyItem().count());

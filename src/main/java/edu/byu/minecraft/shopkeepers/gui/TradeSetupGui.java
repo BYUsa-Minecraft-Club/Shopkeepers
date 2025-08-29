@@ -30,7 +30,7 @@ public abstract class TradeSetupGui extends SimpleGui {
         this.shopkeeper = shopkeeper;
         this.maxTrades = maxTrades;
         tradeItems = new SimpleInventory(((int) Math.ceil(maxTrades / 9.0)) * 27);
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
         List<TradeData> trades = shopkeeperData.trades();
         for (int i = 0; i < trades.size(); i++) {
             int page = i / 9;
@@ -102,7 +102,7 @@ public abstract class TradeSetupGui extends SimpleGui {
         this.setSlot(slot,
                 new GuiElementBuilder(Items.BARRIER).setItemName(Text.of("Disband Shopkeeper")).setCallback(() -> {
                     new ConfirmationGui(player, "disband shopkeeper", this, () -> {
-                        ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
+                        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
 
                         for(TradeData tradeData : shopkeeperData.trades()) {
                             if(tradeData.firstBuyItem() != null && !tradeData.firstBuyItem().isEmpty()) {
@@ -127,7 +127,7 @@ public abstract class TradeSetupGui extends SimpleGui {
                             player.giveOrDropStack(copy);
                         }
 
-                        Shopkeepers.getData().getData().remove(shopkeeper.getUuid());
+                        Shopkeepers.getData().getShopkeeperData().remove(shopkeeper.getUuid());
                         shopkeeper.setPosition(shopkeeper.getX(), -1000, shopkeeper.getZ());
                         shopkeeper.kill(player.getWorld());
                     }).open();
@@ -138,7 +138,7 @@ public abstract class TradeSetupGui extends SimpleGui {
 
     @Override
     public void onClose() {
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
         boolean changed = false;
         for(int i = 0; i < maxTrades; i++) {
             int page = i / 9;

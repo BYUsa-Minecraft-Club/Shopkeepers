@@ -16,7 +16,7 @@ public class LightningEntityMixin {
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
     private void filterLightningTargets(CallbackInfo ci, @Local List<Entity> list) {
-        list.removeIf(entity -> Shopkeepers.getData().getData().containsKey(entity.getUuid()));
+        list.removeIf(entity -> Shopkeepers.getData().getShopkeeperData().containsKey(entity.getUuid()));
     }
 
 }

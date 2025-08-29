@@ -26,7 +26,6 @@ import net.minecraft.util.Identifier;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.function.ToDoubleFunction;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -173,7 +172,7 @@ public class Commands {
             context.getSource().sendMessage(Text.of("this command must be executed by a player"));
             return 0;
         }
-        double ownedShops = Shopkeepers.getData().getData().values().stream()
+        double ownedShops = Shopkeepers.getData().getShopkeeperData().values().stream()
                 .filter(sd -> sd.owners().contains(executor.getUuid()))
                 .mapToDouble(sd -> 1.0 / sd.owners().size())
                 .sum();
@@ -227,7 +226,7 @@ public class Commands {
                 owners.add(executor.getUuid());
             }
 
-            Shopkeepers.getData().getData().put(shopkeeper.getUuid(), new ShopkeeperData(new ArrayList<>(),
+            Shopkeepers.getData().getShopkeeperData().put(shopkeeper.getUuid(), new ShopkeeperData(new ArrayList<>(),
                     new ArrayList<>(), isAdmin, owners));
             Shopkeepers.getData().markDirty();
             return 1;

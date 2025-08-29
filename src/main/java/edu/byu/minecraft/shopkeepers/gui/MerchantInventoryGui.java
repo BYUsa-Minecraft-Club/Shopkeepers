@@ -12,7 +12,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -24,7 +23,7 @@ public class MerchantInventoryGui extends SimpleGui {
     public MerchantInventoryGui(ServerPlayerEntity player, Entity shopkeeper) {
         super(ScreenHandlerType.GENERIC_9X6, player, false);
         this.shopkeeper = shopkeeper;
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
         List<ItemStack> inventoryStacks = shopkeeperData.inventory().stream()
                 .mapMulti((BiConsumer<ItemStack, Consumer<ItemStack>>) (stack, consumer) -> {
                     int maxCount = stack.getMaxCount();
@@ -51,7 +50,7 @@ public class MerchantInventoryGui extends SimpleGui {
 
     @Override
     public void onClose() {
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
 
         shopkeeperData.inventory().clear();
         for(ItemStack inventoryItemStack : inventoryPage) {

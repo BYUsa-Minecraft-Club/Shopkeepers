@@ -32,7 +32,7 @@ public abstract class PlayerEntityMixin {
         // stuff that matters only happens once.
         if (hand == Hand.OFF_HAND) return;
 
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getData().get(entity.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(entity.getUuid());
         if (shopkeeperData != null && player.getServer() != null) {
 
             UUID lockedPlayer = Shopkeepers.getInteractionLocks().tryAcquireLock(entity.getUuid(), player.getUuid());
