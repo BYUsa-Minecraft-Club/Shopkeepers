@@ -9,6 +9,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -56,6 +57,9 @@ public abstract class TradeSetupGui extends SimpleGui {
                 new GuiElementBuilder(Items.SLIME_BLOCK).setItemName(Text.of("Change to baby (if applicable to mob)"));
         builder.setCallback(() -> {
             asMob.setBaby(!currentlyBaby);
+            if(!currentlyBaby && shopkeeper instanceof PassiveEntity pe) {
+                pe.setBreedingAge(-2099999999); //about 3.4 years of loaded time
+            }
             babyToggle(slot);
         });
         this.setSlot(slot, builder.build());
