@@ -38,11 +38,11 @@ public abstract class TradeSetupGui extends SimpleGui {
             int indexOnPage = i % 9;
             int index = (27 * page) + indexOnPage;
             TradeData tradeOffer = trades.get(i);
-            tradeItems.setStack(index, tradeOffer.firstBuyItem());
+            tradeItems.setStack(index, tradeOffer.firstBuyItem().copy());
             if (tradeOffer.secondBuyItem().isPresent()) {
-                tradeItems.setStack(index + 9, tradeOffer.secondBuyItem().get());
+                tradeItems.setStack(index + 9, tradeOffer.secondBuyItem().get().copy());
             }
-            tradeItems.setStack(index + 18, tradeOffer.sellItem());
+            tradeItems.setStack(index + 18, tradeOffer.sellItem().copy());
         }
 
         setupSlots();
@@ -177,10 +177,10 @@ public abstract class TradeSetupGui extends SimpleGui {
         boolean secondBuyItemPresent = !tradeItems.getStack(i + 9).isEmpty();
         boolean sellItemPresent = !tradeItems.getStack(i + 18).isEmpty();
         if (firstBuyItemPresent && sellItemPresent) {
-            ItemStack firstBuyItem = tradeItems.getStack(i);
+            ItemStack firstBuyItem = tradeItems.getStack(i).copy();
             Optional<ItemStack> secondBuyItem =
-                    secondBuyItemPresent ? Optional.of(tradeItems.getStack(i + 9)) : Optional.empty();
-            ItemStack sellItem = tradeItems.getStack(i + 18);
+                    secondBuyItemPresent ? Optional.of(tradeItems.getStack(i + 9).copy()) : Optional.empty();
+            ItemStack sellItem = tradeItems.getStack(i + 18).copy();
             return new TradeData(firstBuyItem, secondBuyItem, sellItem, new HashMap<>());
         }
         else {
