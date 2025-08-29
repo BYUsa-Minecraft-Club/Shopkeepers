@@ -48,7 +48,11 @@ public class MerchantInventoryGui extends SimpleGui {
         for(int i = 0; i < 54; i++) {
             this.setSlotRedirect(i, new Slot(inventoryPage, i, 0, 0));
         }
-        setTitle(Text.of(shopkeeper.getName().getString() + " Inventory"));
+        String title = shopkeeper.getName().getString() + " Inventory";
+        if(inventoryPage.size() > 54) {
+            title += " (" + (inventoryPage.size() - 54) + " stacks hidden)";
+        }
+        setTitle(Text.of(title));
     }
 
     @Override
