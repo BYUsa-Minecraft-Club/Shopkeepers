@@ -1,11 +1,9 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
-import eu.pb4.sgui.api.gui.MerchantGui;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.village.VillagerData;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
 
@@ -19,10 +17,6 @@ public class VillagerCustomizations {
         customizations.add(VillagerTypes.getCurrentType(villager));
         customizations.add(VillagerLevels.getCurrentLevel(villager));
         return customizations;
-    }
-
-    private static String capitalize(String s) {
-        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
 
     private enum VillagerProfessions implements ShopkeeperCustomization<VillagerEntity> {
@@ -65,7 +59,7 @@ public class VillagerCustomizations {
 
         @Override
         public String currentDescription() {
-            return capitalize(profession.getValue().getPath());
+            return CustomizationUtils.capitalizeSingle(profession.getValue().getPath());
         }
 
         @Override
@@ -129,7 +123,7 @@ public class VillagerCustomizations {
 
         @Override
         public String currentDescription() {
-            return capitalize(type.getValue().getPath());
+            return CustomizationUtils.capitalizeSingle(type.getValue().getPath());
         }
 
         @Override
