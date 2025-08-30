@@ -70,6 +70,16 @@ public class OfferGui extends MerchantGui {
     }
 
     @Override
+    protected boolean sendGui() {
+        if(GuiUtils.ensureInteractionLock(player, shopkeeper)) {
+            return super.sendGui();
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
     public void onSelectTrade(TradeOffer offer) {
         super.onSelectTrade(offer);
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
@@ -148,6 +158,6 @@ public class OfferGui extends MerchantGui {
     @Override
     public void onClose() {
         super.onClose();
-        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid());
+        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid(), player.getUuid());
     }
 }

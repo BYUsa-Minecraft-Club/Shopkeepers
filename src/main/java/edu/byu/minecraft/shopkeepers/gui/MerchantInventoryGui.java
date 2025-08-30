@@ -56,6 +56,16 @@ public class MerchantInventoryGui extends SimpleGui {
     }
 
     @Override
+    protected boolean sendGui() {
+        if(GuiUtils.ensureInteractionLock(player, shopkeeper)) {
+            return super.sendGui();
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
     public void onClose() {
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
 
@@ -67,6 +77,6 @@ public class MerchantInventoryGui extends SimpleGui {
         }
         Shopkeepers.getData().markDirty();
 
-        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid());
+        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid(), player.getUuid());
     }
 }

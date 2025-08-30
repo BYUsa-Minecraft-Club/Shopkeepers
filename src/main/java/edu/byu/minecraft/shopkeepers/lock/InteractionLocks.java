@@ -2,6 +2,7 @@ package edu.byu.minecraft.shopkeepers.lock;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class InteractionLocks {
@@ -23,7 +24,9 @@ public class InteractionLocks {
         }
     }
 
-    public void releaseLock(UUID shopkeeperId) {
-        shopkeeperPlayerLockMap.remove(shopkeeperId);
+    public void releaseLock(UUID shopkeeperId, UUID playerId) {
+        if(Objects.equals(shopkeeperPlayerLockMap.get(shopkeeperId), playerId)) {
+            shopkeeperPlayerLockMap.remove(shopkeeperId);
+        }
     }
 }

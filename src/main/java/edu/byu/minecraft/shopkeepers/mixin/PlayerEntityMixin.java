@@ -34,14 +34,6 @@ public abstract class PlayerEntityMixin {
 
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(entity.getUuid());
         if (shopkeeperData != null && player.getServer() != null) {
-
-            UUID lockedPlayer = Shopkeepers.getInteractionLocks().tryAcquireLock(entity.getUuid(), player.getUuid());
-            if(lockedPlayer != null && !lockedPlayer.equals(player.getUuid())) {
-                player.sendMessage(Text.of(Shopkeepers.getData().getPlayers().get(lockedPlayer) +
-                        " is currently interacting with this shopkeeper. Please wait for them to finish."));
-                return;
-            }
-
             if(shopkeeperData.isAdmin() && player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
                 if(shopkeeperData.trades().isEmpty()) {
                     new AdminShopTradeSetupGui(player, entity).open();

@@ -50,10 +50,4 @@ public class MobSettingsGui<E extends Entity> extends SimpleGui {
             setupSlot(index);
         }));
     }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid());
-    }
 }

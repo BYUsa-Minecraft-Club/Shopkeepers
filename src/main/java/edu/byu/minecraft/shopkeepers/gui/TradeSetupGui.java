@@ -165,7 +165,15 @@ public abstract class TradeSetupGui extends SimpleGui {
                 }).build());
     }
 
-
+    @Override
+    protected boolean sendGui() {
+        if(GuiUtils.ensureInteractionLock(player, shopkeeper)) {
+            return super.sendGui();
+        }
+        else {
+            return false;
+        }
+    }
 
     @Override
     public void onClose() {
@@ -200,7 +208,7 @@ public abstract class TradeSetupGui extends SimpleGui {
             shopkeeperData.trades().removeIf(Objects::isNull);
             Shopkeepers.getData().markDirty();
         }
-        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid());
+        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid(), player.getUuid());
     }
 
     protected TradeData validateTradeOrGiveBack(int i) {
