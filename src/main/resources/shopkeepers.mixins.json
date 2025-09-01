@@ -11,6 +11,7 @@
     "SimpleMerchantMixin",
     "invoker.AxolotlEntityVariantSetter",
     "invoker.CatEntityVariationSetter",
+    "invoker.FoxEntityVariationSetter",
     "invoker.FrogEntityVariantSetter",
     "invoker.MooshroomEntityVariantSetter",
     "invoker.ParrotEntityVariantSetter",

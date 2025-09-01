@@ -1,5 +1,6 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
+import edu.byu.minecraft.shopkeepers.mixin.invoker.FoxEntityVariationSetter;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
@@ -23,6 +24,7 @@ public class CustomizationManager {
             case ChickenEntity ce -> ChickenCustomizations.getChickenCustomizations(ce);
             case CowEntity ce -> CowCustomizations.getCowCustomizations(ce);
             case FrogEntity fe -> FrogCustomizations.getFrogCustomizations(fe);
+            case FoxEntity fe -> FoxCustomizations.getFoxCustomizations(fe);
             case MooshroomEntity me -> MooshroomCustomizations.getMooshroomCustomizations(me);
             case ParrotEntity pe -> ParrotCustomizations.getParrotCustomizations(pe);
             case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
