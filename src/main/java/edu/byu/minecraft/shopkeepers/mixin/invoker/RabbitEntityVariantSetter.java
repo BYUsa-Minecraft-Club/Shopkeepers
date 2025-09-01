@@ -1,4 +1,4 @@
-package edu.byu.minecraft.shopkeepers.mixin;
+package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
 import net.minecraft.entity.passive.RabbitEntity;
 import org.spongepowered.asm.mixin.Mixin;

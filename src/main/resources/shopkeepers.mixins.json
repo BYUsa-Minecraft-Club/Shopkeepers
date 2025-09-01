@@ -6,11 +6,12 @@
     "EntityMixin",
     "LightningEntityMixin",
     "LviningEntityMixin",
-    "ParrotEntityVariantSetter",
+    "invoker.ParrotEntityVariantSetter",
     "PlayerEntityMixin",
     "PlayerManagerMixin",
-    "RabbitEntityVariantSetter",
-    "SimpleMerchantMixin"
+    "invoker.RabbitEntityVariantSetter",
+    "SimpleMerchantMixin",
+    "invoker.WolfEntityVariationAccesor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -4,10 +4,7 @@ import edu.byu.minecraft.shopkeepers.gui.MobSettingsGui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
-import net.minecraft.entity.passive.ParrotEntity;
-import net.minecraft.entity.passive.RabbitEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.entity.passive.*;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -31,6 +28,10 @@ public class CustomizationManager {
         if (entity instanceof ParrotEntity pe) {
             return options(pe, player, ParrotCustomizations::getParrotCustomizations, guiParent);
         }
+        if(entity instanceof WolfEntity we) {
+            return options(we, player, WolfCustomizations::getWolfCustomizations, guiParent);
+        }
+
 
         //super types
         if (entity instanceof TameableEntity te) {

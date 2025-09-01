@@ -14,14 +14,14 @@ import java.util.List;
 public class VillagerCustomizations {
     public static <E extends Entity & VillagerDataContainer> List<ShopkeeperCustomization<E>> getVillagerCustomizations(E villagerDataContainerEntity) {
         List<ShopkeeperCustomization<E>> customizations = new ArrayList<>();
-        customizations.add(VillagerProfessionsWrapper.getCurrentprofession(villagerDataContainerEntity));
-        customizations.add(VillagerTypesWrapper.getCurrentType(villagerDataContainerEntity));
+        customizations.add(VillagerProfessions.getCurrentprofession(villagerDataContainerEntity));
+        customizations.add(VillagerTypes.getCurrentType(villagerDataContainerEntity));
         customizations.add(VillagerLevels.getCurrentLevel(villagerDataContainerEntity));
         return customizations;
     }
 
-    private record VillagerProfessionsWrapper<E extends Entity & VillagerDataContainer>(VillagerProfessions profession) implements ShopkeeperCustomization<E> {
-        private enum VillagerProfessions {
+    private record VillagerProfessions<E extends Entity & VillagerDataContainer>(Professions profession) implements ShopkeeperCustomization<E> {
+        private enum Professions {
             NONE(VillagerProfession.NONE),
             NITWIT(VillagerProfession.NITWIT),
             ARMORER(VillagerProfession.ARMORER),
@@ -40,17 +40,17 @@ public class VillagerCustomizations {
 
             private final RegistryKey<VillagerProfession> profession;
 
-            private VillagerProfessions(RegistryKey<VillagerProfession> Profession) {
+            private Professions(RegistryKey<VillagerProfession> Profession) {
                 this.profession = Profession;
             }
         }
 
-        public static <E extends Entity & VillagerDataContainer> VillagerProfessionsWrapper<E> getCurrentprofession(VillagerDataContainer shopkeeper) {
+        public static <E extends Entity & VillagerDataContainer> VillagerProfessions<E> getCurrentprofession(VillagerDataContainer shopkeeper) {
             RegistryKey<VillagerProfession> profession =
                     shopkeeper.getVillagerData().profession().getKey().orElseThrow();
-            for(VillagerProfessions vt : VillagerProfessions.values()) {
+            for(Professions vt : Professions.values()) {
                 if(vt.profession == profession) {
-                    return new VillagerProfessionsWrapper<>(vt);
+                    return new VillagerProfessions<>(vt);
                 }
             }
             throw new IllegalArgumentException("No VillagerProfessions found for villager with profession " + profession);
@@ -88,17 +88,17 @@ public class VillagerCustomizations {
         }
 
         @Override
-        public VillagerProfessionsWrapper<E> setNext(E shopkeeper) {
-            VillagerProfessions next =
-                    VillagerProfessions.values()[(profession.ordinal() + 1) % VillagerProfessions.values().length];
+        public VillagerProfessions<E> setNext(E shopkeeper) {
+            Professions next =
+                    Professions.values()[(profession.ordinal() + 1) % Professions.values().length];
             shopkeeper.setVillagerData(shopkeeper.getVillagerData().withProfession(shopkeeper.getRegistryManager(), next.profession));
-            return new VillagerProfessionsWrapper<>(next);
+            return new VillagerProfessions<>(next);
         }
     }
 
-    private record VillagerTypesWrapper<E extends Entity & VillagerDataContainer>(VillagerTypes type) implements ShopkeeperCustomization<E> {
+    private record VillagerTypes<E extends Entity & VillagerDataContainer>(Types type) implements ShopkeeperCustomization<E> {
 
-            private enum VillagerTypes {
+            private enum Types {
                 DESERT(VillagerType.DESERT),
                 JUNGLE(VillagerType.JUNGLE),
                 PLAINS(VillagerType.PLAINS),
@@ -109,16 +109,16 @@ public class VillagerCustomizations {
 
                 private final RegistryKey<VillagerType> type;
 
-                private VillagerTypes(RegistryKey<VillagerType> type) {
+                private Types(RegistryKey<VillagerType> type) {
                     this.type = type;
                 }
             }
 
-        public static <E extends Entity & VillagerDataContainer> VillagerTypesWrapper<E> getCurrentType(E shopkeeper) {
+        public static <E extends Entity & VillagerDataContainer> VillagerTypes<E> getCurrentType(E shopkeeper) {
                 RegistryKey<VillagerType> type = shopkeeper.getVillagerData().type().getKey().orElseThrow();
-                for (VillagerTypes vt : VillagerTypes.values()) {
+                for (Types vt : Types.values()) {
                     if (vt.type == type) {
-                        return new VillagerTypesWrapper<>(vt);
+                        return new VillagerTypes<>(vt);
                     }
                 }
                 throw new IllegalArgumentException("No VillagerTypes found for villager with type " + type);
@@ -148,11 +148,11 @@ public class VillagerCustomizations {
             }
 
             @Override
-            public VillagerTypesWrapper<E> setNext(E shopkeeper) {
-                VillagerTypes next = VillagerTypes.values()[(type.ordinal() + 1) % VillagerTypes.values().length];
+            public VillagerTypes<E> setNext(E shopkeeper) {
+                Types next = CustomizationUtils.nextAlphabetically(getCurrentType(shopkeeper).type);
                 shopkeeper.setVillagerData(
                         shopkeeper.getVillagerData().withType(shopkeeper.getRegistryManager(), next.type));
-                return new VillagerTypesWrapper<>(next);
+                return new VillagerTypes<>(next);
             }
 
     }

@@ -1,6 +1,6 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
-import edu.byu.minecraft.shopkeepers.mixin.RabbitEntityVariantSetter;
+import edu.byu.minecraft.shopkeepers.mixin.invoker.RabbitEntityVariantSetter;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -43,9 +43,7 @@ public class RabbitCustomizations {
 
             @Override
             public ShopkeeperCustomization<RabbitEntity> setNext(RabbitEntity shopkeeper) {
-                RabbitEntity.Variant next = RabbitEntity.Variant.values()[(shopkeeper.getVariant().ordinal() + 1) %
-                        RabbitEntity.Variant.values().length];
-
+                RabbitEntity.Variant next = CustomizationUtils.nextAlphabetically(shopkeeper.getVariant());
                 ((RabbitEntityVariantSetter) shopkeeper).invokeSetVariant(next);
                 return new RabbitVariantCustomization(next);
             }

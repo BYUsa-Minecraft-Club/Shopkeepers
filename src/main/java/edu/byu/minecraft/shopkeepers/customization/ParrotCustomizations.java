@@ -1,12 +1,11 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
-import edu.byu.minecraft.shopkeepers.mixin.ParrotEntityVariantSetter;
+import edu.byu.minecraft.shopkeepers.mixin.invoker.ParrotEntityVariantSetter;
 import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public class ParrotCustomizations {
     public static List<ShopkeeperCustomization<ParrotEntity>> getParrotCustomizations(ParrotEntity entity) {
@@ -46,8 +45,7 @@ public class ParrotCustomizations {
 
         @Override
         public ShopkeeperCustomization<ParrotEntity> setNext(ParrotEntity shopkeeper) {
-            ParrotEntity.Variant next = ParrotEntity.Variant.values()[(shopkeeper.getVariant().ordinal() + 1) %
-                    ParrotEntity.Variant.values().length];
+            ParrotEntity.Variant next = CustomizationUtils.nextAlphabetically(shopkeeper.getVariant());
             ((ParrotEntityVariantSetter) shopkeeper).invokeSetVariant(next);
             return new ParrotVariantCustomization(next);
         }
