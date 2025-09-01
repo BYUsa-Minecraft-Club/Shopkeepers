@@ -10,14 +10,14 @@ import java.util.List;
 
 public class TameableMobCustomizations {
 
-    public static List<ShopkeeperCustomization<TameableEntity>> getTameableCustomizations(TameableEntity entity) {
-        List<ShopkeeperCustomization<TameableEntity>> customizations = new ArrayList<>();
-        customizations.add(new TamedCustomization(entity));
-        customizations.add(new SittingCustomization(entity));
+    public static <E extends TameableEntity> List<ShopkeeperCustomization<E>> getTameableCustomizations(E entity) {
+        List<ShopkeeperCustomization<E>> customizations = new ArrayList<>();
+        customizations.add(new TamedCustomization<>(entity));
+        customizations.add(new SittingCustomization<>(entity));
         return customizations;
     }
 
-    private static class TamedCustomization implements ShopkeeperCustomization<TameableEntity> {
+    static class TamedCustomization<E extends TameableEntity> implements ShopkeeperCustomization<E> {
 
         private final boolean isTamed;
 
@@ -45,13 +45,13 @@ public class TameableMobCustomizations {
         }
 
         @Override
-        public ShopkeeperCustomization<TameableEntity> setNext(TameableEntity shopkeeper) {
+        public ShopkeeperCustomization<E> setNext(TameableEntity shopkeeper) {
             shopkeeper.setTamed(!isTamed, true);
-            return new TamedCustomization(!isTamed);
+            return new TamedCustomization<>(!isTamed);
         }
     }
 
-    private static class SittingCustomization implements ShopkeeperCustomization<TameableEntity> {
+    static class SittingCustomization<E extends TameableEntity> implements ShopkeeperCustomization<E> {
         private final boolean isSitting;
 
         private SittingCustomization(boolean isSitting) {
@@ -59,7 +59,7 @@ public class TameableMobCustomizations {
         }
 
         private SittingCustomization(TameableEntity tameableEntity) {
-            this(tameableEntity.isInSittingPose());
+            this(tameableEntity.isSitting());
         }
 
         @Override
@@ -78,9 +78,10 @@ public class TameableMobCustomizations {
         }
 
         @Override
-        public ShopkeeperCustomization<TameableEntity> setNext(TameableEntity shopkeeper) {
+        public ShopkeeperCustomization<E> setNext(TameableEntity shopkeeper) {
+            shopkeeper.setSitting(!isSitting);
             shopkeeper.setInSittingPose(!isSitting);
-            return new SittingCustomization(!isSitting);
+            return new SittingCustomization<>(!isSitting);
         }
     }
 
