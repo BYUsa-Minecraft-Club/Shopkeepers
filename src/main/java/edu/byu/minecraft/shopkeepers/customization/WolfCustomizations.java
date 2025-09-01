@@ -9,8 +9,6 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.DyeColor;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class WolfCustomizations {

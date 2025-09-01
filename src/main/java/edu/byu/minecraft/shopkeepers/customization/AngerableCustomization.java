@@ -4,7 +4,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.server.world.ServerWorld;
 
 public class AngerableCustomization<E extends Entity & Angerable> implements ShopkeeperCustomization<E> {
 

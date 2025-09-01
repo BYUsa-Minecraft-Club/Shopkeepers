@@ -6,7 +6,6 @@ import net.minecraft.util.DyeColor;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Map;
 
 public class CustomizationUtils {
 

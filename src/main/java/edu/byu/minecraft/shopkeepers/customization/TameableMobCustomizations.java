@@ -1,7 +1,6 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 

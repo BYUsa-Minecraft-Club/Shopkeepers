@@ -7,7 +7,6 @@ import net.minecraft.entity.passive.FrogVariants;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.DyeColor;
 
 import java.util.ArrayList;
 import java.util.List;

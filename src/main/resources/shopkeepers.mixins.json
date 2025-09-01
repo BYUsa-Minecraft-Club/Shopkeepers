@@ -9,6 +9,7 @@
     "PlayerEntityMixin",
     "PlayerManagerMixin",
     "SimpleMerchantMixin",
+    "invoker.AxolotlEntityVariantSetter",
     "invoker.CatEntityVariationSetter",
     "invoker.FrogEntityVariantSetter",
     "invoker.ParrotEntityVariantSetter",
