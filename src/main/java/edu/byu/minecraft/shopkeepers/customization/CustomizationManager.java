@@ -20,6 +20,7 @@ public class CustomizationManager {
                                                                                                  SimpleGui guiParent) {
         List<? extends ShopkeeperCustomization<? extends Entity>> customization = switch (entity) {
             //specific types
+            case ArmadilloEntity ae -> ArmadilloCustomizations.getArmadilloCustomizations(ae);
             case AxolotlEntity ae -> AxolotlCustomizations.getAxolotlCustomizations(ae);
             case CatEntity ce -> CatCustomizations.getCatCustomizations(ce);
             case ChickenEntity ce -> ChickenCustomizations.getChickenCustomizations(ce);
