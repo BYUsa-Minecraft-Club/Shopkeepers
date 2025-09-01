@@ -1,16 +1,13 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
-import edu.byu.minecraft.shopkeepers.gui.MobSettingsGui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.List;
-import java.util.function.Function;
 
 public class CustomizationManager {
 
@@ -26,6 +23,7 @@ public class CustomizationManager {
             case WolfEntity we -> WolfCustomizations.getWolfCustomizations(we);
             case CatEntity ce -> CatCustomizations.getCatCustomizations(ce);
             case FrogEntity fe -> FrogCustomizations.getFrogCustomizations(fe);
+            case AxolotlEntity ae -> AxolotlCustomizations.getAxolotlCustomizations(ae);
 
             //generic types
             case TameableEntity te -> TameableMobCustomizations.getTameableCustomizations(te);
