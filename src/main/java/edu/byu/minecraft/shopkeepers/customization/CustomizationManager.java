@@ -34,6 +34,9 @@ public class CustomizationManager {
         if(entity instanceof CatEntity ce) {
             return options(ce, player, CatCustomizations::getCatCustomizations, guiParent);
         }
+        if(entity instanceof FrogEntity fe) {
+            return options(fe, player, FrogCustomizations::getFrogCustomizations, guiParent);
+        }
 
 
         //super types
