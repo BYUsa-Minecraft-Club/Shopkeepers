@@ -5,6 +5,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.RabbitEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -14,6 +15,8 @@ import java.util.function.Function;
 
 public class CustomizationManager {
     public static <E extends Entity> CustomizationButtonOptions<?> getCustomizationButtonOptions(E entity, ServerPlayerEntity player, SimpleGui guiParent) {
+
+        //specific types
         if (entity instanceof VillagerEntity ve) {
             return options(ve, player, VillagerCustomizations::getVillagerCustomizations, guiParent);
         }
@@ -23,6 +26,12 @@ public class CustomizationManager {
         if (entity instanceof RabbitEntity re) {
             return options(re, player, RabbitCustomizations::getRabbitCustomizations, guiParent);
         }
+
+        //super types
+        if (entity instanceof TameableEntity te) {
+            return options(te, player, TameableMobCustomizations::getTameableCustomizations, guiParent);
+        }
+
         return null;
     }
 
