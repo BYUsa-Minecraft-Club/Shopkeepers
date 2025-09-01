@@ -38,7 +38,7 @@ public class MooshroomCustomizations {
 
             @Override
             public ShopkeeperCustomization<MooshroomEntity> setNext(MooshroomEntity shopkeeper) {
-                MooshroomEntity.Variant next = CustomizationUtils.nextAlphabetically(shopkeeper.getVariant());
+                MooshroomEntity.Variant next = CustomizationUtils.nextAlphabetically(shopkeeper.getVariant(), MooshroomEntity.Variant.values());
                 ((MooshroomEntityVariantSetter) shopkeeper).invokeSetVariant(next);
                 return new MooshroomVariantCustomization(next);
             }

@@ -21,8 +21,8 @@ public class CustomizationUtils {
         return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
 
-    static <E extends Enum<E>> E nextAlphabetically(E e) {
-        E[] values = (E[]) e.getClass().getEnumConstants();
+    static <E extends Enum<E>> E nextAlphabetically(E e, E[] values) {
+        values = Arrays.copyOf(values, values.length);
         Arrays.sort(values, Comparator.comparing(Enum::name));
         int index = 0;
         for (int i = 0; i < values.length; i++) {

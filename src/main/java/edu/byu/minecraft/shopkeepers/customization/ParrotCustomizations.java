@@ -45,7 +45,7 @@ public class ParrotCustomizations {
 
         @Override
         public ShopkeeperCustomization<ParrotEntity> setNext(ParrotEntity shopkeeper) {
-            ParrotEntity.Variant next = CustomizationUtils.nextAlphabetically(shopkeeper.getVariant());
+            ParrotEntity.Variant next = CustomizationUtils.nextAlphabetically(shopkeeper.getVariant(), ParrotEntity.Variant.values());
             ((ParrotEntityVariantSetter) shopkeeper).invokeSetVariant(next);
             return new ParrotVariantCustomization(next);
         }

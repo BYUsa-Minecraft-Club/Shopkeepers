@@ -47,7 +47,7 @@ public class HorseCustomizations {
 
         @Override
         public ShopkeeperCustomization<HorseEntity> setNext(HorseEntity shopkeeper) {
-            HorseColor next = CustomizationUtils.nextAlphabetically(shopkeeper.getHorseColor());
+            HorseColor next = CustomizationUtils.nextAlphabetically(shopkeeper.getHorseColor(), HorseColor.values());
             ((HorseEntityVariantSetter) shopkeeper).invokeSetVariant(next, shopkeeper.getMarking());
             return new HorseBaseColorCustomization(next);
         }
@@ -79,7 +79,7 @@ public class HorseCustomizations {
 
         @Override
         public ShopkeeperCustomization<HorseEntity> setNext(HorseEntity shopkeeper) {
-            HorseMarking next = CustomizationUtils.nextAlphabetically(shopkeeper.getMarking());
+            HorseMarking next = CustomizationUtils.nextAlphabetically(shopkeeper.getMarking(), HorseMarking.values());
             ((HorseEntityVariantSetter) shopkeeper).invokeSetVariant(shopkeeper.getHorseColor(), next);
             return new HorseMarkingCustomization(next);
         }

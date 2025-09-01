@@ -83,7 +83,7 @@ public class ChickenCustomizations {
         @Override
         public ShopkeeperCustomization<ChickenEntity> setNext(ChickenEntity shopkeeper) {
             Variant current = Variant.of(shopkeeper.getVariant().getKey().orElseThrow());
-            Variant next = CustomizationUtils.nextAlphabetically(current);
+            Variant next = CustomizationUtils.nextAlphabetically(current, Variant.values());
             shopkeeper.setVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
             return new ChickenVariantCustomization(next);
         }

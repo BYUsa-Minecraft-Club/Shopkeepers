@@ -66,7 +66,7 @@ public class FrogCustomizations {
         @Override
         public ShopkeeperCustomization<FrogEntity> setNext(FrogEntity shopkeeper) {
             Variant current = Variant.of(shopkeeper.getVariant().getKey().orElseThrow());
-            Variant next = CustomizationUtils.nextAlphabetically(current);
+            Variant next = CustomizationUtils.nextAlphabetically(current, Variant.values());
             ((FrogEntityVariantSetter) shopkeeper).invokeSetVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
             return new FrogVariantCustomization(next);
         }
