@@ -31,6 +31,9 @@ public class CustomizationManager {
         if(entity instanceof WolfEntity we) {
             return options(we, player, WolfCustomizations::getWolfCustomizations, guiParent);
         }
+        if(entity instanceof CatEntity ce) {
+            return options(ce, player, CatCustomizations::getCatCustomizations, guiParent);
+        }
 
 
         //super types
