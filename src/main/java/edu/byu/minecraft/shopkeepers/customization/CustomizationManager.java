@@ -25,6 +25,7 @@ public class CustomizationManager {
             case CowEntity ce -> CowCustomizations.getCowCustomizations(ce);
             case FrogEntity fe -> FrogCustomizations.getFrogCustomizations(fe);
             case FoxEntity fe -> FoxCustomizations.getFoxCustomizations(fe);
+            case HorseEntity he -> HorseCustomizations.getHorseCustomizations(he);
             case MooshroomEntity me -> MooshroomCustomizations.getMooshroomCustomizations(me);
             case ParrotEntity pe -> ParrotCustomizations.getParrotCustomizations(pe);
             case PigEntity pe -> PigCustomizations.getPigCustomizations(pe);
