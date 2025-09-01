@@ -130,7 +130,7 @@ public class Commands {
             }
 
             Entity testEntity = SummonCommand.summon(context.getSource(), entity, executor.getPos().add(0, 1000, 0),
-                    shopkeeperSummonNbt(), true);
+                    shopkeeperSummonNbt(false), true);
             if(!(testEntity instanceof MobEntity)) {
                 context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " is not a mob, not adding"));
                 testEntity.kill(executor.getWorld());
@@ -217,7 +217,8 @@ public class Commands {
                 return 0;
             }
 
-            Entity shopkeeper = SummonCommand.summon(context.getSource(), entity, executor.getPos(), shopkeeperSummonNbt(), true);
+            Entity shopkeeper = SummonCommand.summon(context.getSource(), entity, executor.getPos(),
+                    shopkeeperSummonNbt(executor.isOnGround()), true);
             shopkeeper.teleport(executor.getWorld(), executor.getX(), executor.getY(), executor.getZ(),
                     new HashSet<>(), executor.getYaw(), executor.getPitch(), true);
 
@@ -237,12 +238,13 @@ public class Commands {
 
     }
 
-    private static NbtCompound shopkeeperSummonNbt() {
+    public static NbtCompound shopkeeperSummonNbt(boolean onGround) {
         NbtCompound nbt = new NbtCompound();
 
         nbt.putBoolean("NoAI", true);
         nbt.putBoolean("Invulnerable", true);
         nbt.putBoolean("Silent", true);
+        nbt.putBoolean("OnGround", onGround);
         nbt.putBoolean("NoGravity", true); //If you want to remove the no gravity, remove the move prevention from
         // EntityMixin (and you may need to find a new way to do that otherwise shopkeepers will be movable by
         // pistons), otherwise the game will become a lag-fest when any shopkeepers are loaded and not on the ground
