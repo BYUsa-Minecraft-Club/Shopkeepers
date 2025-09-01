@@ -25,7 +25,7 @@ public class RabbitCustomizations {
 
             @Override
             public String currentDescription() {
-                return CustomizationUtils.capitalizeRemoveUnderscores(variant.name());
+                return CustomizationUtils.capitalize(variant.name());
             }
 
             @Override
