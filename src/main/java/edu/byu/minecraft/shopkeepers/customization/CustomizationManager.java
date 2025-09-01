@@ -11,6 +11,8 @@ import java.util.List;
 
 public class CustomizationManager {
 
+    @SuppressWarnings("unchecked") //I know this is annoying, but this is the best way I figured out how to get the
+                                   //generics to work to make the customizations extendible
     public static <E extends Entity> CustomizationButtonOptions<E> getCustomizationButtonOptions(E entity,
                                                                                                  ServerPlayerEntity player,
                                                                                                  SimpleGui guiParent) {
@@ -21,6 +23,7 @@ public class CustomizationManager {
             case ChickenEntity ce -> ChickenCustomizations.getChickenCustomizations(ce);
             case CowEntity ce -> CowCustomizations.getCowCustomizations(ce);
             case FrogEntity fe -> FrogCustomizations.getFrogCustomizations(fe);
+            case MooshroomEntity me -> MooshroomCustomizations.getMooshroomCustomizations(me);
             case ParrotEntity pe -> ParrotCustomizations.getParrotCustomizations(pe);
             case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
             case VillagerEntity ve -> VillagerCustomizations.getVillagerCustomizations(ve);

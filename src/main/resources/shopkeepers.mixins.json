@@ -12,6 +12,7 @@
     "invoker.AxolotlEntityVariantSetter",
     "invoker.CatEntityVariationSetter",
     "invoker.FrogEntityVariantSetter",
+    "invoker.MooshroomEntityVariantSetter",
     "invoker.ParrotEntityVariantSetter",
     "invoker.RabbitEntityVariantSetter",
     "invoker.WolfEntityVariationAccesor"
