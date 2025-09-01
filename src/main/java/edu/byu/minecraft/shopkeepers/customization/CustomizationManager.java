@@ -16,14 +16,15 @@ public class CustomizationManager {
                                                                                                  SimpleGui guiParent) {
         List<? extends ShopkeeperCustomization<? extends Entity>> customization = switch (entity) {
             //specific types
-            case VillagerEntity ve -> VillagerCustomizations.getVillagerCustomizations(ve);
-            case ZombieVillagerEntity ze -> VillagerCustomizations.getVillagerCustomizations(ze);
-            case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
-            case ParrotEntity pe -> ParrotCustomizations.getParrotCustomizations(pe);
-            case WolfEntity we -> WolfCustomizations.getWolfCustomizations(we);
-            case CatEntity ce -> CatCustomizations.getCatCustomizations(ce);
-            case FrogEntity fe -> FrogCustomizations.getFrogCustomizations(fe);
             case AxolotlEntity ae -> AxolotlCustomizations.getAxolotlCustomizations(ae);
+            case CatEntity ce -> CatCustomizations.getCatCustomizations(ce);
+            case ChickenEntity ce -> ChickenCustomizations.getChickenCustomizations(ce);
+            case FrogEntity fe -> FrogCustomizations.getFrogCustomizations(fe);
+            case ParrotEntity pe -> ParrotCustomizations.getParrotCustomizations(pe);
+            case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
+            case VillagerEntity ve -> VillagerCustomizations.getVillagerCustomizations(ve);
+            case WolfEntity we -> WolfCustomizations.getWolfCustomizations(we);
+            case ZombieVillagerEntity ze -> VillagerCustomizations.getVillagerCustomizations(ze);
 
             //generic types
             case TameableEntity te -> TameableMobCustomizations.getTameableCustomizations(te);
