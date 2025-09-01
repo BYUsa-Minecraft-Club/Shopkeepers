@@ -14,6 +14,7 @@
     "invoker.FoxEntityVariationSetter",
     "invoker.FrogEntityVariantSetter",
     "invoker.HorseEntityVariantSetter",
+    "invoker.LlamaEntityVariantSetter",
     "invoker.MooshroomEntityVariantSetter",
     "invoker.ParrotEntityVariantSetter",
     "invoker.PigEntityVariantSetter",

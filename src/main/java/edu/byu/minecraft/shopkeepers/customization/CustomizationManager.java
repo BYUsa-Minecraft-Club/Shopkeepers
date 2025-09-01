@@ -1,6 +1,7 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
 import edu.byu.minecraft.shopkeepers.mixin.invoker.FoxEntityVariationSetter;
+import edu.byu.minecraft.shopkeepers.mixin.invoker.LlamaEntityVariantSetter;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
@@ -26,6 +27,7 @@ public class CustomizationManager {
             case FrogEntity fe -> FrogCustomizations.getFrogCustomizations(fe);
             case FoxEntity fe -> FoxCustomizations.getFoxCustomizations(fe);
             case HorseEntity he -> HorseCustomizations.getHorseCustomizations(he);
+            case LlamaEntity le -> LlamaCustomizations.getLlamaCustomizations(le); //also covers trader llama as TraderLlamaEntity extends LlamaEntity
             case MooshroomEntity me -> MooshroomCustomizations.getMooshroomCustomizations(me);
             case ParrotEntity pe -> ParrotCustomizations.getParrotCustomizations(pe);
             case PigEntity pe -> PigCustomizations.getPigCustomizations(pe);
