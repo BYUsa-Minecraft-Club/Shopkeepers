@@ -4,6 +4,7 @@ import edu.byu.minecraft.shopkeepers.gui.MobSettingsGui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
+import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class CustomizationManager {
+
     public static <E extends Entity> CustomizationButtonOptions<?> getCustomizationButtonOptions(E entity, ServerPlayerEntity player, SimpleGui guiParent) {
 
         //specific types
@@ -25,6 +27,9 @@ public class CustomizationManager {
         }
         if (entity instanceof RabbitEntity re) {
             return options(re, player, RabbitCustomizations::getRabbitCustomizations, guiParent);
+        }
+        if (entity instanceof ParrotEntity pe) {
+            return options(pe, player, ParrotCustomizations::getParrotCustomizations, guiParent);
         }
 
         //super types

@@ -6,6 +6,7 @@
     "EntityMixin",
     "LightningEntityMixin",
     "LviningEntityMixin",
+    "ParrotEntityVariantSetter",
     "PlayerEntityMixin",
     "PlayerManagerMixin",
     "RabbitEntityVariantSetter",
