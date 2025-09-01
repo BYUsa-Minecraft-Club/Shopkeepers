@@ -17,6 +17,7 @@ public class LlamaCustomizations {
         List<ShopkeeperCustomization<LlamaEntity>> customizations = new ArrayList<>();
         customizations.add(new LlamaVariantCustomization(llama.getVariant()));
         customizations.add(LlamaCarpetCustomization.forLlama(llama));
+        customizations.add(new AbstractDonkeyCustomizations.ChestedCustomization<>(llama));
         return customizations;
     }
 

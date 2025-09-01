@@ -38,6 +38,7 @@ public class CustomizationManager {
 
             //generic types
             case TameableEntity te -> TameableMobCustomizations.getTameableCustomizations(te);
+            case AbstractDonkeyEntity abe -> AbstractDonkeyCustomizations.getAbstractDonkeyCustomizations(abe);
             default -> null;
         };
 
