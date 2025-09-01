@@ -4,4 +4,6 @@ import edu.byu.minecraft.shopkeepers.gui.MobSettingsGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 
-public record CustomizationButtonOptions<E extends Entity>(Item mobSpawnEgg, MobSettingsGui<E> settingsGui, String mobName) {}
+import java.util.List;
+
+public record CustomizationButtonOptions<E extends Entity>(Item mobSpawnEgg, List<ShopkeeperCustomization<E>> customizations, String mobName) {}

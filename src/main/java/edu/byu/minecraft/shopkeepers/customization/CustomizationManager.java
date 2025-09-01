@@ -3,6 +3,7 @@ package edu.byu.minecraft.shopkeepers.customization;
 import edu.byu.minecraft.shopkeepers.gui.MobSettingsGui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.item.SpawnEggItem;
@@ -13,45 +14,28 @@ import java.util.function.Function;
 
 public class CustomizationManager {
 
-    public static <E extends Entity> CustomizationButtonOptions<?> getCustomizationButtonOptions(E entity, ServerPlayerEntity player, SimpleGui guiParent) {
+    public static <E extends Entity> CustomizationButtonOptions<E> getCustomizationButtonOptions(E entity,
+                                                                                                 ServerPlayerEntity player,
+                                                                                                 SimpleGui guiParent) {
+        List<? extends ShopkeeperCustomization<? extends Entity>> customization = switch (entity) {
+            //specific types
+            case VillagerEntity ve -> VillagerCustomizations.getVillagerCustomizations(ve);
+            case ZombieVillagerEntity ze -> VillagerCustomizations.getVillagerCustomizations(ze);
+            case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
+            case ParrotEntity pe -> ParrotCustomizations.getParrotCustomizations(pe);
+            case WolfEntity we -> WolfCustomizations.getWolfCustomizations(we);
+            case CatEntity ce -> CatCustomizations.getCatCustomizations(ce);
+            case FrogEntity fe -> FrogCustomizations.getFrogCustomizations(fe);
 
-        //specific types
-        if (entity instanceof VillagerEntity ve) {
-            return options(ve, player, VillagerCustomizations::getVillagerCustomizations, guiParent);
-        }
-        if (entity instanceof ZombieVillagerEntity zve) {
-            return options(zve, player, VillagerCustomizations::getVillagerCustomizations, guiParent);
-        }
-        if (entity instanceof RabbitEntity re) {
-            return options(re, player, RabbitCustomizations::getRabbitCustomizations, guiParent);
-        }
-        if (entity instanceof ParrotEntity pe) {
-            return options(pe, player, ParrotCustomizations::getParrotCustomizations, guiParent);
-        }
-        if(entity instanceof WolfEntity we) {
-            return options(we, player, WolfCustomizations::getWolfCustomizations, guiParent);
-        }
-        if(entity instanceof CatEntity ce) {
-            return options(ce, player, CatCustomizations::getCatCustomizations, guiParent);
-        }
-        if(entity instanceof FrogEntity fe) {
-            return options(fe, player, FrogCustomizations::getFrogCustomizations, guiParent);
-        }
+            //generic types
+            case TameableEntity te -> TameableMobCustomizations.getTameableCustomizations(te);
+            default -> null;
+        };
 
+        if (customization == null) return null;
 
-        //super types
-        if (entity instanceof TameableEntity te) {
-            return options(te, player, TameableMobCustomizations::getTameableCustomizations, guiParent);
-        }
-
-        return null;
-    }
-
-    private static <E extends Entity> CustomizationButtonOptions<E> options(E entity, ServerPlayerEntity player,
-                                                                            Function<E, List<ShopkeeperCustomization<E>>> customizations,
-                                                                            SimpleGui guiParent) {
         return new CustomizationButtonOptions<>(SpawnEggItem.forEntity(entity.getType()),
-                new MobSettingsGui<>(player, entity, customizations.apply(entity), guiParent),
+                (List<ShopkeeperCustomization<E>>) customization,
                 CustomizationUtils.capitalize(entity.getType().getName().getString()));
     }
 }

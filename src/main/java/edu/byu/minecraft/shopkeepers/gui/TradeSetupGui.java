@@ -104,14 +104,16 @@ public abstract class TradeSetupGui extends SimpleGui {
     }
 
     protected void mobOptions(int slot) {
-        CustomizationButtonOptions<?> buttonOptions =
-                CustomizationManager.getCustomizationButtonOptions(shopkeeper, player, this);
-        if (buttonOptions != null) {
+        CustomizationButtonOptions<Entity>
+                buttonOptions = CustomizationManager.getCustomizationButtonOptions(shopkeeper, player, this);
+        if (buttonOptions == null) {
+            setSlot(slot, GuiUtils.EMPTY_SLOT);
+        } else if (buttonOptions.customizations().size() > 1) {
             setSlot(slot, new GuiElementBuilder(buttonOptions.mobSpawnEgg())
                     .setItemName(Text.of("Edit " + buttonOptions.mobName() + " Options"))
-                    .setCallback(() -> buttonOptions.settingsGui().open()).build());
+                    .setCallback(() -> new MobSettingsGui<>(player, shopkeeper, buttonOptions.customizations(), this).open()).build());
         } else {
-            setSlot(slot, GuiUtils.EMPTY_SLOT);
+            MobSettingsGui.setupSlot(this, shopkeeper, slot, buttonOptions.customizations(), 0);
         }
     }
 

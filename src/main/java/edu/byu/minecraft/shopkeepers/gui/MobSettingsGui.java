@@ -24,9 +24,8 @@ public class MobSettingsGui<E extends Entity> extends SimpleGui {
         this.shopkeeper = shopkeeper;
         this.customizations = new ArrayList<>(customizations);
 
-        int index = 0;
         for (int i = 0; i < customizations.size(); i++) {
-            setupSlot(i);
+            setupSlot(this, shopkeeper, i, customizations, i);
         }
 
         for (int i = customizations.size(); i < 26; i++) {
@@ -40,14 +39,15 @@ public class MobSettingsGui<E extends Entity> extends SimpleGui {
         }).build());
     }
 
-    private void setupSlot(int index) {
+    static <E extends Entity> void setupSlot(SimpleGui gui, E shopkeeper, int slot,
+                                             List<ShopkeeperCustomization<E>> customizations, int index) {
         ShopkeeperCustomization<E> customization = customizations.get(index);
-        setSlot(index, new GuiElementBuilder(customization.getCurrentRepresentationItem()).setItemName(
+        gui.setSlot(slot, new GuiElementBuilder(customization.getCurrentRepresentationItem()).setItemName(
                 Text.of("Cycle " + customization.customizationDescription())).setLore(
                 List.of(Text.of("Current " + customization.customizationDescription() + ": "),
                         Text.of(customization.currentDescription()))).setCallback(() -> {
             customizations.set(index, customization.setNext(shopkeeper));
-            setupSlot(index);
+            setupSlot(gui, shopkeeper, slot, customizations, index);
         }));
     }
 }
