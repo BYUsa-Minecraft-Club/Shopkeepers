@@ -9,6 +9,7 @@ import net.minecraft.entity.passive.*;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomizationManager {
@@ -18,8 +19,13 @@ public class CustomizationManager {
     public static <E extends Entity> CustomizationButtonOptions<E> getCustomizationButtonOptions(E entity,
                                                                                                  ServerPlayerEntity player,
                                                                                                  SimpleGui guiParent) {
+        HeldItemCustomization heldItemCustomization = switch (entity) {
+            case AllayEntity ae -> AllayCustomizations.getHeldItemCustomization(ae);
+            default -> null;
+        };
+
+        //specific types
         List<? extends ShopkeeperCustomization<? extends Entity>> customization = switch (entity) {
-            //specific types
             case ArmadilloEntity ae -> ArmadilloCustomizations.getArmadilloCustomizations(ae);
             case AxolotlEntity ae -> AxolotlCustomizations.getAxolotlCustomizations(ae);
             case CatEntity ce -> CatCustomizations.getCatCustomizations(ce);
@@ -37,16 +43,25 @@ public class CustomizationManager {
             case WolfEntity we -> WolfCustomizations.getWolfCustomizations(we);
             case ZombieVillagerEntity ze -> VillagerCustomizations.getVillagerCustomizations(ze);
 
-            //generic types
-            case TameableEntity te -> TameableMobCustomizations.getTameableCustomizations(te);
-            case AbstractDonkeyEntity abe -> AbstractDonkeyCustomizations.getAbstractDonkeyCustomizations(abe);
-            default -> null;
+            default -> new ArrayList<>();
         };
 
-        if (customization == null) return null;
+        //generic types
+        if(customization.isEmpty()) {
+            customization = switch (entity) {
+                case TameableEntity te -> TameableMobCustomizations.getTameableCustomizations(te);
+                case AbstractDonkeyEntity abe -> AbstractDonkeyCustomizations.getAbstractDonkeyCustomizations(abe);
+                default -> new ArrayList<>();
+            };
+        }
+
+        if (customization.isEmpty() && heldItemCustomization == null) {
+            return null;
+        }
 
         return new CustomizationButtonOptions<>(SpawnEggItem.forEntity(entity.getType()),
                 (List<ShopkeeperCustomization<E>>) customization,
+                heldItemCustomization,
                 CustomizationUtils.capitalize(entity.getType().getName().getString()));
     }
 }

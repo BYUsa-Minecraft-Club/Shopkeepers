@@ -108,10 +108,18 @@ public abstract class TradeSetupGui extends SimpleGui {
                 buttonOptions = CustomizationManager.getCustomizationButtonOptions(shopkeeper, player, this);
         if (buttonOptions == null) {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
-        } else if (buttonOptions.customizations().size() > 1) {
-            setSlot(slot, new GuiElementBuilder(buttonOptions.mobSpawnEgg())
-                    .setItemName(Text.of("Edit " + buttonOptions.mobName() + " Options"))
-                    .setCallback(() -> new MobSettingsGui<>(player, shopkeeper, buttonOptions.customizations(), this).open()).build());
+        } else if (buttonOptions.customizations().size() > 1 || buttonOptions.heldItemCustomization() != null) {
+            GuiElementBuilder builder = new GuiElementBuilder(buttonOptions.mobSpawnEgg())
+                    .setItemName(Text.of("Edit " + buttonOptions.mobName() + " Options"));
+
+            if (buttonOptions.heldItemCustomization() != null) {
+                builder.setCallback(() -> new HeldItemGui<>(player, shopkeeper, buttonOptions.customizations(),
+                        buttonOptions.heldItemCustomization(), this).open());
+            } else {
+                builder.setCallback(() -> new MobSettingsGui<>(player, shopkeeper, buttonOptions.customizations(), this).open());
+            }
+
+            setSlot(slot, builder.build());
         } else {
             MobSettingsGui.setupSlot(this, shopkeeper, slot, buttonOptions.customizations(), 0);
         }

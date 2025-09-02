@@ -5,4 +5,7 @@ import net.minecraft.item.Item;
 
 import java.util.List;
 
-public record CustomizationButtonOptions<E extends Entity>(Item mobSpawnEgg, List<ShopkeeperCustomization<E>> customizations, String mobName) {}
+public record CustomizationButtonOptions<E extends Entity>(Item mobSpawnEgg,
+                                                           List<ShopkeeperCustomization<E>> customizations,
+                                                           HeldItemCustomization heldItemCustomization,
+                                                           String mobName) {}

@@ -15,14 +15,10 @@ import java.util.List;
 
 public class MobSettingsGui<E extends Entity> extends SimpleGui {
 
-    private final E shopkeeper;
-    private final List<ShopkeeperCustomization<E>> customizations;
-
     public MobSettingsGui(ServerPlayerEntity player, E shopkeeper,
                           List<ShopkeeperCustomization<E>> customizations, SimpleGui parent) {
         super(ScreenHandlerType.GENERIC_9X3, player, false);
-        this.shopkeeper = shopkeeper;
-        this.customizations = new ArrayList<>(customizations);
+        customizations = new ArrayList<>(customizations);
 
         for (int i = 0; i < customizations.size(); i++) {
             setupSlot(this, shopkeeper, i, customizations, i);
