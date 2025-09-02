@@ -6,6 +6,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.EndermanEntity;
+import net.minecraft.entity.mob.SlimeEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.item.SpawnEggItem;
@@ -49,6 +50,7 @@ public class CustomizationManager {
             case PigEntity pe -> PigCustomizations.getPigCustomizations(pe);
             case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
             case SheepEntity se -> SheepCustomizations.getSheepCustomizations(se);
+            case SlimeEntity se -> SlimeCustomizations.getSlimeCustomizations(se); //also covers Magma Cube
             case TropicalFishEntity tfe -> TropicalFishCustomizations.getTropicalFishCustomizations(tfe);
             case VillagerEntity ve -> VillagerCustomizations.getVillagerCustomizations(ve);
             case WolfEntity we -> WolfCustomizations.getWolfCustomizations(we);
