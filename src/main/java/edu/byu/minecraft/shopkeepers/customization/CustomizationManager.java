@@ -45,9 +45,10 @@ public class CustomizationManager {
             case PigEntity pe -> PigCustomizations.getPigCustomizations(pe);
             case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
             case SheepEntity se -> SheepCustomizations.getSheepCustomizations(se);
+            case TropicalFishEntity tfe -> TropicalFishCustomizations.getTropicalFishCustomizations(tfe);
             case VillagerEntity ve -> VillagerCustomizations.getVillagerCustomizations(ve);
             case WolfEntity we -> WolfCustomizations.getWolfCustomizations(we);
-            case ZombieVillagerEntity ze -> VillagerCustomizations.getVillagerCustomizations(ze);
+            case ZombieVillagerEntity zve -> VillagerCustomizations.getVillagerCustomizations(zve);
 
             default -> new ArrayList<>();
         };
