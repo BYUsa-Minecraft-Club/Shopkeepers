@@ -12,6 +12,8 @@
     "invoker.AxolotlEntityVariantSetter",
     "invoker.BeeEntityVariationSetter",
     "invoker.CatEntityVariationSetter",
+    "invoker.CreeperEntityVariationSetter",
+    "invoker.EntityDataTrackerAccessor",
     "invoker.FoxEntityVariationSetter",
     "invoker.FrogEntityVariantSetter",
     "invoker.HorseEntityVariantSetter",

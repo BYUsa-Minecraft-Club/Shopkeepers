@@ -4,6 +4,7 @@ import edu.byu.minecraft.shopkeepers.mixin.invoker.FoxEntityVariationSetter;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.LlamaEntityVariantSetter;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.*;
@@ -35,6 +36,7 @@ public class CustomizationManager {
             case BeeEntity be -> BeeCustomizations.getBeeCustomizations(be);
             case CatEntity ce -> CatCustomizations.getCatCustomizations(ce);
             case ChickenEntity ce -> ChickenCustomizations.getChickenCustomizations(ce);
+            case CreeperEntity ce -> CreeperCustomizations.getCreeperCustomizations(ce);
             case CowEntity ce -> CowCustomizations.getCowCustomizations(ce);
             case FrogEntity fe -> FrogCustomizations.getFrogCustomizations(fe);
             case FoxEntity fe -> FoxCustomizations.getFoxCustomizations(fe);
