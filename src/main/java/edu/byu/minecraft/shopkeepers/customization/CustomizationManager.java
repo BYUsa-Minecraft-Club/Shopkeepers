@@ -4,6 +4,7 @@ import edu.byu.minecraft.shopkeepers.mixin.invoker.FoxEntityVariationSetter;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.LlamaEntityVariantSetter;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.item.SpawnEggItem;
@@ -21,6 +22,8 @@ public class CustomizationManager {
                                                                                                  SimpleGui guiParent) {
         HeldItemCustomization heldItemCustomization = switch (entity) {
             case AllayEntity ae -> AllayCustomizations.getHeldItemCustomization(ae);
+            case EndermanEntity ee -> EndermanCustomization.getHeldItemCustomization(ee);
+
             default -> null;
         };
 
