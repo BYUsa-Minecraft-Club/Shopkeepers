@@ -16,6 +16,7 @@
     "invoker.EntityDataTrackerAccessor",
     "invoker.FoxEntityVariationSetter",
     "invoker.FrogEntityVariantSetter",
+    "invoker.GoatEntityVariationSetter",
     "invoker.HorseEntityVariantSetter",
     "invoker.LlamaEntityVariantSetter",
     "invoker.MooshroomEntityVariantSetter",
