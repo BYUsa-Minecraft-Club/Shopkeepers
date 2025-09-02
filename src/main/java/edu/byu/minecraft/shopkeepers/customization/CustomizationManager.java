@@ -31,6 +31,7 @@ public class CustomizationManager {
         List<? extends ShopkeeperCustomization<? extends Entity>> customization = switch (entity) {
             case ArmadilloEntity ae -> ArmadilloCustomizations.getArmadilloCustomizations(ae);
             case AxolotlEntity ae -> AxolotlCustomizations.getAxolotlCustomizations(ae);
+            case BatEntity be -> BatCustomizations.getBatCustomizations(be);
             case CatEntity ce -> CatCustomizations.getCatCustomizations(ce);
             case ChickenEntity ce -> ChickenCustomizations.getChickenCustomizations(ce);
             case CowEntity ce -> CowCustomizations.getCowCustomizations(ce);
