@@ -53,6 +53,7 @@ public class CustomizationManager {
             case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
             case SheepEntity se -> SheepCustomizations.getSheepCustomizations(se);
             case SlimeEntity se -> SlimeCustomizations.getSlimeCustomizations(se); //also covers Magma Cube
+            case SnowGolemEntity sge -> SnowGolemCustomizations.getSnowGolemCustomizations(sge);
             case TropicalFishEntity tfe -> TropicalFishCustomizations.getTropicalFishCustomizations(tfe);
             case VillagerEntity ve -> VillagerCustomizations.getVillagerCustomizations(ve);
             case WolfEntity we -> WolfCustomizations.getWolfCustomizations(we);
