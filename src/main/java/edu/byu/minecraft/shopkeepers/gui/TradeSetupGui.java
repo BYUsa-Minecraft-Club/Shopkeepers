@@ -218,6 +218,11 @@ public abstract class TradeSetupGui extends SimpleGui {
             shopkeeperData.trades().removeIf(Objects::isNull);
             Shopkeepers.getData().markDirty();
         }
+    }
+
+    @Override
+    public void onScreenHandlerClosed() {
+        super.onScreenHandlerClosed();
         Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid(), player.getUuid());
     }
 

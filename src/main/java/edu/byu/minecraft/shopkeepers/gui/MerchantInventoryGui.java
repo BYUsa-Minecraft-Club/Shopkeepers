@@ -76,7 +76,11 @@ public class MerchantInventoryGui extends SimpleGui {
             }
         }
         Shopkeepers.getData().markDirty();
+    }
 
+    @Override
+    public void onScreenHandlerClosed() {
+        super.onScreenHandlerClosed();
         Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid(), player.getUuid());
     }
 }

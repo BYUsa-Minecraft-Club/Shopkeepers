@@ -156,8 +156,8 @@ public class OfferGui extends MerchantGui {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void onScreenHandlerClosed() {
+        super.onScreenHandlerClosed();
         Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid(), player.getUuid());
     }
 }
