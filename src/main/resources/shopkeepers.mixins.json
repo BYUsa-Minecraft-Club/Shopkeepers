@@ -5,7 +5,7 @@
   "mixins": [
     "EntityMixin",
     "LightningEntityMixin",
-    "LviningEntityMixin",
+    "LivingEntityMixin",
     "PlayerEntityMixin",
     "PlayerManagerMixin",
     "SimpleMerchantMixin",
