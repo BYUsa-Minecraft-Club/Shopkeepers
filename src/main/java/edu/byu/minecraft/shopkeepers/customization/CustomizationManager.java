@@ -49,6 +49,7 @@ public class CustomizationManager {
             case PandaEntity pe -> PandaCustomizations.getPandaCustomizations(pe);
             case ParrotEntity pe -> ParrotCustomizations.getParrotCustomizations(pe);
             case PigEntity pe -> PigCustomizations.getPigCustomizations(pe);
+            case PufferfishEntity pe -> PufferfishCustomizations.getPufferfishCustomizations(pe);
             case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
             case SheepEntity se -> SheepCustomizations.getSheepCustomizations(se);
             case SlimeEntity se -> SlimeCustomizations.getSlimeCustomizations(se); //also covers Magma Cube
