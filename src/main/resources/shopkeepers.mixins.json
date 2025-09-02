@@ -23,6 +23,7 @@
     "invoker.ParrotEntityVariantSetter",
     "invoker.PigEntityVariantSetter",
     "invoker.RabbitEntityVariantSetter",
+    "invoker.SalmonEntityVariantSetter",
     "invoker.TropicalFishEntityVariationSetter",
     "invoker.WolfEntityVariationAccesor"
   ],

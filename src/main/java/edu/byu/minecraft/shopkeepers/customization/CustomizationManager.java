@@ -51,6 +51,7 @@ public class CustomizationManager {
             case PigEntity pe -> PigCustomizations.getPigCustomizations(pe);
             case PufferfishEntity pe -> PufferfishCustomizations.getPufferfishCustomizations(pe);
             case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
+            case SalmonEntity se -> SalmonCustomizations.getSalmonCustomizations(se);
             case SheepEntity se -> SheepCustomizations.getSheepCustomizations(se);
             case SlimeEntity se -> SlimeCustomizations.getSlimeCustomizations(se); //also covers Magma Cube
             case SnowGolemEntity sge -> SnowGolemCustomizations.getSnowGolemCustomizations(sge);
