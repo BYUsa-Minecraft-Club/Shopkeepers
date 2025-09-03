@@ -78,7 +78,8 @@ public class Commands {
                                 .executes(Commands::playerShopLimitSet))
                                     .then(argument("player", StringArgumentType.word())
                                             .suggests(CustomSuggestionProviders::allPlayers)
-                                            .executes(Commands::onePlayerShopLimitSet)))
+                                                .then(CommandManager.argument("max", IntegerArgumentType.integer())
+                                                        .executes(Commands::onePlayerShopLimitSet))))
                         .then(literal("list").executes(Commands::listShopLimits))
                         .then(literal("remove").then(argument("player", StringArgumentType.word())
                                 .suggests(CustomSuggestionProviders::allPlayers)
@@ -272,18 +273,23 @@ public class Commands {
                 .filter(sd -> sd.owners().contains(executor.getUuid()))
                 .mapToDouble(sd -> 1.0 / sd.owners().size())
                 .sum();
-        int maxShops = Shopkeepers.getData().getMaxOwnedShops();
+        int maxShops = Shopkeepers.getData().getMaxOwnedShops();;
+        String maxShopOwner = "the";
+        if(Shopkeepers.getData().getPlayerMaxOwnedShops().containsKey(executor.getUuid())) {
+            maxShops = Shopkeepers.getData().getPlayerMaxOwnedShops().get(executor.getUuid());
+            maxShopOwner = "your";
+        }
         if (ownedShops >= maxShops) {
             String relationshipDescription = (ownedShops == maxShops) ? "at" : "greater than";
             if(executor.getServer() != null && executor.getServer().getPlayerManager().isOperator(executor.getGameProfile())) {
                 executor.sendMessage(Text.of(String.format("Warning: you already own %.2f current shops (adjusted for multiple owners)," +
-                        " %s the normal max of %d. Since you are a server operator," +
+                        " %s %s normal max of %d. Since you are a server operator," +
                         " you are allowed to bypass the limit. Continuing with shop creation.",
-                        ownedShops, relationshipDescription, maxShops)));
+                        ownedShops, relationshipDescription, maxShopOwner, maxShops)));
             } else {
                 executor.sendMessage(Text.of(String.format("You already own %.2f current shops (adjusted for multiple owners)," +
-                                " %s the max of %d. Disband another shop if you want to make a new one",
-                        ownedShops, relationshipDescription, maxShops)));
+                                " %s %s max of %d. Disband another shop(s) if you want to make a new one",
+                        ownedShops, relationshipDescription, maxShopOwner, maxShops)));
                 return 0;
             }
         }
