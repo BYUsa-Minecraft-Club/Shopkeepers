@@ -25,9 +25,13 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.SummonCommand;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -99,13 +103,21 @@ public class Commands {
             builder.append(TAB).append("/shopkeepers admin playershoplimit get <player name>   - displays the current maximum number of shops for specified player\n");
             builder.append(TAB).append("/shopkeepers admin playershoplimit set <integer>   - sets the maximum number of shops players can own\n");
             builder.append(TAB).append("/shopkeepers admin playershoplimit set <integer> <player name>   - sets the maximum number of shops specified player can own\n");
-            builder.append(TAB).append("/shopkeepers admin playershoplimit remove <player name>   - removes the specific limit for specified player (reverts to default\n");
+            builder.append(TAB).append("/shopkeepers admin playershoplimit remove <player name>   - removes the specific limit for specified player (reverts to default)\n");
             builder.append(TAB).append("/shopkeepers admin playershoplimit list   - lists shop limits for any player with a limit set\n");
+            builder.append("(click for more readable documentation)");
+        } else {
+            builder.deleteCharAt(builder.length() - 1);
         }
 
-        builder.deleteCharAt(builder.length() - 1);
+        Text text = Text.of(builder.toString());
+        try {
+                text = text.getWithStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(new URI(
+                        "https://github.com/BYUsa-Minecraft-Club/Shopkeepers/blob/master/README.md"
+                )))).getFirst();
+        } catch (URISyntaxException ignored) {}
 
-        context.getSource().sendMessage(Text.of(builder.toString()));
+        context.getSource().sendMessage(text);
         return 1;
     }
 
