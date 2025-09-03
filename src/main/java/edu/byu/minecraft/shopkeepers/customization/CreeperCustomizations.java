@@ -35,7 +35,6 @@ public class CreeperCustomizations {
 
         @Override
         public ShopkeeperCustomization<CreeperEntity> setNext(CreeperEntity shopkeeper) {
-            boolean isCharged = shopkeeper.isCharged();
             ((CreeperEditor) shopkeeper).shopkeepers$setCharged(!isCharged);
             return new CreeperChargedCustomization(!isCharged);
         }

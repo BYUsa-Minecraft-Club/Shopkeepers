@@ -41,7 +41,7 @@ public class AxolotlCustomizations {
 
             @Override
             public ShopkeeperCustomization<AxolotlEntity> setNext(AxolotlEntity shopkeeper) {
-                AxolotlEntity.Variant next = CustomizationUtils.nextAlphabetically(shopkeeper.getVariant(), AxolotlEntity.Variant.values());
+                AxolotlEntity.Variant next = CustomizationUtils.nextAlphabetically(variant, AxolotlEntity.Variant.values());
                 ((AxolotlEntityVariantSetter) shopkeeper).invokeSetVariant(next);
                 return new AxolotlVariantCustomization(next);
             }

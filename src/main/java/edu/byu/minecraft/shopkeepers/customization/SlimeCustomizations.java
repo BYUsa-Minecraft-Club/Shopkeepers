@@ -46,7 +46,7 @@ public class SlimeCustomizations {
 
         @Override
         public ShopkeeperCustomization<SlimeEntity> setNext(SlimeEntity shopkeeper) {
-            int next = (shopkeeper.getSize() % 4) + 1;
+            int next = (size % 4) + 1;
             shopkeeper.setSize(next, true);
             return new SlimeSizeCustomization(next);
         }

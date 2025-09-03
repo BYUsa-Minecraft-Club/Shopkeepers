@@ -44,7 +44,7 @@ public class PufferfishCustomizations {
 
         @Override
         public ShopkeeperCustomization<PufferfishEntity> setNext(PufferfishEntity shopkeeper) {
-            int next = (shopkeeper.getPuffState() + 1) % 3;
+            int next = (size + 1) % 3;
             shopkeeper.setPuffState(next);
             return new PufferfishSizeCustomization(next);
         }

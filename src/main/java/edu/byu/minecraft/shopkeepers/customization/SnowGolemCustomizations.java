@@ -34,7 +34,6 @@ public class SnowGolemCustomizations {
 
         @Override
         public ShopkeeperCustomization<SnowGolemEntity> setNext(SnowGolemEntity shopkeeper) {
-            boolean hasPumpkin = shopkeeper.hasPumpkin();
             shopkeeper.setHasPumpkin(!hasPumpkin);
             return new SnowGolemPumpkinCustomization(!hasPumpkin);
         }

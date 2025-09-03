@@ -35,7 +35,6 @@ public class GoatCustomizations {
 
         @Override
         public ShopkeeperCustomization<GoatEntity> setNext(GoatEntity shopkeeper) {
-            boolean hasHorn = shopkeeper.hasLeftHorn();
             ((GoatEditor) shopkeeper).shopkeepers$setHasHorn(false, !hasHorn);
             return new GoatLeftHornCustomization(!hasHorn);
         }
@@ -61,7 +60,6 @@ public class GoatCustomizations {
 
         @Override
         public ShopkeeperCustomization<GoatEntity> setNext(GoatEntity shopkeeper) {
-            boolean hasHorn = shopkeeper.hasRightHorn();
             ((GoatEditor) shopkeeper).shopkeepers$setHasHorn(true, !hasHorn);
             return new GoatRightHornCustomization(!hasHorn);
         }

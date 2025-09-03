@@ -45,7 +45,7 @@ public class LlamaCustomizations {
 
             @Override
             public ShopkeeperCustomization<LlamaEntity> setNext(LlamaEntity shopkeeper) {
-                LlamaEntity.Variant next = CustomizationUtils.nextAlphabetically(shopkeeper.getVariant(), LlamaEntity.Variant.values());
+                LlamaEntity.Variant next = CustomizationUtils.nextAlphabetically(variant, LlamaEntity.Variant.values());
                 ((LlamaEntityVariantSetter) shopkeeper).invokeSetVariant(next);
                 return new LlamaVariantCustomization(next);
             }
@@ -94,7 +94,7 @@ public class LlamaCustomizations {
 
         @Override
         public ShopkeeperCustomization<LlamaEntity> setNext(LlamaEntity shopkeeper) {
-            DyeColorWithNone next = CustomizationUtils.nextAlphabetically(forLlama(shopkeeper).carpet, DyeColorWithNone.values());
+            DyeColorWithNone next = CustomizationUtils.nextAlphabetically(carpet, DyeColorWithNone.values());
             shopkeeper.equipBodyArmor(new ItemStack(switch (next) {
                 case NONE -> ItemStack.EMPTY.getItem();
                 case WHITE -> Items.WHITE_CARPET;

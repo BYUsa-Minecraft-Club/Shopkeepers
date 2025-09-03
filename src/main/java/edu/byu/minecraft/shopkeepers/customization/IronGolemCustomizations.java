@@ -43,7 +43,7 @@ public class IronGolemCustomizations {
 
         @Override
         public ShopkeeperCustomization<IronGolemEntity> setNext(IronGolemEntity shopkeeper) {
-            var next = CustomizationUtils.nextAlphabetically(shopkeeper.getCrackLevel(), Cracks.CrackLevel.values());
+            var next = CustomizationUtils.nextAlphabetically(crackLevel, Cracks.CrackLevel.values());
             shopkeeper.setHealth(switch (next) {
                 case NONE -> 80.0F;
                 case LOW -> 60.0F;

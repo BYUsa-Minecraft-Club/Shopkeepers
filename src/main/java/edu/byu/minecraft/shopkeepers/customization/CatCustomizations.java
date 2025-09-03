@@ -79,8 +79,7 @@ public class CatCustomizations {
 
         @Override
         public ShopkeeperCustomization<CatEntity> setNext(CatEntity shopkeeper) {
-            Variant current = Variant.of(shopkeeper.getVariant().getKey().orElseThrow());
-            Variant next = CustomizationUtils.nextAlphabetically(current, Variant.values());
+            Variant next = CustomizationUtils.nextAlphabetically(variant, Variant.values());
             ((CatEntityVariationSetter) shopkeeper).invokeSetVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
             return new CatVariantCustomization(next);
         }
@@ -105,7 +104,7 @@ public class CatCustomizations {
 
         @Override
         public ShopkeeperCustomization<CatEntity> setNext(CatEntity shopkeeper) {
-            DyeColor next = CustomizationUtils.nextAlphabetically(shopkeeper.getCollarColor(), DyeColor.values());
+            DyeColor next = CustomizationUtils.nextAlphabetically(color, DyeColor.values());
             ((CatEntityVariationSetter) shopkeeper).invokeSetCollarColor(next);
             return new CatCollarCustomization(next);
         }

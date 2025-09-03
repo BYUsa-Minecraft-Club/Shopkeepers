@@ -80,8 +80,7 @@ public class WolfCustomizations {
 
         @Override
         public ShopkeeperCustomization<WolfEntity> setNext(WolfEntity shopkeeper) {
-            Variant current = Variant.of(((WolfEntityVariationAccesor) shopkeeper).invokeGetVariant().getKey().orElseThrow());
-            Variant next = CustomizationUtils.nextAlphabetically(current, Variant.values());
+            Variant next = CustomizationUtils.nextAlphabetically(variant, Variant.values());
             ((WolfEntityVariationAccesor) shopkeeper).invokeSetVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
             return new WolfVariantCustomization(next);
         }
@@ -106,7 +105,7 @@ public class WolfCustomizations {
 
         @Override
         public ShopkeeperCustomization<WolfEntity> setNext(WolfEntity shopkeeper) {
-            DyeColor next = CustomizationUtils.nextAlphabetically(shopkeeper.getCollarColor(), DyeColor.values());
+            DyeColor next = CustomizationUtils.nextAlphabetically(color, DyeColor.values());
             ((WolfEntityVariationAccesor) shopkeeper).invokeSetCollarColor(next);
             return new WolfCollarCustomization(next);
         }

@@ -37,7 +37,6 @@ public class BeeCustomizations {
 
         @Override
         public BeeNectarCustomization setNext(BeeEntity shopkeeper) {
-            boolean hasNectar = shopkeeper.hasNectar();
             ((BeeEntityVariationSetter) shopkeeper).invokeSetHasNectar(!hasNectar);
             return new BeeNectarCustomization(!hasNectar);
         }
@@ -62,9 +61,9 @@ public class BeeCustomizations {
 
         @Override
         public BeeStingerCustomization setNext(BeeEntity shopkeeper) {
-            boolean hasStung = shopkeeper.hasStung();
-            ((BeeEntityVariationSetter) shopkeeper).invokeSetHasStung(!hasStung);
-            return new BeeStingerCustomization(hasStung);
+            ((BeeEntityVariationSetter) shopkeeper).invokeSetHasStung(hasStinger); //since this is a negative, we set
+            // it to what the boolean currently is rather than will be
+            return new BeeStingerCustomization(!hasStinger);
         }
     }
 

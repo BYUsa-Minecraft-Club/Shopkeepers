@@ -39,7 +39,7 @@ public class SalmonCustomizations {
 
             @Override
             public ShopkeeperCustomization<SalmonEntity> setNext(SalmonEntity shopkeeper) {
-                SalmonEntity.Variant next = CustomizationUtils.nextAlphabetically(shopkeeper.getVariant(), SalmonEntity.Variant.values());
+                SalmonEntity.Variant next = CustomizationUtils.nextAlphabetically(variant, SalmonEntity.Variant.values());
                 ((SalmonEntityVariantSetter) shopkeeper).invokeSetVariant(next);
                 return new SalmonVariantCustomization(next);
             }

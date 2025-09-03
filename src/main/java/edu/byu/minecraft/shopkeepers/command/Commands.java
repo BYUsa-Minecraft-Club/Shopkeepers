@@ -129,7 +129,7 @@ public class Commands {
                 return 0;
             }
 
-            Entity testEntity = SummonCommand.summon(context.getSource(), entity, executor.getPos().add(0, 1000, 0),
+            Entity testEntity = SummonCommand.summon(context.getSource(), entity, executor.getPos().subtract(0, 1000, 0),
                     shopkeeperSummonNbt(false), true);
             if(!(testEntity instanceof MobEntity)) {
                 context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " is not a mob, not adding"));

@@ -37,7 +37,6 @@ public class SheepCustomizations {
 
         @Override
         public ShopkeeperCustomization<SheepEntity> setNext(SheepEntity shopkeeper) {
-            boolean isSheared = shopkeeper.isSheared();
             shopkeeper.setSheared(!isSheared);
             return new SheepShearedCustomization(!isSheared);
         }
@@ -62,7 +61,7 @@ public class SheepCustomizations {
 
         @Override
         public ShopkeeperCustomization<SheepEntity> setNext(SheepEntity shopkeeper) {
-            DyeColor next = CustomizationUtils.nextAlphabetically(shopkeeper.getColor(), DyeColor.values());
+            DyeColor next = CustomizationUtils.nextAlphabetically(color, DyeColor.values());
             shopkeeper.setColor(next);
             return new SheepColorCustomization(next);
         }

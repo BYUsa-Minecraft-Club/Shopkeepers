@@ -34,7 +34,6 @@ public class BatCustomizations {
 
         @Override
         public ShopkeeperCustomization<BatEntity> setNext(BatEntity shopkeeper) {
-            boolean isRoosting = shopkeeper.isRoosting();
             shopkeeper.setRoosting(!isRoosting);
             return new BatRoostingCustomization(!isRoosting);
         }
