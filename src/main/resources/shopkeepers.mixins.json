@@ -24,6 +24,7 @@
     "invoker.PigEntityVariantSetter",
     "invoker.RabbitEntityVariantSetter",
     "invoker.SalmonEntityVariantSetter",
+    "invoker.ShulkerEntityVariationSetter",
     "invoker.TropicalFishEntityVariationSetter",
     "invoker.WolfEntityVariationAccesor"
   ],

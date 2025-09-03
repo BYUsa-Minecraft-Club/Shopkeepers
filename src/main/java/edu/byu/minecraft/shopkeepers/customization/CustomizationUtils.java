@@ -8,6 +8,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class CustomizationUtils {
+    static enum DyeColorWithNone {
+        NONE, WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, GRAY, LIGHT_GRAY, CYAN, PURPLE, BLUE, BROWN,
+        GREEN, RED, BLACK
+    }
 
     static String capitalize(String s) {
         String[] split = s.split("[_ ]");

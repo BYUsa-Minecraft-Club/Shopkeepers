@@ -4,10 +4,7 @@ import edu.byu.minecraft.shopkeepers.mixin.invoker.FoxEntityVariationSetter;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.LlamaEntityVariantSetter;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.EndermanEntity;
-import net.minecraft.entity.mob.SlimeEntity;
-import net.minecraft.entity.mob.ZombieVillagerEntity;
+import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.*;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -53,6 +50,7 @@ public class CustomizationManager {
             case RabbitEntity re -> RabbitCustomizations.getRabbitCustomizations(re);
             case SalmonEntity se -> SalmonCustomizations.getSalmonCustomizations(se);
             case SheepEntity se -> SheepCustomizations.getSheepCustomizations(se);
+            case ShulkerEntity se -> ShulkerCustomizations.getShulkerCustomizations(se);
             case SlimeEntity se -> SlimeCustomizations.getSlimeCustomizations(se); //also covers Magma Cube
             case SnowGolemEntity sge -> SnowGolemCustomizations.getSnowGolemCustomizations(sge);
             case TropicalFishEntity tfe -> TropicalFishCustomizations.getTropicalFishCustomizations(tfe);

@@ -1,7 +1,7 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
 import edu.byu.minecraft.shopkeepers.mixin.invoker.LlamaEntityVariantSetter;
-import net.minecraft.block.MapColor;
+import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils.DyeColorWithNone;
 import net.minecraft.entity.passive.LlamaEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -51,32 +51,28 @@ public class LlamaCustomizations {
             }
         }
 
-    private record LlamaCarpetCustomization(CarpetOption carpet) implements ShopkeeperCustomization<LlamaEntity> {
-        private enum CarpetOption {
-            NONE, WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, GRAY, LIGHT_GRAY, CYAN, PURPLE, BLUE, BROWN,
-            GREEN, RED, BLACK
-        }
+    private record LlamaCarpetCustomization(DyeColorWithNone carpet) implements ShopkeeperCustomization<LlamaEntity> {
 
         private static LlamaCarpetCustomization forLlama(LlamaEntity llama) {
             ItemStack carpetStack = llama.getBodyArmor();
-            if(carpetStack == null || carpetStack.isEmpty()) return new LlamaCarpetCustomization(CarpetOption.NONE);
+            if(carpetStack == null || carpetStack.isEmpty()) return new LlamaCarpetCustomization(DyeColorWithNone.NONE);
             Item carpetItem = carpetStack.getItem();
-            if(carpetItem == Items.WHITE_CARPET) return new LlamaCarpetCustomization(CarpetOption.WHITE);
-            else if(carpetItem == Items.ORANGE_CARPET) return new LlamaCarpetCustomization(CarpetOption.ORANGE);
-            else if (carpetItem == Items.MAGENTA_CARPET) return new LlamaCarpetCustomization(CarpetOption.MAGENTA);
-            else if (carpetItem == Items.LIGHT_BLUE_CARPET) return new LlamaCarpetCustomization(CarpetOption.LIGHT_BLUE);
-            else if (carpetItem == Items.YELLOW_CARPET) return new LlamaCarpetCustomization(CarpetOption.YELLOW);
-            else if (carpetItem == Items.LIME_CARPET) return new LlamaCarpetCustomization(CarpetOption.LIME);
-            else if (carpetItem == Items.PINK_CARPET) return new LlamaCarpetCustomization(CarpetOption.PINK);
-            else if (carpetItem == Items.GRAY_CARPET) return new LlamaCarpetCustomization(CarpetOption.GRAY);
-            else if (carpetItem == Items.LIGHT_GRAY_CARPET) return new LlamaCarpetCustomization(CarpetOption.LIGHT_GRAY);
-            else if (carpetItem == Items.CYAN_CARPET) return new LlamaCarpetCustomization(CarpetOption.CYAN);
-            else if (carpetItem == Items.PURPLE_CARPET) return new LlamaCarpetCustomization(CarpetOption.PURPLE);
-            else if (carpetItem == Items.BLUE_CARPET) return new LlamaCarpetCustomization(CarpetOption.BLUE);
-            else if (carpetItem == Items.BROWN_CARPET) return new LlamaCarpetCustomization(CarpetOption.BROWN);
-            else if (carpetItem == Items.GREEN_CARPET) return new LlamaCarpetCustomization(CarpetOption.GREEN);
-            else if (carpetItem == Items.RED_CARPET) return new LlamaCarpetCustomization(CarpetOption.RED);
-            else if (carpetItem == Items.BLACK_CARPET) return new LlamaCarpetCustomization(CarpetOption.BLACK);
+            if(carpetItem == Items.WHITE_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.WHITE);
+            else if(carpetItem == Items.ORANGE_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.ORANGE);
+            else if (carpetItem == Items.MAGENTA_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.MAGENTA);
+            else if (carpetItem == Items.LIGHT_BLUE_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.LIGHT_BLUE);
+            else if (carpetItem == Items.YELLOW_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.YELLOW);
+            else if (carpetItem == Items.LIME_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.LIME);
+            else if (carpetItem == Items.PINK_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.PINK);
+            else if (carpetItem == Items.GRAY_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.GRAY);
+            else if (carpetItem == Items.LIGHT_GRAY_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.LIGHT_GRAY);
+            else if (carpetItem == Items.CYAN_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.CYAN);
+            else if (carpetItem == Items.PURPLE_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.PURPLE);
+            else if (carpetItem == Items.BLUE_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.BLUE);
+            else if (carpetItem == Items.BROWN_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.BROWN);
+            else if (carpetItem == Items.GREEN_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.GREEN);
+            else if (carpetItem == Items.RED_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.RED);
+            else if (carpetItem == Items.BLACK_CARPET) return new LlamaCarpetCustomization(DyeColorWithNone.BLACK);
             else throw new IllegalStateException("unknown carpet item: " + carpetItem);
         }
 
@@ -92,13 +88,13 @@ public class LlamaCustomizations {
 
         @Override
         public Item getCurrentRepresentationItem() {
-            if (carpet == CarpetOption.NONE) return Items.BARRIER;
+            if (carpet == DyeColorWithNone.NONE) return Items.BARRIER;
             return CustomizationUtils.getDyeItem(DyeColor.valueOf(carpet.name()));
         }
 
         @Override
         public ShopkeeperCustomization<LlamaEntity> setNext(LlamaEntity shopkeeper) {
-            CarpetOption next = CustomizationUtils.nextAlphabetically(forLlama(shopkeeper).carpet, CarpetOption.values());
+            DyeColorWithNone next = CustomizationUtils.nextAlphabetically(forLlama(shopkeeper).carpet, DyeColorWithNone.values());
             shopkeeper.equipBodyArmor(new ItemStack(switch (next) {
                 case NONE -> ItemStack.EMPTY.getItem();
                 case WHITE -> Items.WHITE_CARPET;
