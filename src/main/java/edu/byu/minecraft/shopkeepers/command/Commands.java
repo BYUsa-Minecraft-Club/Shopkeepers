@@ -1,9 +1,13 @@
 package edu.byu.minecraft.shopkeepers.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.Message;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandExceptionType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import me.lucko.fabric.api.permissions.v0.Permissions;
@@ -27,9 +31,13 @@ import net.minecraft.util.Identifier;
 import java.util.*;
 import java.util.function.Predicate;
 
+import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class Commands {
+
+    //actual tab characters (\t) don't display correctly
+    private static final String TAB = "    ";
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess,
                                 CommandManager.RegistrationEnvironment environment) {
@@ -58,30 +66,106 @@ public class Commands {
                                 .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
                                 .executes(Commands::makeAdmin)))
                     .then(literal("playershoplimit").executes(Commands::playerShopLimitGet)
-                        .then(literal("get").executes(Commands::playerShopLimitGet))
+                        .then(literal("get").executes(Commands::playerShopLimitGet)
+                                .then(argument("player", StringArgumentType.word())
+                                        .suggests(CustomSuggestionProviders::allPlayers)
+                                        .executes(Commands::onePlayerShopLimitGet)))
                         .then(literal("set").then(CommandManager.argument("max", IntegerArgumentType.integer())
-                                .executes(Commands::playerShopLimitSet))))
+                                .executes(Commands::playerShopLimitSet))
+                                    .then(argument("player", StringArgumentType.word())
+                                            .suggests(CustomSuggestionProviders::allPlayers)
+                                            .executes(Commands::onePlayerShopLimitSet)))
+                        .then(literal("list").executes(Commands::listShopLimits))
+                        .then(literal("remove").then(argument("player", StringArgumentType.word())
+                                .suggests(CustomSuggestionProviders::allPlayers)
+                                .executes(Commands::onePlayerShopLimitRemove))))
                 ));
     }
 
+
+
     private static int documentation(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         StringBuilder builder = new StringBuilder("Shopkeepers usage:\n");
-        String tab = "    "; //actual tab characters (\t) don't display correctly
 
-        builder.append(tab).append("/shopkeepers make <approved entity type>   - Creates a new shopkeeper, owned by you\n");
-        builder.append(tab).append("/shopkeepers shopentities   - lists out the entity types approved by admins\n");
+        builder.append(TAB).append("/shopkeepers make <approved entity type>   - Creates a new shopkeeper, owned by you\n");
+        builder.append(TAB).append("/shopkeepers shopentities   - lists out the entity types approved by admins\n");
 
-        if(Permissions.check(context.getSource(), "shopkeepers.admin", 3)) {
-            builder.append(tab).append("/shopkeepers admin make <approved entity type>   - Creates a new admin shop\n");
-            builder.append(tab).append("/shopkeepers admin shopentities list   - lists out the approved entity types\n");
-            builder.append(tab).append("/shopkeepers admin shopentities add <summonable entity type>   - Adds entity type to approved list\n");
-            builder.append(tab).append("/shopkeepers admin shopentities remove <summonable entity type>   - Removes entity type from approved list. Does not disband existing shops with removed type\n");
-            builder.append(tab).append("/shopkeepers admin playershoplimit get   - displays the current maximum number of shops players can own\n");
-            builder.append(tab).append("/shopkeepers admin playershoplimit set <integer>   - sets the maximum number of shops players can own\n");
+        if(Permissions.check(context.getSource(), "shopkeepers.admin", 4)) {
+            builder.append(TAB).append("/shopkeepers admin make <approved entity type>   - Creates a new admin shop\n");
+            builder.append(TAB).append("/shopkeepers admin shopentities list   - lists out the approved entity types\n");
+            builder.append(TAB).append("/shopkeepers admin shopentities add <summonable entity type>   - Adds entity type to approved list\n");
+            builder.append(TAB).append("/shopkeepers admin shopentities remove <summonable entity type>   - Removes entity type from approved list. Does not disband existing shops with removed type\n");
+            builder.append(TAB).append("/shopkeepers admin playershoplimit get   - displays the current default maximum number of shops players can own\n");
+            builder.append(TAB).append("/shopkeepers admin playershoplimit get <player name>   - displays the current maximum number of shops for specified player\n");
+            builder.append(TAB).append("/shopkeepers admin playershoplimit set <integer>   - sets the maximum number of shops players can own\n");
+            builder.append(TAB).append("/shopkeepers admin playershoplimit set <integer> <player name>   - sets the maximum number of shops specified player can own\n");
+            builder.append(TAB).append("/shopkeepers admin playershoplimit remove <player name>   - removes the specific limit for specified player (reverts to default\n");
+            builder.append(TAB).append("/shopkeepers admin playershoplimit list   - lists shop limits for any player with a limit set\n");
         }
+
+        builder.deleteCharAt(builder.length() - 1);
 
         context.getSource().sendMessage(Text.of(builder.toString()));
         return 1;
+    }
+
+    private static int listShopLimits(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        StringBuilder builder = new StringBuilder(String.format("Player shop limits: \n  Default Limit: %s\n",
+                Shopkeepers.getData().getMaxOwnedShops()));
+        List<String> playersWithLimits = new ArrayList<>();
+        for(var entry : Shopkeepers.getData().getPlayerMaxOwnedShops().entrySet()) {
+            playersWithLimits.add(String.format("%s%s: %d\n",
+                    TAB, Shopkeepers.getData().getPlayers().get(entry.getKey()), entry.getValue()));
+        }
+        playersWithLimits.sort(Comparator.naturalOrder());
+        playersWithLimits.forEach(builder::append);
+        builder.deleteCharAt(builder.length() - 1);
+        context.getSource().sendMessage(Text.of(builder.toString()));
+        return 1;
+    }
+
+    private static int onePlayerShopLimitRemove(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        String playerName = StringArgumentType.getString(context, "player");
+        UUID playerId = getPlayerId(playerName);
+        Integer oldMax = Shopkeepers.getData().getPlayerMaxOwnedShops().remove(playerId);
+        if(oldMax == null) {
+            context.getSource().sendMessage(Text.of(String.format("Player %s did not already have a limit", playerName)));
+            return 0;
+        } else {
+            context.getSource().sendMessage(Text.of(String.format("Removed limit from %s (was %d)", playerName, oldMax)));
+            return 1;
+        }
+    }
+
+    private static int onePlayerShopLimitSet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        String playerName = StringArgumentType.getString(context, "player");
+        int max = IntegerArgumentType.getInteger(context, "max");
+        UUID playerId = getPlayerId(playerName);
+        Shopkeepers.getData().getPlayerMaxOwnedShops().put(playerId, max);
+        context.getSource().sendMessage(Text.of(String.format("Set new limit for %s of %d", playerName, max)));
+        return 1;
+    }
+
+    private static int onePlayerShopLimitGet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        String playerName = StringArgumentType.getString(context, "player");
+        UUID playerId = getPlayerId(playerName);
+        Integer max = Shopkeepers.getData().getPlayerMaxOwnedShops().get(playerId);
+        if(max == null) {
+            context.getSource().sendMessage(Text.of(String.format("No specific limit set for %s, default is %d",
+                    playerName, Shopkeepers.getData().getMaxOwnedShops())));
+        } else {
+            context.getSource().sendMessage(Text.of(String.format("Limit for %s is %d", playerName, max)));
+        }
+        return 1;
+    }
+
+    private static UUID getPlayerId(String playerName) throws CommandSyntaxException {
+        for(Map.Entry<UUID, String> entry : Shopkeepers.getData().getPlayers().entrySet()) {
+            if(entry.getValue().equals(playerName)) return entry.getKey();
+        }
+
+        Message errorMessage = () -> "Could not find player with name " + playerName;
+        throw new CommandSyntaxException(new SimpleCommandExceptionType(errorMessage), errorMessage);
     }
 
     private static int playerShopLimitGet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -157,7 +241,7 @@ public class Commands {
         } else {
             approvedEntities.sort(Comparator.comparing(o -> o.getName().getString()));
             for (var entityType : approvedEntities) {
-                sb.append("    ").append(entityType.getName().getString()).append("\n");
+                sb.append(TAB).append(entityType.getName().getString()).append("\n");
             }
             sb.deleteCharAt(sb.length() - 1);
         }
