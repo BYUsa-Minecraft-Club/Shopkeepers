@@ -5,7 +5,6 @@ import com.mojang.brigadier.Message;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandExceptionType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import edu.byu.minecraft.Shopkeepers;
@@ -17,7 +16,6 @@ import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -29,6 +27,7 @@ import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -226,8 +225,8 @@ public class Commands {
                 return 0;
             }
 
-            Entity testEntity = SummonCommand.summon(context.getSource(), entity, executor.getPos().subtract(0, 1000, 0),
-                    shopkeeperSummonNbt(false), true);
+            Entity testEntity = ShopkeeperEntitySummoner.summon(context.getSource(), entity,
+                    new Vec3d(executor.getX(), -100, executor.getZ()), false, false);
             if(!(testEntity instanceof MobEntity)) {
                 context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " is not a mob, not adding"));
                 testEntity.kill(executor.getWorld());
@@ -319,8 +318,8 @@ public class Commands {
                 return 0;
             }
 
-            Entity shopkeeper = SummonCommand.summon(context.getSource(), entity, executor.getPos(),
-                    shopkeeperSummonNbt(executor.isOnGround()), true);
+            Entity shopkeeper = ShopkeeperEntitySummoner.summon(context.getSource(), entity, executor.getPos(),
+                    executor.isOnGround(), true);
             shopkeeper.teleport(executor.getWorld(), executor.getX(), executor.getY(), executor.getZ(),
                     new HashSet<>(), executor.getYaw(), executor.getPitch(), true);
 
@@ -338,24 +337,6 @@ public class Commands {
             return 0;
         }
 
-    }
-
-    public static NbtCompound shopkeeperSummonNbt(boolean onGround) {
-        NbtCompound nbt = new NbtCompound();
-
-        nbt.putBoolean("NoAI", true);
-        nbt.putBoolean("Invulnerable", true);
-        nbt.putBoolean("Silent", true);
-        nbt.putBoolean("OnGround", onGround);
-        nbt.putBoolean("NoGravity", true); //If you want to remove the no gravity, remove the move prevention from
-        // EntityMixin (and you may need to find a new way to do that otherwise shopkeepers will be movable by
-        // pistons), otherwise the game will become a lag-fest when any shopkeepers are loaded and not on the ground
-        nbt.putBoolean("CanPickUpLoot", false);
-        nbt.putBoolean("PersistenceRequired", true);
-        nbt.putBoolean("IsImmuneToZombification", true);
-        nbt.putBoolean("CannotBeHunted", true);
-
-        return nbt;
     }
 
 }
