@@ -32,9 +32,9 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
         }
         setSlot(35, GuiUtils.EMPTY_SLOT);
 
-        babyToggle(36);
-        setName(37);
-        mobOptions(38);
+        setName(36);
+        mobOptions(37);
+        setSlot(38, GuiUtils.EMPTY_SLOT);
         setSlot(39, GuiUtils.EMPTY_SLOT);
         disbandShopkeeper(40);
         setSlot(41, GuiUtils.EMPTY_SLOT);

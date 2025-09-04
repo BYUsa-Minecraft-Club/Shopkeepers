@@ -75,22 +75,6 @@ public abstract class TradeSetupGui extends SimpleGui {
         }
     }
 
-    protected void babyToggle(int slot) {
-        MobEntity asMob = (MobEntity) shopkeeper;
-        boolean currentlyBaby = asMob.isBaby();
-        GuiElementBuilder builder = currentlyBaby ?
-                new GuiElementBuilder(Items.SLIME_BALL).setItemName(Text.of("Change to adult")) :
-                new GuiElementBuilder(Items.SLIME_BLOCK).setItemName(Text.of("Change to baby (if applicable to mob)"));
-        builder.setCallback(() -> {
-            asMob.setBaby(!currentlyBaby);
-            if(!currentlyBaby && shopkeeper instanceof PassiveEntity pe) {
-                pe.setBreedingAge(-2099999999); //about 3.4 years of loaded time
-            }
-            babyToggle(slot);
-        });
-        this.setSlot(slot, builder.build());
-    }
-
     protected void setName(int slot) {
         GuiElementBuilder builder = new GuiElementBuilder(Items.NAME_TAG).setItemName(Text.of("Change name"));
         if (shopkeeper.getCustomName() != null) {

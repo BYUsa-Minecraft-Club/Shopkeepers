@@ -14,8 +14,8 @@ import java.util.List;
 
 public class CustomizationManager {
 
-    @SuppressWarnings("unchecked") //I know this is annoying, but this is the best way I figured out how to get the
-                                   //generics to work to make the customizations extendible
+    @SuppressWarnings({"unchecked", "rawtypes"}) /* I know this is annoying, but this is the best way I figured out
+    how to get the generics to work to make the customizations extendible */
     public static <E extends Entity> CustomizationButtonOptions<E> getCustomizationButtonOptions(E entity,
                                                                                                  ServerPlayerEntity player,
                                                                                                  SimpleGui guiParent) {
@@ -27,7 +27,7 @@ public class CustomizationManager {
         };
 
         //specific types
-        List<? extends ShopkeeperCustomization<? extends Entity>> customization = switch (entity) {
+        List customization = switch (entity) {
             case ArmadilloEntity ae -> ArmadilloCustomizations.getArmadilloCustomizations(ae);
             case AxolotlEntity ae -> AxolotlCustomizations.getAxolotlCustomizations(ae);
             case BatEntity be -> BatCustomizations.getBatCustomizations(be);
@@ -70,6 +70,11 @@ public class CustomizationManager {
             };
         }
 
+        if(entity instanceof MobEntity mob && mobCanBeBaby(mob)) {
+            customization.addFirst(new BabyMobCustomization<>(mob.isBaby()));
+        }
+
+
         if (customization.isEmpty() && heldItemCustomization == null) {
             return null;
         }
@@ -78,5 +83,16 @@ public class CustomizationManager {
                 (List<ShopkeeperCustomization<E>>) customization,
                 heldItemCustomization,
                 CustomizationUtils.capitalize(entity.getType().getName().getString()));
+    }
+
+    private static boolean mobCanBeBaby(MobEntity mob) {
+        if (mob.isBaby()) {
+            return true;
+        } else {
+            mob.setBaby(true);
+            boolean baby = mob.isBaby();
+            mob.setBaby(false);
+            return baby;
+        }
     }
 }
