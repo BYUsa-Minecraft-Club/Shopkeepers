@@ -8,12 +8,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class CustomizationUtils {
-    static enum DyeColorWithNone {
+    public static enum DyeColorWithNone {
         NONE, WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, GRAY, LIGHT_GRAY, CYAN, PURPLE, BLUE, BROWN,
         GREEN, RED, BLACK
     }
 
-    static String capitalize(String s) {
+    public static String capitalize(String s) {
         String[] split = s.split("[_ ]");
         for (int i = 0; i < split.length; i++) {
             split[i] = capitalizeSingle(split[i]);
@@ -25,7 +25,7 @@ public class CustomizationUtils {
         return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
 
-    static <E extends Enum<E>> E nextAlphabetically(E e, E[] values) {
+    public static <E extends Enum<E>> E nextAlphabetically(E e, E[] values) {
         values = Arrays.copyOf(values, values.length);
         Arrays.sort(values, Comparator.comparing(Enum::name));
         int index = 0;
@@ -35,7 +35,7 @@ public class CustomizationUtils {
         return values[(index + 1) % values.length];
     }
 
-    static Item getDyeItem(DyeColor dyeColor) {
+    public static Item getDyeItem(DyeColor dyeColor) {
         return switch (dyeColor) {
             case WHITE -> Items.WHITE_DYE;
             case ORANGE -> Items.ORANGE_DYE;

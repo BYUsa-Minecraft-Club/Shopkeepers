@@ -1,8 +1,8 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
 import edu.byu.minecraft.Shopkeepers;
-import edu.byu.minecraft.shopkeepers.customization.CustomizationButtonOptions;
-import edu.byu.minecraft.shopkeepers.customization.CustomizationManager;
+import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomizationOptions;
+import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomizationManager;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperInventoryEntry;
 import edu.byu.minecraft.shopkeepers.data.TradeData;
@@ -86,8 +86,8 @@ public abstract class TradeSetupGui extends SimpleGui {
     }
 
     protected void mobOptions(int slot) {
-        CustomizationButtonOptions<Entity>
-                buttonOptions = CustomizationManager.getCustomizationButtonOptions(shopkeeper, player, this);
+        AppearanceCustomizationOptions<Entity>
+                buttonOptions = AppearanceCustomizationManager.getCustomizationButtonOptions(shopkeeper, player, this);
         if (buttonOptions == null) {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
         } else if (buttonOptions.customizations().size() > 1 || buttonOptions.heldItemCustomization() != null) {

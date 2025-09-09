@@ -1,6 +1,6 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
-import edu.byu.minecraft.shopkeepers.customization.GoatCustomizations;
+import edu.byu.minecraft.shopkeepers.customization.appearance.GoatCustomizations;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.passive.GoatEntity;
 import org.spongepowered.asm.mixin.Mixin;

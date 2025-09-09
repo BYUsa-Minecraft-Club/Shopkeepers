@@ -1,7 +1,7 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
-import edu.byu.minecraft.shopkeepers.customization.HeldItemCustomization;
-import edu.byu.minecraft.shopkeepers.customization.ShopkeeperCustomization;
+import edu.byu.minecraft.shopkeepers.customization.appearance.HeldItemCustomization;
+import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomization;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
@@ -20,7 +20,7 @@ public class HeldItemGui<E extends Entity> extends MobSettingsGui<E> {
 
     private final SimpleInventory inventory;
 
-    public HeldItemGui(ServerPlayerEntity player, E shopkeeper, List<ShopkeeperCustomization<E>> customizations,
+    public HeldItemGui(ServerPlayerEntity player, E shopkeeper, List<AppearanceCustomization<E>> customizations,
                        HeldItemCustomization heldItemCustomization, SimpleGui parent) {
         super(player, shopkeeper, customizations, parent);
         inventory = new SimpleInventory(1);

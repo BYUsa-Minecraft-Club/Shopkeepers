@@ -1,7 +1,7 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
 import edu.byu.minecraft.Shopkeepers;
-import edu.byu.minecraft.shopkeepers.customization.ShopkeeperCustomization;
+import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomization;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
@@ -16,7 +16,7 @@ import java.util.List;
 public class MobSettingsGui<E extends Entity> extends SimpleGui {
 
     public MobSettingsGui(ServerPlayerEntity player, E shopkeeper,
-                          List<ShopkeeperCustomization<E>> customizations, SimpleGui parent) {
+                          List<AppearanceCustomization<E>> customizations, SimpleGui parent) {
         super(ScreenHandlerType.GENERIC_9X3, player, false);
         customizations = new ArrayList<>(customizations);
 
@@ -36,8 +36,8 @@ public class MobSettingsGui<E extends Entity> extends SimpleGui {
     }
 
     static <E extends Entity> void setupSlot(SimpleGui gui, E shopkeeper, int slot,
-                                             List<ShopkeeperCustomization<E>> customizations, int index) {
-        ShopkeeperCustomization<E> customization = customizations.get(index);
+                                             List<AppearanceCustomization<E>> customizations, int index) {
+        AppearanceCustomization<E> customization = customizations.get(index);
         gui.setSlot(slot, new GuiElementBuilder(customization.getCurrentRepresentationItem()).setItemName(
                 Text.of("Cycle " + customization.customizationDescription())).setLore(
                 List.of(Text.of("Current " + customization.customizationDescription() + ": "),
