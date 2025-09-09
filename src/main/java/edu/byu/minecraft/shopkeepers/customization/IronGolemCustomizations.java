@@ -3,9 +3,7 @@ package edu.byu.minecraft.shopkeepers.customization;
 import net.minecraft.entity.passive.Cracks;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.Hand;
 
 import java.util.ArrayList;
 import java.util.List;

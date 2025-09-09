@@ -1,7 +1,7 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
-import edu.byu.minecraft.shopkeepers.mixin.invoker.LlamaEntityVariantSetter;
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils.DyeColorWithNone;
+import edu.byu.minecraft.shopkeepers.mixin.invoker.LlamaEntityVariantSetter;
 import net.minecraft.entity.passive.LlamaEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

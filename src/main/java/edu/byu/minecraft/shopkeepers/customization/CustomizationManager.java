@@ -1,7 +1,5 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
-import edu.byu.minecraft.shopkeepers.mixin.invoker.FoxEntityVariationSetter;
-import edu.byu.minecraft.shopkeepers.mixin.invoker.LlamaEntityVariantSetter;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.*;

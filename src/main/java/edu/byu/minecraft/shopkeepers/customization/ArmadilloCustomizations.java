@@ -3,7 +3,6 @@ package edu.byu.minecraft.shopkeepers.customization;
 import net.minecraft.entity.passive.ArmadilloEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.util.Arm;
 
 import java.util.ArrayList;
 import java.util.List;

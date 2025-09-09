@@ -3,19 +3,16 @@ package edu.byu.minecraft.shopkeepers.gui;
 import edu.byu.minecraft.shopkeepers.customization.HeldItemCustomization;
 import edu.byu.minecraft.shopkeepers.customization.ShopkeeperCustomization;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.gui.GuiInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class HeldItemGui<E extends Entity> extends MobSettingsGui<E> {
 

@@ -1,29 +1,11 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import edu.byu.minecraft.shopkeepers.command.Commands;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.ChickenVariant;
 import net.minecraft.entity.passive.ChickenVariants;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.command.SummonCommand;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.TeleportTarget;
-import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;

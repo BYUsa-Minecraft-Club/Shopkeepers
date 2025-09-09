@@ -1,6 +1,5 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
-import net.minecraft.entity.passive.Cracks;
 import net.minecraft.entity.passive.PandaEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
