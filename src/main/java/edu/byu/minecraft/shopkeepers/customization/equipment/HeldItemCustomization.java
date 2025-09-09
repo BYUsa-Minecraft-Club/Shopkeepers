@@ -1,4 +1,4 @@
-package edu.byu.minecraft.shopkeepers.customization.appearance;
+package edu.byu.minecraft.shopkeepers.customization.equipment;
 
 import net.minecraft.item.ItemStack;
 

@@ -1,28 +1,25 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
-import edu.byu.minecraft.shopkeepers.customization.appearance.HeldItemCustomization;
-import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomization;
+import edu.byu.minecraft.shopkeepers.customization.equipment.HeldItemCustomization;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-import java.util.List;
-
-public class HeldItemGui<E extends Entity> extends MobSettingsGui<E> {
+public class HeldItemGui<E extends Entity> extends SimpleGui {
 
     private final HeldItemCustomization heldItemCustomization;
 
     private final SimpleInventory inventory;
 
-    public HeldItemGui(ServerPlayerEntity player, E shopkeeper, List<AppearanceCustomization<E>> customizations,
-                       HeldItemCustomization heldItemCustomization, SimpleGui parent) {
-        super(player, shopkeeper, customizations, parent);
+    public HeldItemGui(ServerPlayerEntity player, E shopkeeper, HeldItemCustomization heldItemCustomization, SimpleGui parent) {
+        super(ScreenHandlerType.GENERIC_9X3, player, false);
         inventory = new SimpleInventory(1);
         inventory.setStack(0, heldItemCustomization.initalStack().get());
         this.heldItemCustomization = heldItemCustomization;

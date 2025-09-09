@@ -1,12 +1,8 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
-import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
-import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.*;
-import net.minecraft.item.SpawnEggItem;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +11,7 @@ public class AppearanceCustomizationManager {
 
     @SuppressWarnings({"unchecked", "rawtypes"}) /* I know this is annoying, but this is the best way I figured out
     how to get the generics to work to make the customizations extendible */
-    public static <E extends Entity> AppearanceCustomizationOptions<E> getCustomizationButtonOptions(E entity,
-                                                                                                     ServerPlayerEntity player,
-                                                                                                     SimpleGui guiParent) {
-        HeldItemCustomization heldItemCustomization = switch (entity) {
-            case AllayEntity ae -> AllayCustomizations.getHeldItemCustomization(ae);
-            case EndermanEntity ee -> EndermanCustomization.getHeldItemCustomization(ee);
-
-            default -> null;
-        };
+    public static <E extends Entity> List<AppearanceCustomization<E>> getAppearanceOptions(E entity) {
 
         //specific types
         List customization = switch (entity) {
@@ -65,7 +53,7 @@ public class AppearanceCustomizationManager {
             customization = switch (entity) {
                 case TameableEntity te -> TameableMobCustomizations.getTameableCustomizations(te);
                 case AbstractDonkeyEntity abe -> AbstractDonkeyCustomizations.getAbstractDonkeyCustomizations(abe);
-                default -> new ArrayList<>();
+                default -> customization;
             };
         }
 
@@ -73,15 +61,7 @@ public class AppearanceCustomizationManager {
             customization.addFirst(new BabyMobCustomization<>(mob.isBaby()));
         }
 
-
-        if (customization.isEmpty() && heldItemCustomization == null) {
-            return null;
-        }
-
-        return new AppearanceCustomizationOptions<>(SpawnEggItem.forEntity(entity.getType()),
-                (List<AppearanceCustomization<E>>) customization,
-                heldItemCustomization,
-                CustomizationUtils.capitalize(entity.getType().getName().getString()));
+        return customization;
     }
 
     private static boolean mobCanBeBaby(MobEntity mob) {

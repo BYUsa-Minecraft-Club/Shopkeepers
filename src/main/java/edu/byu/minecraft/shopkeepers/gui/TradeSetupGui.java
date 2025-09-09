@@ -1,8 +1,11 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
 import edu.byu.minecraft.Shopkeepers;
-import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomizationOptions;
+import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
+import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomization;
 import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomizationManager;
+import edu.byu.minecraft.shopkeepers.customization.equipment.EquipmentCustomizationManager;
+import edu.byu.minecraft.shopkeepers.customization.equipment.HeldItemCustomization;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperInventoryEntry;
 import edu.byu.minecraft.shopkeepers.data.TradeData;
@@ -12,6 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -85,26 +89,35 @@ public abstract class TradeSetupGui extends SimpleGui {
         this.setSlot(slot, builder.build());
     }
 
-    protected void mobOptions(int slot) {
-        AppearanceCustomizationOptions<Entity>
-                buttonOptions = AppearanceCustomizationManager.getCustomizationButtonOptions(shopkeeper, player, this);
-        if (buttonOptions == null) {
+    protected void appearanceOptions(int slot) {
+        List<AppearanceCustomization<Entity>> appearanceOptions =
+                AppearanceCustomizationManager.getAppearanceOptions(shopkeeper);
+        if (appearanceOptions.isEmpty()) {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
-        } else if (buttonOptions.customizations().size() > 1 || buttonOptions.heldItemCustomization() != null) {
-            GuiElementBuilder builder = new GuiElementBuilder(buttonOptions.mobSpawnEgg())
-                    .setItemName(Text.of("Edit " + buttonOptions.mobName() + " Options"));
-
-            if (buttonOptions.heldItemCustomization() != null) {
-                builder.setCallback(() -> new HeldItemGui<>(player, shopkeeper, buttonOptions.customizations(),
-                        buttonOptions.heldItemCustomization(), this).open());
-            } else {
-                builder.setCallback(() -> new MobSettingsGui<>(player, shopkeeper, buttonOptions.customizations(), this).open());
-            }
-
-            setSlot(slot, builder.build());
+        } else if (appearanceOptions.size() > 1) {
+            SpawnEggItem egg = SpawnEggItem.forEntity(shopkeeper.getType());
+            setSlot(slot, new GuiElementBuilder(egg != null ? egg : Items.LIME_DYE)
+                    .setItemName(Text.of(String.format("Edit %s Appearance Options",
+                            CustomizationUtils.capitalize(shopkeeper.getType().getName().getString()))))
+                    .setCallback(() -> new MobSettingsGui<>(player, shopkeeper, appearanceOptions, this).open())
+                    .build());
         } else {
-            MobSettingsGui.setupSlot(this, shopkeeper, slot, buttonOptions.customizations(), 0);
+            MobSettingsGui.setupSlot(this, shopkeeper, slot, appearanceOptions, 0);
         }
+    }
+
+    protected void equipmentOptions(int slot) {
+        HeldItemCustomization equipmentOptions = EquipmentCustomizationManager.getEquipmentOptions(shopkeeper);
+        if(equipmentOptions == null) {
+            setSlot(slot, GuiUtils.EMPTY_SLOT);
+        } else {
+            setSlot(slot, new GuiElementBuilder(Items.GRASS_BLOCK) //TODO: Replace with equipment option item
+                    .setItemName(Text.of(String.format("Edit %s Equipment Options",
+                                    CustomizationUtils.capitalize(shopkeeper.getType().getName().getString()))))
+                    .setCallback(() -> new HeldItemGui<>(player, shopkeeper, equipmentOptions, this).open())
+                    .build());
+        }
+
     }
 
 
