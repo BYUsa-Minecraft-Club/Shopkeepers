@@ -2,7 +2,6 @@ package edu.byu.minecraft.shopkeepers.customization.equipment;
 
 import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.AllayEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +14,9 @@ public class EquipmentCustomizationManager {
 
         ArmorCustomizations.addArmorCustomizations(entity, equipmentOptions);
         BodyArmorCustomization.addBodyArmorCustomization(entity, equipmentOptions);
+        HeldItemCustomizations.addHeldItemCustomizations(entity, equipmentOptions);
         SaddleCustomization.addSaddleCustomization(entity, equipmentOptions);
 
-        if(entity instanceof AllayEntity allay) {
-            equipmentOptions.add((EquipmentCustomization<E>) new AllayCustomizations(allay));
-        }
         if(entity instanceof EndermanEntity enderman) {
             equipmentOptions.add((EquipmentCustomization<E>) new EndermanCustomization(enderman));
         }
