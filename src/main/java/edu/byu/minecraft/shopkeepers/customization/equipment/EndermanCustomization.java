@@ -5,31 +5,27 @@ import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+public class EndermanCustomization implements EquipmentCustomization<EndermanEntity> {
+    @Override
+    public String validate(EndermanEntity entity, ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return null;
+        if (stack.getCount() > 1) return "Stack must have exactly one item";
+        if (!stack.getComponentChanges().isEmpty()) return "Stack cannot have any changed components";
+        return (stack.getItem() instanceof BlockItem) ? null : "Stack must be a block item";
+    }
 
-public class EndermanCustomization {
-    static HeldItemCustomization getHeldItemCustomization(EndermanEntity enderman) {
-        HeldItemCustomization.HeldItemValidator validator = (is) -> {
-            if (is == null || is.isEmpty()) return null;
-            if (is.getCount() > 1) return "Stack must have exactly one item";
-            if (!is.getComponentChanges().isEmpty()) return "Stack cannot have any changed components";
-            return (is.getItem() instanceof BlockItem) ? null : "Stack must be a block item";
-        };
+    @Override
+    public ItemStack getInitalStack(EndermanEntity entity) {
+        BlockState carriedBlock = entity.getCarriedBlock();
+        return carriedBlock == null ? ItemStack.EMPTY : carriedBlock.getBlock().asItem().getDefaultStack();
+    }
 
-        Supplier<ItemStack> initialItem = () -> {
-            BlockState carriedBlock = enderman.getCarriedBlock();
-            return carriedBlock == null ? ItemStack.EMPTY : carriedBlock.getBlock().asItem().getDefaultStack();
-        };
-
-        Consumer<ItemStack> onUpdateStack = (is) -> {
-            if (is != null && !is.isEmpty() && is.getItem() instanceof BlockItem bi) {
-                enderman.setCarriedBlock(bi.getBlock().getDefaultState());
-            } else {
-                enderman.setCarriedBlock(null);
-            }
-        };
-
-        return new HeldItemCustomization(validator, initialItem, onUpdateStack);
+    @Override
+    public void updateEquipment(EndermanEntity enderman, ItemStack is) {
+        if (is != null && !is.isEmpty() && is.getItem() instanceof BlockItem bi) {
+            enderman.setCarriedBlock(bi.getBlock().getDefaultState());
+        } else {
+            enderman.setCarriedBlock(null);
+        }
     }
 }

@@ -4,22 +4,19 @@ import net.minecraft.entity.passive.AllayEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+public class AllayCustomizations implements EquipmentCustomization<AllayEntity> {
+    @Override
+    public String validate(AllayEntity entity, ItemStack stack) {
+        return (stack == null || stack.getCount() <= 1) ? null : "Stack must have exactly one item";
+    }
 
-public class AllayCustomizations {
-    public static HeldItemCustomization getHeldItemCustomization(AllayEntity allay) {
-        HeldItemCustomization.HeldItemValidator validator = (is) ->
-                (is == null || is.getCount() <= 1) ? null : "Stack must have exactly one item";
+    @Override
+    public ItemStack getInitalStack(AllayEntity entity) {
+        return entity.getStackInHand(Hand.MAIN_HAND);
+    }
 
-        Supplier<ItemStack> initialItem = () -> allay.getStackInHand(Hand.MAIN_HAND);
-
-        Consumer<ItemStack> onUpdateStack = (is) -> {
-            if (!ItemStack.areEqual(is, allay.getStackInHand(Hand.MAIN_HAND))) {
-                allay.setStackInHand(Hand.MAIN_HAND, is);
-            }
-        };
-
-        return new HeldItemCustomization(validator, initialItem, onUpdateStack);
+    @Override
+    public void updateEquipment(AllayEntity entity, ItemStack stack) {
+        entity.setStackInHand(Hand.MAIN_HAND, stack);
     }
 }

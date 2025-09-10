@@ -6,10 +6,10 @@ import net.minecraft.entity.passive.AllayEntity;
 
 public class EquipmentCustomizationManager {
 
-    public static <E extends Entity> HeldItemCustomization getEquipmentOptions(E entity) {
-        HeldItemCustomization heldItemCustomization = switch (entity) {
-            case AllayEntity ae -> AllayCustomizations.getHeldItemCustomization(ae);
-            case EndermanEntity ee -> EndermanCustomization.getHeldItemCustomization(ee);
+    public static <E extends Entity> EquipmentCustomization<E> getEquipmentOptions(E entity) {
+        EquipmentCustomization heldItemCustomization = switch (entity) {
+            case AllayEntity ae -> new AllayCustomizations();
+            case EndermanEntity ee -> new EndermanCustomization();
 
             default -> null;
         };

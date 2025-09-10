@@ -1,6 +1,6 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
-import edu.byu.minecraft.shopkeepers.customization.equipment.HeldItemCustomization;
+import edu.byu.minecraft.shopkeepers.customization.equipment.EquipmentCustomization;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
@@ -14,14 +14,21 @@ import net.minecraft.text.Text;
 
 public class HeldItemGui<E extends Entity> extends SimpleGui {
 
-    private final HeldItemCustomization heldItemCustomization;
+    private final EquipmentCustomization<E> heldItemCustomization;
 
     private final SimpleInventory inventory;
 
-    public HeldItemGui(ServerPlayerEntity player, E shopkeeper, HeldItemCustomization heldItemCustomization, SimpleGui parent) {
+    private final E shopkeeper;
+
+    private final ItemStack initialStack;
+
+    public HeldItemGui(ServerPlayerEntity player, E shopkeeper, EquipmentCustomization<E> heldItemCustomization,
+            SimpleGui parent) {
         super(ScreenHandlerType.GENERIC_9X3, player, false);
+        this.shopkeeper = shopkeeper;
+        this.initialStack = heldItemCustomization.getInitalStack(shopkeeper);
         inventory = new SimpleInventory(1);
-        inventory.setStack(0, heldItemCustomization.initalStack().get());
+        inventory.setStack(0, initialStack.copy());
         this.heldItemCustomization = heldItemCustomization;
         setSlotRedirect(13, new Slot(inventory, 0, 0, 0));
         setSlot(22, new GuiElementBuilder(Items.LIGHT_BLUE_STAINED_GLASS_PANE)
@@ -31,12 +38,13 @@ public class HeldItemGui<E extends Entity> extends SimpleGui {
     @Override
     public void onClose() {
         ItemStack itemStack = inventory.getStack(0);
-        String validation = heldItemCustomization.validator().validate(itemStack);
-        if(validation != null) {
+        String validation = heldItemCustomization.validate(shopkeeper, itemStack);
+        if (validation == null) {
+            heldItemCustomization.updateEquipment(shopkeeper, itemStack);
+        } else {
             player.sendMessage(Text.of(validation));
             player.giveOrDropStack(itemStack);
-        } else if (!ItemStack.areEqual(itemStack, heldItemCustomization.initalStack().get())) {
-            heldItemCustomization.onUpdateStack().accept(itemStack);
+            heldItemCustomization.updateEquipment(shopkeeper, ItemStack.EMPTY);
         }
 
         super.onClose();

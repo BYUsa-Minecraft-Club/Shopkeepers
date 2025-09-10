@@ -4,8 +4,8 @@ import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomization;
 import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomizationManager;
+import edu.byu.minecraft.shopkeepers.customization.equipment.EquipmentCustomization;
 import edu.byu.minecraft.shopkeepers.customization.equipment.EquipmentCustomizationManager;
-import edu.byu.minecraft.shopkeepers.customization.equipment.HeldItemCustomization;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperInventoryEntry;
 import edu.byu.minecraft.shopkeepers.data.TradeData;
@@ -107,7 +107,7 @@ public abstract class TradeSetupGui extends SimpleGui {
     }
 
     protected void equipmentOptions(int slot) {
-        HeldItemCustomization equipmentOptions = EquipmentCustomizationManager.getEquipmentOptions(shopkeeper);
+        EquipmentCustomization<Entity> equipmentOptions = EquipmentCustomizationManager.getEquipmentOptions(shopkeeper);
         if(equipmentOptions == null) {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
         } else {
