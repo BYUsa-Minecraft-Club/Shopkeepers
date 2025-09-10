@@ -10,10 +10,14 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(GoatEntity.class)
 public abstract class GoatEntityVariationSetter implements GoatCustomizations.GoatEditor {
     @Accessor(value = "RIGHT_HORN")
-    public abstract TrackedData<Boolean> accessRightHorn();
+    public static TrackedData<Boolean> accessRightHorn() {
+        throw new AssertionError();
+    }
 
     @Accessor(value = "LEFT_HORN")
-    public abstract TrackedData<Boolean> accessLeftHorn();
+    public static TrackedData<Boolean> accessLeftHorn() {
+        throw new AssertionError();
+    }
 
     @Override
     @Unique

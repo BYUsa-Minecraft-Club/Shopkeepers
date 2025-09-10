@@ -10,7 +10,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(CreeperEntity.class)
 public abstract class CreeperEntityVariationSetter implements CreeperCustomizations.CreeperEditor {
     @Accessor(value = "CHARGED")
-    public abstract TrackedData<Boolean> accessCharged();
+    public static TrackedData<Boolean> accessCharged() {
+        throw new AssertionError();
+    }
 
     @Unique
     public void shopkeepers$setCharged(boolean charged) {
