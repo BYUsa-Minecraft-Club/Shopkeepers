@@ -8,6 +8,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
 public class EndermanCustomization implements EquipmentCustomization<EndermanEntity> {
+    private static final Item DEFAULT_DISPLAY_ITEM = Items.GRASS_BLOCK;
+    private Item displayItem;
+
+    public EndermanCustomization(EndermanEntity enderman) {
+        ItemStack initalStack = getInitalStack(enderman);
+        displayItem = initalStack.isEmpty() ? DEFAULT_DISPLAY_ITEM : initalStack.getItem();
+    }
+
     @Override
     public String validate(EndermanEntity entity, ItemStack stack) {
         if (stack == null || stack.isEmpty()) return null;
@@ -18,7 +26,7 @@ public class EndermanCustomization implements EquipmentCustomization<EndermanEnt
 
     @Override
     public Item getDescriptionItem() {
-        return Items.GRASS_BLOCK;
+        return displayItem;
     }
 
     @Override
@@ -36,8 +44,10 @@ public class EndermanCustomization implements EquipmentCustomization<EndermanEnt
     public void updateEquipment(EndermanEntity enderman, ItemStack is) {
         if (is != null && !is.isEmpty() && is.getItem() instanceof BlockItem bi) {
             enderman.setCarriedBlock(bi.getBlock().getDefaultState());
+            displayItem = is.getItem();
         } else {
             enderman.setCarriedBlock(null);
+            displayItem = DEFAULT_DISPLAY_ITEM;
         }
     }
 }

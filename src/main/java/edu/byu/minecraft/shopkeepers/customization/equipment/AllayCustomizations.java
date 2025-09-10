@@ -5,7 +5,8 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 
 public class AllayCustomizations extends HandEquipmentCustomizations<AllayEntity> {
-    public AllayCustomizations() {
-        super(Hand.MAIN_HAND, "held item", Items.CAKE);
+    public AllayCustomizations(AllayEntity allay) {
+        super(Hand.MAIN_HAND, "held item",
+                allay.getStackInHand(Hand.MAIN_HAND).isEmpty() ? Items.CAKE : allay.getStackInHand(Hand.MAIN_HAND).getItem());
     }
 }

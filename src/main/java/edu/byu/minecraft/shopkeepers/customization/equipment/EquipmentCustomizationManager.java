@@ -9,7 +9,7 @@ import java.util.List;
 
 public class EquipmentCustomizationManager {
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked"})
     public static <E extends MobEntity> List<EquipmentCustomization<E>> getEquipmentOptions(E entity) {
         List<EquipmentCustomization<E>> equipmentOptions = new ArrayList<>();
 
@@ -17,11 +17,11 @@ public class EquipmentCustomizationManager {
         BodyArmorCustomization.addBodyArmorCustomization(entity, equipmentOptions);
         SaddleCustomization.addSaddleCustomization(entity, equipmentOptions);
 
-        if(entity instanceof AllayEntity) {
-            equipmentOptions.add((EquipmentCustomization<E>) new AllayCustomizations());
+        if(entity instanceof AllayEntity allay) {
+            equipmentOptions.add((EquipmentCustomization<E>) new AllayCustomizations(allay));
         }
-        if(entity instanceof EndermanEntity) {
-            equipmentOptions.add((EquipmentCustomization<E>) new EndermanCustomization());
+        if(entity instanceof EndermanEntity enderman) {
+            equipmentOptions.add((EquipmentCustomization<E>) new EndermanCustomization(enderman));
         }
 
         return equipmentOptions;
