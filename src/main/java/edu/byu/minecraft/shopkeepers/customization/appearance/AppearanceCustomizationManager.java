@@ -67,6 +67,8 @@ public class AppearanceCustomizationManager {
     private static boolean mobCanBeBaby(MobEntity mob) {
         if (mob.isBaby()) {
             return true;
+        } else if (mob instanceof WanderingTraderEntity) {
+            return false;
         } else {
             mob.setBaby(true);
             boolean baby = mob.isBaby();
