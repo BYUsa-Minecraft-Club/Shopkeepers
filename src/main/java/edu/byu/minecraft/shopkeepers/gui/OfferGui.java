@@ -75,6 +75,7 @@ public class OfferGui extends MerchantGui {
             return super.sendGui();
         }
         else {
+            this.close();
             return false;
         }
     }

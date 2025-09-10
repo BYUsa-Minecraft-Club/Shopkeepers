@@ -61,6 +61,7 @@ public class MerchantInventoryGui extends SimpleGui {
             return super.sendGui();
         }
         else {
+            this.close();
             return false;
         }
     }

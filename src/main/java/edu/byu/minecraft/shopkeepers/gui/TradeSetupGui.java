@@ -99,22 +99,23 @@ public abstract class TradeSetupGui extends SimpleGui {
             setSlot(slot, new GuiElementBuilder(egg != null ? egg : Items.LIME_DYE)
                     .setItemName(Text.of(String.format("Edit %s Appearance Options",
                             CustomizationUtils.capitalize(shopkeeper.getType().getName().getString()))))
-                    .setCallback(() -> new MobSettingsGui<>(player, shopkeeper, appearanceOptions, this).open())
+                    .setCallback(() -> new MobAppearanceGui<>(player, shopkeeper, appearanceOptions, this).open())
                     .build());
         } else {
-            MobSettingsGui.setupSlot(this, shopkeeper, slot, appearanceOptions, 0);
+            MobAppearanceGui.setupSlot(this, shopkeeper, slot, appearanceOptions, 0);
         }
     }
 
     protected void equipmentOptions(int slot) {
-        EquipmentCustomization<Entity> equipmentOptions = EquipmentCustomizationManager.getEquipmentOptions(shopkeeper);
-        if(equipmentOptions == null) {
+        List<EquipmentCustomization<Entity>> equipmentOptions =
+                EquipmentCustomizationManager.getEquipmentOptions(shopkeeper);
+        if(equipmentOptions.isEmpty()) {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
         } else {
-            setSlot(slot, new GuiElementBuilder(equipmentOptions.getDescriptionItem())
+            setSlot(slot, new GuiElementBuilder(equipmentOptions.getFirst().getDescriptionItem())
                     .setItemName(Text.of(String.format("Edit %s Equipment Options",
                                     CustomizationUtils.capitalize(shopkeeper.getType().getName().getString()))))
-                    .setCallback(() -> new HeldItemGui<>(player, shopkeeper, equipmentOptions, this).open())
+                    .setCallback(() -> new MobEquipmentGui<>(player, shopkeeper, equipmentOptions, this).open())
                     .build());
         }
 
@@ -176,6 +177,7 @@ public abstract class TradeSetupGui extends SimpleGui {
             return super.sendGui();
         }
         else {
+            this.close();
             return false;
         }
     }

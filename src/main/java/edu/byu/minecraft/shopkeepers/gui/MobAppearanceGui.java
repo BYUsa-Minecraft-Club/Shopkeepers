@@ -1,6 +1,5 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
-import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomization;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
@@ -13,10 +12,10 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MobSettingsGui<E extends Entity> extends SimpleGui {
+public class MobAppearanceGui<E extends Entity> extends SimpleGui {
 
-    public MobSettingsGui(ServerPlayerEntity player, E shopkeeper,
-                          List<AppearanceCustomization<E>> customizations, SimpleGui parent) {
+    public MobAppearanceGui(ServerPlayerEntity player, E shopkeeper,
+                            List<AppearanceCustomization<E>> customizations, SimpleGui parent) {
         super(ScreenHandlerType.GENERIC_9X3, player, false);
         customizations = new ArrayList<>(customizations);
 
@@ -31,7 +30,6 @@ public class MobSettingsGui<E extends Entity> extends SimpleGui {
         setSlot(26, new GuiElementBuilder(Items.BARRIER).setItemName(Text.of("Close")).setCallback(() -> {
             this.close();
             parent.open();
-            Shopkeepers.getInteractionLocks().tryAcquireLock(shopkeeper.getUuid(), player.getUuid());
         }).build());
     }
 
