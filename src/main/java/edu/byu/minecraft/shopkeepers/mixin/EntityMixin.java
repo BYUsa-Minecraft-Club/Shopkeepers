@@ -38,7 +38,7 @@ public class EntityMixin {
     }
 
     @Unique
-    private void ifShopkeeperEntity(Runnable action) {
+    protected void ifShopkeeperEntity(Runnable action) {
         Entity self = (Entity) (Object) this;
         if(Shopkeepers.getData().getShopkeeperData().containsKey(self.getUuid())) {
             action.run();

@@ -3,7 +3,7 @@ package edu.byu.minecraft.shopkeepers.gui;
 import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
 public class AdminShopTradeSetupGui extends TradeSetupGui {
 
 
-    public AdminShopTradeSetupGui(ServerPlayerEntity player, Entity shopkeeper) {
+    public AdminShopTradeSetupGui(ServerPlayerEntity player, MobEntity shopkeeper) {
         super(ScreenHandlerType.GENERIC_9X5, player, shopkeeper, 45);
         this.setTitle(Text.of("Admin shop setup"));
     }

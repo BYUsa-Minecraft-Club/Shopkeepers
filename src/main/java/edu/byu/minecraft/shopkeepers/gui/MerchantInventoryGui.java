@@ -4,7 +4,7 @@ import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperInventoryEntry;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
@@ -18,10 +18,10 @@ import java.util.function.Consumer;
 
 public class MerchantInventoryGui extends SimpleGui {
 
-    private final Entity shopkeeper;
+    private final MobEntity shopkeeper;
     private final SimpleInventory inventoryPage;
 
-    public MerchantInventoryGui(ServerPlayerEntity player, Entity shopkeeper) {
+    public MerchantInventoryGui(ServerPlayerEntity player, MobEntity shopkeeper) {
         super(ScreenHandlerType.GENERIC_9X6, player, false);
         this.shopkeeper = shopkeeper;
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());

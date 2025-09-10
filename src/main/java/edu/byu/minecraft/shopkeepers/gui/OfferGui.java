@@ -8,7 +8,7 @@ import net.minecraft.component.Component;
 import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.component.ComponentMapPredicate;
@@ -41,11 +41,11 @@ public class OfferGui extends MerchantGui {
         ownerEditTradeSellItem = new ItemStack(Items.PAPER.getRegistryEntry(), 1, ComponentChanges.builder().add(ownerNameComponenet).add(ownerLoreComponent).build());
     }
 
-    private final Entity shopkeeper;
+    private final MobEntity shopkeeper;
     private final boolean isAdmin;
     private final boolean isOwner;
 
-    public OfferGui(ServerPlayerEntity player, Entity shopkeeper) {
+    public OfferGui(ServerPlayerEntity player, MobEntity shopkeeper) {
         super(player, false);
         this.shopkeeper = shopkeeper;
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());

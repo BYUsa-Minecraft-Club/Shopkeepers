@@ -6,6 +6,7 @@
     "EntityMixin",
     "LightningEntityMixin",
     "LivingEntityMixin",
+    "MobEntityMixin",
     "PlayerEntityMixin",
     "PlayerManagerMixin",
     "SimpleMerchantMixin",
