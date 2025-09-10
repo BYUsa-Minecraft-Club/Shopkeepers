@@ -36,6 +36,10 @@ public class CustomSuggestionProviders {
     }
 
     private static final Set<EntityType<?>> MOB_ENTITIES;
+    private static final Set<EntityType<?>> SIDE_EFFECT_MOB_ENTITIES =
+            Set.of(EntityType.ENDER_DRAGON, EntityType.WITHER); /*Ender dragons are not interactable and withers show
+                                                                  a boss bar. I don't want either of those, so I'm
+                                                                  just not going to make them options in the first place */
 
     static {
         MOB_ENTITIES = Arrays.stream(EntityType.class.getDeclaredFields())
@@ -50,7 +54,9 @@ public class CustomSuggestionProviders {
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
-                }).collect(Collectors.toCollection(HashSet::new));
+                })
+                .filter(type -> !SIDE_EFFECT_MOB_ENTITIES.contains(type))
+                .collect(Collectors.toCollection(HashSet::new));
     }
 
     public static CompletableFuture<Suggestions> unaddedEntityTypes(CommandContext<ServerCommandSource> ctx,
