@@ -58,6 +58,7 @@ public class Commands {
                         .then(literal("add")
                             .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
                                     .suggests(SuggestionProviders.byId(Identifier.ofVanilla("summonable_entities")))
+                                    .suggests(CustomSuggestionProviders::unaddedEntityTypes)
                                     .executes(Commands::addShopEntity)))
                         .then(literal("remove")
                             .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
