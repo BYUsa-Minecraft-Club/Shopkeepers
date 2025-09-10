@@ -33,7 +33,7 @@ public class MobEquipmentGui<E extends Entity> extends SimpleGui {
         for(int i = 0; i < equipmentCustomizations.size(); i++) {
             EquipmentCustomization<E> equipment = equipmentCustomizations.get(i);
             inventory.setStack(i, equipment.getInitalStack(shopkeeper).copy());
-            setSlotRedirect(i, new Slot(inventory, 0, 0, 0));
+            setSlotRedirect(i, new Slot(inventory, i, 0, 0));
             setSlot(i + 9, new GuiElementBuilder(equipment.getDescriptionItem())
                     .setItemName(Text.of(String.format("↑ Place %s in slot above this ↑",
                             equipment.equipmentSlotDescription().toLowerCase()))).build());
