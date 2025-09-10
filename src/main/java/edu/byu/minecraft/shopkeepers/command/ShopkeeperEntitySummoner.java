@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
+import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -29,6 +30,9 @@ public class ShopkeeperEntitySummoner {
             }
             if (entity instanceof AbstractHorseEntity ahe) {
                 ahe.setTame(true);
+            }
+            if (entity instanceof ChickenEntity chicken) {
+                chicken.eggLayTime = 2099999999;
             }
         }
         return entity;
