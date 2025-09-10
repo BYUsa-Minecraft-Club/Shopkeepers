@@ -20,5 +20,9 @@ public class BodyArmorCustomization {
         if(entity.canEquip(new ItemStack(Items.WHITE_HARNESS), EquipmentSlot.BODY)) {
             list.add(new MobEquipmentCustomizations<>(EquipmentSlot.BODY, "harness", Items.WHITE_HARNESS));
         }
+
+        if(entity.canEquip(new ItemStack(Items.WHITE_CARPET), EquipmentSlot.BODY)) {
+            list.add(new MobEquipmentCustomizations<>(EquipmentSlot.BODY, "carpet", Items.WHITE_CARPET));
+        }
     }
 }
