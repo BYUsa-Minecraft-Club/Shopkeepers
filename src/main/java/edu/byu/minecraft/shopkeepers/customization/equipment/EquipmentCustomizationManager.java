@@ -14,6 +14,7 @@ public class EquipmentCustomizationManager {
         List<EquipmentCustomization<E>> equipmentOptions = new ArrayList<>();
 
         ArmorCustomizations.addArmorCustomizations(entity, equipmentOptions);
+        SaddleCustomization.addSaddleCustomization(entity, equipmentOptions);
 
         EquipmentCustomization heldItemCustomization = switch (entity) {
             case AllayEntity ae -> new AllayCustomizations();

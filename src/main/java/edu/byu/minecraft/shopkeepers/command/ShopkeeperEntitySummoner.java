@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -24,6 +25,9 @@ public class ShopkeeperEntitySummoner {
                 for (EquipmentSlot equipmentSlot : EquipmentSlot.VALUES) {
                     me.equipStack(equipmentSlot, ItemStack.EMPTY);
                 }
+            }
+            if (entity instanceof AbstractHorseEntity ahe) {
+                ahe.setTame(true);
             }
         }
         return entity;
