@@ -22,6 +22,7 @@ public class ShopkeeperEntitySummoner {
         if(initialize) {
             if(entity instanceof MobEntity me) {
                 me.setBaby(false);
+                me.setLeftHanded(false);
                 for (EquipmentSlot equipmentSlot : EquipmentSlot.VALUES) {
                     me.equipStack(equipmentSlot, ItemStack.EMPTY);
                 }
