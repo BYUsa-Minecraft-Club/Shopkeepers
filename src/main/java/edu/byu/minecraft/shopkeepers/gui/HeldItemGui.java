@@ -6,7 +6,6 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -31,8 +30,9 @@ public class HeldItemGui<E extends Entity> extends SimpleGui {
         inventory.setStack(0, initialStack.copy());
         this.heldItemCustomization = heldItemCustomization;
         setSlotRedirect(13, new Slot(inventory, 0, 0, 0));
-        setSlot(22, new GuiElementBuilder(Items.LIGHT_BLUE_STAINED_GLASS_PANE)
-                .setItemName(Text.of("↑ Place held item in slot above this ↑")));
+        setSlot(22, new GuiElementBuilder(heldItemCustomization.getDescriptionItem())
+                .setItemName(Text.of(String.format("↑ Place %s in slot above this ↑",
+                        heldItemCustomization.equipmentSlotDescription().toLowerCase()))).build());
     }
 
     @Override

@@ -111,7 +111,7 @@ public abstract class TradeSetupGui extends SimpleGui {
         if(equipmentOptions == null) {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
         } else {
-            setSlot(slot, new GuiElementBuilder(Items.GRASS_BLOCK) //TODO: Replace with equipment option item
+            setSlot(slot, new GuiElementBuilder(equipmentOptions.getDescriptionItem())
                     .setItemName(Text.of(String.format("Edit %s Equipment Options",
                                     CustomizationUtils.capitalize(shopkeeper.getType().getName().getString()))))
                     .setCallback(() -> new HeldItemGui<>(player, shopkeeper, equipmentOptions, this).open())

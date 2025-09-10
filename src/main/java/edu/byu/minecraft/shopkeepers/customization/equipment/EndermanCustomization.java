@@ -3,7 +3,9 @@ package edu.byu.minecraft.shopkeepers.customization.equipment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 public class EndermanCustomization implements EquipmentCustomization<EndermanEntity> {
     @Override
@@ -12,6 +14,16 @@ public class EndermanCustomization implements EquipmentCustomization<EndermanEnt
         if (stack.getCount() > 1) return "Stack must have exactly one item";
         if (!stack.getComponentChanges().isEmpty()) return "Stack cannot have any changed components";
         return (stack.getItem() instanceof BlockItem) ? null : "Stack must be a block item";
+    }
+
+    @Override
+    public Item getDescriptionItem() {
+        return Items.GRASS_BLOCK;
+    }
+
+    @Override
+    public String equipmentSlotDescription() {
+        return "held block";
     }
 
     @Override
