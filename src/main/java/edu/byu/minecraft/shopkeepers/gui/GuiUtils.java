@@ -1,13 +1,18 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
+import com.mojang.authlib.GameProfile;
 import edu.byu.minecraft.Shopkeepers;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class GuiUtils {
@@ -23,5 +28,12 @@ public class GuiUtils {
         }
         return !locked;
     }
-}
 
+    static ItemStack getPlayerHead(UUID uuid, String playerName) {
+        ItemStack playerHead = Items.PLAYER_HEAD.getDefaultStack();
+        GameProfile profile = new GameProfile(uuid, playerName);
+        ProfileComponent pc = new ProfileComponent(Optional.empty(), Optional.of(uuid), profile.getProperties());
+        playerHead.set(DataComponentTypes.PROFILE, pc);
+        return playerHead;
+    }
+}
