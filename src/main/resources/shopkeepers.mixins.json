@@ -11,6 +11,7 @@
     "PlayerEntityMixin",
     "PlayerManagerMixin",
     "SimpleMerchantMixin",
+    "SnowGolemEntityMixin",
     "TurtleEntityMixin",
     "invoker.AxolotlEntityVariantSetter",
     "invoker.BeeEntityVariationSetter",
