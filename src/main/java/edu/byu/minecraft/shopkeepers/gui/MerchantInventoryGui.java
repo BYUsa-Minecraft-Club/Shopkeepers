@@ -2,21 +2,33 @@ package edu.byu.minecraft.shopkeepers.gui;
 
 import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
-import edu.byu.minecraft.shopkeepers.data.ShopkeeperInventoryEntry;
+import eu.pb4.sgui.api.ClickType;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.DyeColor;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class MerchantInventoryGui extends SimpleGui {
+    private static final Style INVENTORY_INFO_STYLE;
+
+    static {
+        INVENTORY_INFO_STYLE = Style.EMPTY
+                .withColor(DyeColor.ORANGE.getSignColor())
+                .withItalic(true)
+                .withUnderline(true);
+    }
 
     private final MobEntity shopkeeper;
     private final SimpleInventory inventoryPage;
@@ -25,35 +37,74 @@ public class MerchantInventoryGui extends SimpleGui {
         super(ScreenHandlerType.GENERIC_9X6, player, false);
         this.shopkeeper = shopkeeper;
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
-        List<ItemStack> inventoryStacks = shopkeeperData.inventory().stream()
-                .mapMulti((BiConsumer<ShopkeeperInventoryEntry, Consumer<ItemStack>>) (entry, consumer) -> {
-                    int numItems = entry.getAmount();
-                    int maxCount = entry.getStack().getMaxCount();
-                    ItemStack copy = entry.getStack().copy();
-                    while (numItems > maxCount) {
-                        ItemStack newStack = copy.copy();
-                        newStack.setCount(maxCount);
-                        consumer.accept(newStack);
-                        numItems -= maxCount;
-                    }
-                    if (numItems > 0) {
-                        copy.setCount(numItems);
-                        consumer.accept(copy);
-                    }
-                }).toList();
-        inventoryPage = new SimpleInventory(Math.max(54, inventoryStacks.size()));
-        for(int i = 0; i < inventoryStacks.size(); i++) {
-            inventoryPage.setStack(i, inventoryStacks.get(i));
+
+        int starterSize = shopkeeperData.inventory().size();
+        inventoryPage = new SimpleInventory(54 - starterSize);
+
+        for(int i = 0; i < starterSize; i++) {
+            setupSlot(i, shopkeeperData.inventory().get(i).getStack(), shopkeeperData);
         }
-        for(int i = 0; i < 54; i++) {
-            this.setSlotRedirect(i, new Slot(inventoryPage, i, 0, 0));
+
+        for(int i = starterSize; i < 54; i++) {
+            this.setSlotRedirect(i, new Slot(inventoryPage, i - starterSize, 0, 0));
         }
-        String title = shopkeeper.getName().getString() + " Inventory";
-        if(inventoryPage.size() > 54) {
-            title += " (" + (inventoryPage.size() - 54) + " stacks hidden)";
-        }
-        setTitle(Text.of(title));
+        setTitle(Text.of(shopkeeper.getName().getString() + " Inventory"));
     }
+
+    private void setupSlot(int i, ItemStack stack, ShopkeeperData shopkeeperData) {
+        Integer amount = shopkeeperData.inventoryGet(stack);
+        if(amount == null || amount <= 0) {
+            setSlot(i, GuiUtils.EMPTY_SLOT);
+        }
+        else {
+            ItemStack copy = stack.copy();
+            copy.setCount(1);
+            setSlot(i, GuiElementBuilder.from(copy)
+                    .setName(Text.of(String.format("(%d) %s", amount,
+                            stack.getName().getString())).getWithStyle(stack.getName().getStyle()).getFirst())
+                    .setLore(makeLore(copy))
+                    .setCallback((index, clickType, slotActionType) -> {
+                        if(clickType == ClickType.MOUSE_LEFT_SHIFT || clickType == ClickType.MOUSE_RIGHT_SHIFT) {
+                            boolean hasMore = true;
+                            while(hasMore && player.getInventory().getEmptySlot() != -1) {
+                                hasMore = giveStack(shopkeeperData, stack, false);
+                            }
+                        }
+                        else {
+                            giveStack(shopkeeperData, stack, clickType == ClickType.MOUSE_RIGHT);
+                        }
+
+                        setupSlot(i, stack, shopkeeperData);
+                        Shopkeepers.getData().markDirty();
+                    }));
+        }
+    }
+
+    private List<Text> makeLore(ItemStack stack) {
+        LoreComponent loreComponent = stack.getComponents().get(DataComponentTypes.LORE);
+        List<Text> lore = new ArrayList<>(loreComponent == null ? List.of() : loreComponent.styledLines());
+        lore.add(Text.empty());
+        lore.addAll(Text.of("Right Click to receive one").getWithStyle(INVENTORY_INFO_STYLE));
+        lore.addAll(Text.of("Left Click to receive one stack").getWithStyle(INVENTORY_INFO_STYLE));
+        lore.addAll(Text.of("Shift Click to fill inventory").getWithStyle(INVENTORY_INFO_STYLE));
+        lore.add(Text.empty());
+        return lore;
+    }
+
+    private boolean giveStack(ShopkeeperData shopkeeperData, ItemStack stack, boolean maxOne) {
+        int maxSize = maxOne ? 1 : stack.getMaxCount();
+        Integer amountHeld = shopkeeperData.inventoryGet(stack);
+        if (amountHeld == null || amountHeld <= 0) {
+            return false;
+        }
+        int giveSize = Math.min(maxSize, amountHeld);
+        ItemStack copy = stack.copy();
+        copy.setCount(giveSize);
+        player.giveOrDropStack(copy);
+        shopkeeperData.removeItems(stack, giveSize); //this should subtract the amount from the inventoryEntry we currently have
+        return amountHeld > giveSize;
+    }
+
 
     @Override
     protected boolean sendGui() {
@@ -70,7 +121,6 @@ public class MerchantInventoryGui extends SimpleGui {
     public void onClose() {
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
 
-        shopkeeperData.inventory().clear();
         for(ItemStack inventoryItemStack : inventoryPage) {
             if(!inventoryItemStack.isEmpty()) {
                 shopkeeperData.addItems(inventoryItemStack, inventoryItemStack.getCount());
