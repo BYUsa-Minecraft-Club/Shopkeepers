@@ -4,6 +4,8 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.FieldDecoder;
+import edu.byu.minecraft.Shopkeepers;
+import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
@@ -37,17 +39,28 @@ public class ShopkeeperMover {
                         "Shopkeeper teleport key is present but unreadable. Please try again or contact an admin"));
             } else {
                 UUID shopkeeperId = uuidResult.getOrThrow();
-                Entity shopkeeper = getShopkeeper(shopkeeperId, player.getWorld());
-                if (shopkeeper == null) {
-                    player.sendMessage(Text.of("Unable to locate shopkeeper. Please try again or contact an admin."));
-                } else {
-                    if(!shopkeeper.getWorld().isPosLoaded(shopkeeper.getBlockPos())) {
-                        player.sendMessage(Text.of("Warning: shopkeeper is currently unloaded. " +
-                                "This may result in an unsuccessful teleport. If unsuccessful, " +
-                                "please ensure the shopkeeper is loaded before trying again"));
+                ShopkeeperData data = Shopkeepers.getData().getShopkeeperData().get(shopkeeperId);
+                if(data == null) {
+                    player.sendMessage(Text.of("An unknown error occurred. Please try again or contact an admin"));
+                }
+                else if (!data.owners().contains(player.getUuid()) && player.getServer() != null && !player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
+                    player.sendMessage(Text.of("Error: You are not an admin and do not own this shop"));
+                }
+                else {
+                    Entity shopkeeper = getShopkeeper(shopkeeperId, player.getWorld());
+                    if (shopkeeper == null) {
+                        player.sendMessage(
+                                Text.of("Unable to locate shopkeeper. Please try again or contact an admin."));
+                    } else {
+                        if (!shopkeeper.getWorld().isPosLoaded(shopkeeper.getBlockPos())) {
+                            player.sendMessage(Text.of("Warning: shopkeeper is currently unloaded. " +
+                                    "This may result in an unsuccessful teleport. If unsuccessful, " +
+                                    "please ensure the shopkeeper is loaded before trying again"));
+                        }
+                        shopkeeper.teleportTo(
+                                new TeleportTarget(player.getWorld(), player.getPos(), Vec3d.ZERO, player.getYaw(),
+                                        player.getPitch(), TeleportTarget.NO_OP));
                     }
-                    shopkeeper.teleportTo(new TeleportTarget(player.getWorld(), player.getPos(), Vec3d.ZERO,
-                            player.getYaw(), player.getPitch(), TeleportTarget.NO_OP));
                 }
             }
 
