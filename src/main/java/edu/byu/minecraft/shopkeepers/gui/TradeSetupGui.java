@@ -100,11 +100,13 @@ public abstract class TradeSetupGui extends SimpleGui {
         this.setSlot(slot, builder.build());
     }
 
-    protected void appearanceOptions(int slot) {
+    //returns whether there's something important now in the slot
+    protected boolean appearanceOptions(int slot) {
         List<AppearanceCustomization<Entity>> appearanceOptions =
                 AppearanceCustomizationManager.getAppearanceOptions(shopkeeper);
         if (appearanceOptions.isEmpty()) {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
+            return false;
         } else if (appearanceOptions.size() > 1) {
             SpawnEggItem egg = SpawnEggItem.forEntity(shopkeeper.getType());
             setSlot(slot, new GuiElementBuilder(egg != null ? egg : Items.LIME_DYE)
@@ -112,8 +114,10 @@ public abstract class TradeSetupGui extends SimpleGui {
                             CustomizationUtils.capitalize(shopkeeper.getType().getName().getString()))))
                     .setCallback(() -> new MobAppearanceGui<>(player, shopkeeper, appearanceOptions, this).open())
                     .build());
+            return true;
         } else {
             MobAppearanceGui.setupSlot(this, shopkeeper, slot, appearanceOptions, 0);
+            return true;
         }
     }
 
@@ -131,7 +135,6 @@ public abstract class TradeSetupGui extends SimpleGui {
         }
 
     }
-
 
     protected void openTradeMenu(int slot) {
         this.setSlot(slot,

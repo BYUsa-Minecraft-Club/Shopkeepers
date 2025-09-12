@@ -22,8 +22,13 @@ public class AdminShopTradeSetupGui extends TradeSetupGui {
         setupPage(0);
 
         setName(37);
-        appearanceOptions(38);
-        equipmentOptions(39);
+
+        boolean appearanceOptionsPresent = appearanceOptions(38);
+        equipmentOptions(appearanceOptionsPresent ? 39 : 38);
+        if(!appearanceOptionsPresent) {
+            setSlot(39, GuiUtils.EMPTY_SLOT);
+        }
+
         disbandShopkeeper(40);
         this.setSlot(41, GuiUtils.EMPTY_SLOT);
         teleportShopkeeper(42);

@@ -33,8 +33,12 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
         setSlot(35, GuiUtils.EMPTY_SLOT);
 
         setName(36);
-        appearanceOptions(37);
-        equipmentOptions(38);
+        boolean appearanceOptionsPresent = appearanceOptions(37);
+        equipmentOptions(appearanceOptionsPresent ? 38 : 37);
+        if(!appearanceOptionsPresent) {
+            setSlot(38, GuiUtils.EMPTY_SLOT);
+        }
+
         setSlot(39, GuiUtils.EMPTY_SLOT);
         disbandShopkeeper(40);
         teleportShopkeeper(41);
