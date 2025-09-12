@@ -19,6 +19,7 @@ public class AppearanceCustomizationManager {
             case AxolotlEntity ae -> AxolotlCustomizations.getAxolotlCustomizations(ae);
             case BatEntity be -> BatCustomizations.getBatCustomizations(be);
             case BeeEntity be -> BeeCustomizations.getBeeCustomizations(be);
+            case BoggedEntity be -> BoggedCustomizations.getBoggedCustomizations(be);
             case CatEntity ce -> CatCustomizations.getCatCustomizations(ce);
             case ChickenEntity ce -> ChickenCustomizations.getChickenCustomizations(ce);
             case CreeperEntity ce -> CreeperCustomizations.getCreeperCustomizations(ce);
