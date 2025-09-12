@@ -1,6 +1,7 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
 import edu.byu.minecraft.Shopkeepers;
+import edu.byu.minecraft.shopkeepers.ShopkeeperMover;
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomization;
 import edu.byu.minecraft.shopkeepers.customization.appearance.AppearanceCustomizationManager;
@@ -11,6 +12,11 @@ import edu.byu.minecraft.shopkeepers.data.ShopkeeperInventoryEntry;
 import edu.byu.minecraft.shopkeepers.data.TradeData;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import net.minecraft.component.ComponentChanges;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.MergedComponentMap;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
@@ -18,11 +24,14 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.scanner.NbtCollector;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public abstract class TradeSetupGui extends SimpleGui {
 
@@ -130,6 +139,41 @@ public abstract class TradeSetupGui extends SimpleGui {
             this.close();
             new OfferGui(player, shopkeeper).open();
         }).build());
+    }
+
+    protected void teleportShopkeeper(int slot) {
+        setSlot(slot, new GuiElementBuilder(Items.ENDER_PEARL)
+                .setName(Text.of("Move Shopkeeper"))
+                .setCallback(() -> {
+                    if(player.getInventory().containsAny(stack -> {
+                        NbtComponent nbt = stack.getComponents().get(DataComponentTypes.CUSTOM_DATA);
+                        return nbt != null && nbt.contains(ShopkeeperMover.SHOPKEEPER_ID_KEY);
+                    })) {
+                        player.sendMessage(Text.of("You already have a teleport item in your inventory"));
+                        return;
+                    }
+
+                    NbtCompound nbt = new NbtCompound();
+                    nbt.putString(ShopkeeperMover.SHOPKEEPER_ID_KEY, shopkeeper.getUuid().toString());
+
+                    String teleportItemName = "Move " + (shopkeeper.hasCustomName() ?
+                            Objects.requireNonNull(shopkeeper.getCustomName()).getString() :
+                            ("your " + shopkeeper.getName().getString().toLowerCase() + " shopkeeper"));
+
+                    ItemStack teleportItemStack = new ItemStack(Items.ENDER_PEARL.getRegistryEntry(), 1,
+                            ComponentChanges.builder()
+                                    .add(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt))
+                                    .add(DataComponentTypes.CUSTOM_NAME, Text.of(teleportItemName))
+                                    .add(DataComponentTypes.LORE, new LoreComponent(List.of(Text.empty(),
+                                            Text.of("Use this item to move"), Text.of(teleportItemName.substring(5)),
+                                            Text.of("to your current location"), Text.empty())))
+                                    .add(DataComponentTypes.MAX_STACK_SIZE, 1)
+                                    .build());
+
+                    player.giveOrDropStack(teleportItemStack);
+
+                    ShopkeeperMover.addToShopkeeperCache(shopkeeper);
+                }));
     }
 
     protected void disbandShopkeeper(int slot) {

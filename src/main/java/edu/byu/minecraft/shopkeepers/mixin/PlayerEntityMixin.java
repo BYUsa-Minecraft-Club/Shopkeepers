@@ -1,6 +1,7 @@
 package edu.byu.minecraft.shopkeepers.mixin;
 
 import edu.byu.minecraft.Shopkeepers;
+import edu.byu.minecraft.shopkeepers.ShopkeeperMover;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import edu.byu.minecraft.shopkeepers.gui.AdminShopTradeSetupGui;
 import edu.byu.minecraft.shopkeepers.gui.OfferGui;
@@ -8,6 +9,7 @@ import edu.byu.minecraft.shopkeepers.gui.PlayerShopTradeSetupGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -25,6 +27,13 @@ public abstract class PlayerEntityMixin {
         //ignore the warning on this line. Because this is a mixin, the compiler says it can never be a
         //ServerPlayerEntity but it will be at runtime (sometimes, hence the line)
         if(!( ((Object) this) instanceof ServerPlayerEntity player)) return;
+
+        ItemStack is = player.getStackInHand(hand);
+        if(ShopkeeperMover.moved(is, player)) {
+            cir.setReturnValue(ActionResult.SUCCESS);
+            cir.cancel();
+            return;
+        }
 
         //this method sometimes fires twice, one with main hand and one with off hand. I wanted to filter out so the
         // stuff that matters only happens once.

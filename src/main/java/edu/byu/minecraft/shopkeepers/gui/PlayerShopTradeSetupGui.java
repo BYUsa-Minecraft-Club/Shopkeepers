@@ -37,7 +37,7 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
         equipmentOptions(38);
         setSlot(39, GuiUtils.EMPTY_SLOT);
         disbandShopkeeper(40);
-        setSlot(41, GuiUtils.EMPTY_SLOT);
+        teleportShopkeeper(41);
 
         setSlot(42, GuiElementBuilder.from(GuiUtils.getPlayerHead(player.getUuid(), player.getGameProfile().getName()))
                 .setName(Text.of("Edit Shopkeeper Owners"))

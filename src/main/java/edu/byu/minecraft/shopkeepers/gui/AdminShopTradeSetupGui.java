@@ -26,7 +26,7 @@ public class AdminShopTradeSetupGui extends TradeSetupGui {
         equipmentOptions(39);
         disbandShopkeeper(40);
         this.setSlot(41, GuiUtils.EMPTY_SLOT);
-        this.setSlot(42, GuiUtils.EMPTY_SLOT);
+        teleportShopkeeper(42);
         openTradeMenu(43);
     }
 
