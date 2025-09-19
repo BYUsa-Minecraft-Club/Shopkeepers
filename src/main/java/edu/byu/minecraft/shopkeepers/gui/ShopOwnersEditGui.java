@@ -57,20 +57,33 @@ public class ShopOwnersEditGui extends SimpleGui {
         int index = 0;
         for(Map.Entry<String, UUID> entry : ownersMap.entrySet()) {
             ItemStack playerHead = GuiUtils.getPlayerHead(entry.getValue(), entry.getKey());
-            setSlot(index, GuiElementBuilder.from(playerHead)
-                    .setName(Text.of(entry.getKey()))
-                    .setLore(List.of(Text.empty(),
-                            Text.of("Click to remove").getWithStyle(Style.EMPTY.withItalic(true)).getFirst(),
-                            Text.empty()))
-                    .setCallback(() -> {
-                        data.owners().remove(entry.getValue());
-                        Shopkeepers.getData().markDirty();
-                        if(!isAdmin && entry.getValue().equals(player.getUuid())) {
-                            close();
-                        } else {
-                            setupSlots();
-                        }
-                    }));
+            Style style = Style.EMPTY.withItalic(true);
+
+            GuiElementBuilder guiBuilder = GuiElementBuilder.from(playerHead).setName(Text.of(entry.getKey()));
+            if(ownersMap.size() > 1) {
+                guiBuilder = guiBuilder.setLore(List.of(Text.empty(),
+                                Text.of("Click to remove").getWithStyle(style).getFirst(), Text.empty()))
+                        .setCallback(() -> {
+                            data.owners().remove(entry.getValue());
+                            Shopkeepers.getData().markDirty();
+                            if (entry.getValue().equals(player.getUuid())) {
+                                if (isAdmin) {
+                                    player.sendMessage(
+                                            Text.of("Warning: you just removed yourself. Now editing as administrator"));
+                                    setupSlots();
+                                } else {
+                                    close();
+                                }
+                            } else {
+                                setupSlots();
+                            }
+                        });
+            }
+            else {
+                guiBuilder = guiBuilder.setLore(List.of(Text.empty(),
+                        Text.of("You cannot remove the only owner").getWithStyle(style).getFirst(), Text.empty()));
+            }
+            setSlot(index, guiBuilder.build());
             index++;
         }
 
