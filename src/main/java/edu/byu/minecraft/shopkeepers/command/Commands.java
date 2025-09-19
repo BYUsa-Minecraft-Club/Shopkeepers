@@ -44,7 +44,7 @@ public class Commands {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess,
                                 CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(literal("shopkeepers")
-            .requires(Permissions.require("shopkeepers.admin", 4).and(((Predicate<ServerCommandSource>) ServerCommandSource::isExecutedByPlayer)))
+            .requires((Predicate<ServerCommandSource>) ServerCommandSource::isExecutedByPlayer)
             .executes(Commands::documentation)
                 .then(literal("help").executes(Commands::documentation))
                 .then(literal("make")
