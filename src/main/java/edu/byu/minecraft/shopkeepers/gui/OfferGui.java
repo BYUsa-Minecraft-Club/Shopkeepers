@@ -50,7 +50,7 @@ public class OfferGui extends MerchantGui {
         this.shopkeeper = shopkeeper;
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
 
-        if(player.getServer() != null && player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
+        if(player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry())) {
             isAdmin = true;
             isOwner = false;
             addTrade(new TradeOffer(adminEditTradeBuyItem, adminEditTradeSellItem, 1, 0, 0));

@@ -39,7 +39,7 @@ public class ShopOwnersEditGui extends SimpleGui {
     private void setupSlots() {
         ShopkeeperData data = Shopkeepers.getData().getShopkeeperData().get(shopkeeperId);
 
-        boolean isAdmin = player.getServer() != null && player.getServer().getPlayerManager().isOperator(player.getGameProfile());
+        boolean isAdmin = player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry());
 
         if (!isAdmin && !data.owners().contains(player.getUuid())) {
             close();
@@ -56,7 +56,7 @@ public class ShopOwnersEditGui extends SimpleGui {
 
         int index = 0;
         for(Map.Entry<String, UUID> entry : ownersMap.entrySet()) {
-            ItemStack playerHead = GuiUtils.getPlayerHead(entry.getValue(), entry.getKey());
+            ItemStack playerHead = GuiUtils.getPlayerHead(entry.getValue());
             Style style = Style.EMPTY.withItalic(true);
 
             GuiElementBuilder guiBuilder = GuiElementBuilder.from(playerHead).setName(Text.of(entry.getKey()));

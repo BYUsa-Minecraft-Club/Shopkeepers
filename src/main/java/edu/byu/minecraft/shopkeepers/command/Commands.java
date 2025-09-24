@@ -229,14 +229,14 @@ public class Commands {
                     new Vec3d(executor.getX(), -100, executor.getZ()), false, false);
             if(!(testEntity instanceof MobEntity)) {
                 context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " is not a mob, not adding"));
-                testEntity.kill(executor.getWorld());
+                testEntity.kill(executor.getEntityWorld());
                 return 0;
             }
             else {
                 Shopkeepers.getData().getAllowedShopkeepers().add(entity.value());
                 Shopkeepers.getData().markDirty();
                 context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " added"));
-                testEntity.kill(executor.getWorld());
+                testEntity.kill(executor.getEntityWorld());
                 return 1;
             }
         } catch (Exception e) {
@@ -280,7 +280,7 @@ public class Commands {
         }
         if (ownedShops >= maxShops) {
             String relationshipDescription = (ownedShops == maxShops) ? "at" : "greater than";
-            if(executor.getServer() != null && executor.getServer().getPlayerManager().isOperator(executor.getGameProfile())) {
+            if(executor.getEntityWorld().getServer().getPlayerManager().isOperator(executor.getPlayerConfigEntry())) {
                 executor.sendMessage(Text.of(String.format("Warning: you already own %.2f current shops (adjusted for multiple owners)," +
                         " %s %s normal max of %d. Since you are a server operator," +
                         " you are allowed to bypass the limit. Continuing with shop creation.",
@@ -318,9 +318,9 @@ public class Commands {
                 return 0;
             }
 
-            Entity shopkeeper = ShopkeeperEntitySummoner.summon(context.getSource(), entity, executor.getPos(),
+            Entity shopkeeper = ShopkeeperEntitySummoner.summon(context.getSource(), entity, executor.getEntityPos(),
                     executor.isOnGround(), true);
-            shopkeeper.teleport(executor.getWorld(), executor.getX(), executor.getY(), executor.getZ(),
+            shopkeeper.teleport(executor.getEntityWorld(), executor.getX(), executor.getY(), executor.getZ(),
                     new HashSet<>(), executor.getYaw(), executor.getPitch(), true);
 
             List<UUID> owners = new ArrayList<>();

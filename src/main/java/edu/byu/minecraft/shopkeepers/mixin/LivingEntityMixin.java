@@ -27,11 +27,11 @@ public class LivingEntityMixin {
                     self.getName().getString(),
                     Shopkeepers.getData().getShopkeeperData().get(self.getUuid()).owners().stream().map(
                             uuid -> Shopkeepers.getData().getPlayers().get(uuid)).sorted(String::compareToIgnoreCase).toList(),
-                    self.getPos().getX(), self.getPos().getY(), self.getPos().getZ());
+                    self.getX(), self.getY(), self.getZ());
 
-            if(self.getServer() != null) {
-                for (String opName : self.getServer().getPlayerManager().getOpNames()) {
-                    ServerPlayerEntity op = self.getServer().getPlayerManager().getPlayer(opName);
+            if(self.getEntityWorld().getServer() != null) {
+                for (String opName : self.getEntityWorld().getServer().getPlayerManager().getOpNames()) {
+                    ServerPlayerEntity op = self.getEntityWorld().getServer().getPlayerManager().getPlayer(opName);
                     if (op != null) {
                         op.sendMessage(Text.of(warning));
                     }

@@ -40,8 +40,8 @@ public abstract class PlayerEntityMixin {
         if (hand == Hand.OFF_HAND) return;
 
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(entity.getUuid());
-        if (shopkeeperData != null && player.getServer() != null) {
-            if(shopkeeperData.isAdmin() && player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
+        if (shopkeeperData != null && player.getEntityWorld().getServer() != null) {
+            if(shopkeeperData.isAdmin() && player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry())) {
                 if(shopkeeperData.trades().isEmpty()) {
                     new AdminShopTradeSetupGui(player, (MobEntity) entity).open();
                 } else {

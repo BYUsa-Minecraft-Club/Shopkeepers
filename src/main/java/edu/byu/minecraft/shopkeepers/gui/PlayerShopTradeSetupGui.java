@@ -43,7 +43,7 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
         disbandShopkeeper(40);
         teleportShopkeeper(41);
 
-        setSlot(42, GuiElementBuilder.from(GuiUtils.getPlayerHead(player.getUuid(), player.getGameProfile().getName()))
+        setSlot(42, GuiElementBuilder.from(GuiUtils.getPlayerHead(player.getUuid()))
                 .setName(Text.of("Edit Shopkeeper Owners"))
                 .setCallback(() -> new ShopOwnersEditGui(player, shopkeeper.getUuid(), this).open())
                 .build());

@@ -29,11 +29,9 @@ public class GuiUtils {
         return !locked;
     }
 
-    static ItemStack getPlayerHead(UUID uuid, String playerName) {
+    static ItemStack getPlayerHead(UUID uuid) {
         ItemStack playerHead = Items.PLAYER_HEAD.getDefaultStack();
-        GameProfile profile = new GameProfile(uuid, playerName);
-        ProfileComponent pc = new ProfileComponent(Optional.empty(), Optional.of(uuid), profile.getProperties());
-        playerHead.set(DataComponentTypes.PROFILE, pc);
+        playerHead.set(DataComponentTypes.PROFILE, ProfileComponent.ofDynamic(uuid));
         return playerHead;
     }
 }

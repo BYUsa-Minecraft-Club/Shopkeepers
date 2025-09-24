@@ -10,6 +10,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -17,6 +18,7 @@ import net.minecraft.util.Uuids;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.TeleportTarget;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -30,35 +32,37 @@ public class ShopkeeperMover {
 
     public static boolean moved(ItemStack itemStack, ServerPlayerEntity player) {
         NbtComponent customNbt = itemStack.getComponents().get(DataComponentTypes.CUSTOM_DATA);
-        boolean isShopkeeperTeleportItem = customNbt != null && customNbt.contains(SHOPKEEPER_ID_KEY);
+        boolean isShopkeeperTeleportItem = customNbt != null && customNbt.copyNbt().contains(SHOPKEEPER_ID_KEY);
 
         if(isShopkeeperTeleportItem) {
-            DataResult<UUID> uuidResult = customNbt.get(new FieldDecoder<>(SHOPKEEPER_ID_KEY, Uuids.CODEC));
-            if (!uuidResult.isSuccess()) {
+            NbtElement nbtElement = customNbt.copyNbt().get(SHOPKEEPER_ID_KEY);
+            Optional<UUID> uuidResult = nbtElement.asString().map(UUID::fromString);
+            if (!uuidResult.isPresent()) {
                 player.sendMessage(Text.of(
                         "Shopkeeper teleport key is present but unreadable. Please try again or contact an admin"));
             } else {
-                UUID shopkeeperId = uuidResult.getOrThrow();
+                UUID shopkeeperId = uuidResult.orElseThrow();
                 ShopkeeperData data = Shopkeepers.getData().getShopkeeperData().get(shopkeeperId);
                 if(data == null) {
                     player.sendMessage(Text.of("An unknown error occurred. Please try again or contact an admin"));
                 }
-                else if (!data.owners().contains(player.getUuid()) && player.getServer() != null && !player.getServer().getPlayerManager().isOperator(player.getGameProfile())) {
+                else if (!data.owners().contains(player.getUuid()) &&
+                        !player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry())) {
                     player.sendMessage(Text.of("Error: You are not an admin and do not own this shop"));
                 }
                 else {
-                    Entity shopkeeper = getShopkeeper(shopkeeperId, player.getWorld());
+                    Entity shopkeeper = getShopkeeper(shopkeeperId, player.getEntityWorld());
                     if (shopkeeper == null) {
                         player.sendMessage(
                                 Text.of("Unable to locate shopkeeper. Please try again or contact an admin."));
                     } else {
-                        if (!shopkeeper.getWorld().isPosLoaded(shopkeeper.getBlockPos())) {
+                        if (!shopkeeper.getEntityWorld().isPosLoaded(shopkeeper.getBlockPos())) {
                             player.sendMessage(Text.of("Warning: shopkeeper is currently unloaded. " +
                                     "This may result in an unsuccessful teleport. If unsuccessful, " +
                                     "please ensure the shopkeeper is loaded before trying again"));
                         }
                         shopkeeper.teleportTo(
-                                new TeleportTarget(player.getWorld(), player.getPos(), Vec3d.ZERO, player.getYaw(),
+                                new TeleportTarget(player.getEntityWorld(), player.getEntityPos(), Vec3d.ZERO, player.getYaw(),
                                         player.getPitch(), TeleportTarget.NO_OP));
                     }
                 }

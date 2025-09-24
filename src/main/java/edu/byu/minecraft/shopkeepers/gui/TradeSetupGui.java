@@ -150,7 +150,7 @@ public abstract class TradeSetupGui extends SimpleGui {
                 .setCallback(() -> {
                     if(player.getInventory().containsAny(stack -> {
                         NbtComponent nbt = stack.getComponents().get(DataComponentTypes.CUSTOM_DATA);
-                        return nbt != null && nbt.contains(ShopkeeperMover.SHOPKEEPER_ID_KEY);
+                        return nbt != null && nbt.copyNbt().contains(ShopkeeperMover.SHOPKEEPER_ID_KEY);
                     })) {
                         player.sendMessage(Text.of("You already have a teleport item in your inventory"));
                         return;
@@ -222,7 +222,7 @@ public abstract class TradeSetupGui extends SimpleGui {
                         }
 
                         shopkeeper.setPosition(shopkeeper.getX(), -1000, shopkeeper.getZ());
-                        shopkeeper.kill(player.getWorld());
+                        shopkeeper.kill(player.getEntityWorld());
                     }).open();
                 }).build());
     }
