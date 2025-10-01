@@ -1,13 +1,8 @@
 package edu.byu.minecraft.shopkeepers.mixin;
 
-import edu.byu.minecraft.Shopkeepers;
+import edu.byu.minecraft.shopkeepers.ShopkeeperInteractions;
 import edu.byu.minecraft.shopkeepers.ShopkeeperMover;
-import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
-import edu.byu.minecraft.shopkeepers.gui.AdminShopTradeSetupGui;
-import edu.byu.minecraft.shopkeepers.gui.OfferGui;
-import edu.byu.minecraft.shopkeepers.gui.PlayerShopTradeSetupGui;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -39,22 +34,8 @@ public abstract class PlayerEntityMixin {
         // stuff that matters only happens once.
         if (hand == Hand.OFF_HAND) return;
 
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(entity.getUuid());
-        if (shopkeeperData != null && player.getEntityWorld().getServer() != null) {
-            if(shopkeeperData.isAdmin() && player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry())) {
-                if(shopkeeperData.trades().isEmpty()) {
-                    new AdminShopTradeSetupGui(player, (LivingEntity) entity).open();
-                } else {
-                    new OfferGui(player, (LivingEntity) entity).open();
-                }
-            } else if (shopkeeperData.owners().contains(player.getUuid())) {
-                new PlayerShopTradeSetupGui(player, (LivingEntity) entity).open();
-            } else {
-                new OfferGui(player, (LivingEntity) entity).open();
-            }
-
+        if (ShopkeeperInteractions.openGui(entity, player)) {
             cir.setReturnValue(ActionResult.CONSUME);
-            cir.cancel();
         }
     }
 

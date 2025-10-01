@@ -3,6 +3,7 @@
   "package": "edu.byu.minecraft.shopkeepers.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ArmorStandEntityMixin",
     "EntityMixin",
     "ItemStackMixin",
     "LightningEntityMixin",
