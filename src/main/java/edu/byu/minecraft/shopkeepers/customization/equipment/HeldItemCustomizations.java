@@ -1,6 +1,8 @@
 package edu.byu.minecraft.shopkeepers.customization.equipment;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.PlayerLikeEntity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.AllayEntity;
 import net.minecraft.entity.passive.DolphinEntity;
@@ -26,7 +28,8 @@ public class HeldItemCustomizations {
     private static boolean canVisuallyDualWield(LivingEntity mob) {
         return mob instanceof ZombieEntity || mob instanceof AbstractSkeletonEntity ||
                 mob instanceof AbstractPiglinEntity || mob instanceof PillagerEntity ||
-                mob instanceof GiantEntity || mob instanceof VexEntity;
+                mob instanceof GiantEntity || mob instanceof VexEntity ||
+                mob instanceof ArmorStandEntity || mob instanceof PlayerLikeEntity;
     }
 
     private static boolean canVisuallyHaveOneItem(LivingEntity mob) {

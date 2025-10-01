@@ -2,6 +2,8 @@ package edu.byu.minecraft.shopkeepers.customization.equipment;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.PlayerLikeEntity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.*;
 import net.minecraft.item.Items;
 
@@ -19,6 +21,7 @@ public class ArmorCustomizations {
 
     private static boolean canVisuallyEquipArmor(LivingEntity mob) {
         return mob instanceof ZombieEntity || mob instanceof AbstractSkeletonEntity ||
-                mob instanceof AbstractPiglinEntity || mob instanceof GiantEntity;
+                mob instanceof AbstractPiglinEntity || mob instanceof GiantEntity ||
+                mob instanceof ArmorStandEntity || mob instanceof PlayerLikeEntity;
     }
 }
