@@ -1,6 +1,8 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.decoration.MannequinEntity;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.*;
 
@@ -16,6 +18,7 @@ public class AppearanceCustomizationManager {
         //specific types
         List customization = switch (entity) {
             case ArmadilloEntity ae -> ArmadilloCustomizations.getArmadilloCustomizations(ae);
+            case ArmorStandEntity ae -> ArmorStandCustomizations.getArmorStandCustomizations(ae);
             case AxolotlEntity ae -> AxolotlCustomizations.getAxolotlCustomizations(ae);
             case BatEntity be -> BatCustomizations.getBatCustomizations(be);
             case BeeEntity be -> BeeCustomizations.getBeeCustomizations(be);
@@ -33,6 +36,7 @@ public class AppearanceCustomizationManager {
             case HorseEntity he -> HorseCustomizations.getHorseCustomizations(he);
             case IronGolemEntity ie -> IronGolemCustomizations.getIronGolemCustomizations(ie);
             case LlamaEntity le -> LlamaCustomizations.getLlamaCustomizations(le); //also covers trader llama as TraderLlamaEntity extends LlamaEntity
+            case MannequinEntity me -> MannequinCustomizations.getMannequinCustomizations(me);
             case MooshroomEntity me -> MooshroomCustomizations.getMooshroomCustomizations(me);
             case PandaEntity pe -> PandaCustomizations.getPandaCustomizations(pe);
             case ParrotEntity pe -> ParrotCustomizations.getParrotCustomizations(pe);

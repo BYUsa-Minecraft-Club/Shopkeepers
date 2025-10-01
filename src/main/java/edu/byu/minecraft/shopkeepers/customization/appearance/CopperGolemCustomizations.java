@@ -1,7 +1,7 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
-import edu.byu.minecraft.shopkeepers.command.ShopkeeperEntitySummoner;
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
+import edu.byu.minecraft.shopkeepers.mixin.invoker.CopperGolemOxidationTimerSetter;
 import net.minecraft.block.Oxidizable;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.passive.CopperGolemEntity;
@@ -80,9 +80,5 @@ public class CopperGolemCustomizations {
             shopkeeper.equipStack(EquipmentSlot.SADDLE, hasPoppy ? ItemStack.EMPTY : new ItemStack(Items.POPPY));
             return new CopperGolemPoppyCustomization(!hasPoppy);
         }
-    }
-
-    public interface CopperGolemOxidationTimerSetter {
-        void setNextOxidationAge(long nextOxidationAge);
     }
 }

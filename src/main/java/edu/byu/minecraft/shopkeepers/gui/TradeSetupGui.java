@@ -20,8 +20,10 @@ import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SpawnEggItem;
@@ -109,7 +111,10 @@ public abstract class TradeSetupGui extends SimpleGui {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
             return false;
         } else if (appearanceOptions.size() > 1) {
-            SpawnEggItem egg = SpawnEggItem.forEntity(shopkeeper.getType());
+            Item egg = SpawnEggItem.forEntity(shopkeeper.getType());
+            if(egg == null && shopkeeper instanceof ArmorStandEntity) {
+                egg = Items.ARMOR_STAND;
+            }
             setSlot(slot, new GuiElementBuilder(egg != null ? egg : Items.LIME_DYE)
                     .setItemName(Text.of(String.format("Edit %s Appearance Options",
                             CustomizationUtils.capitalize(shopkeeper.getType().getName().getString()))))

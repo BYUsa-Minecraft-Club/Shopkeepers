@@ -1,10 +1,13 @@
 package edu.byu.minecraft.shopkeepers.command;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import edu.byu.minecraft.shopkeepers.customization.appearance.CopperGolemCustomizations.CopperGolemOxidationTimerSetter;
+import edu.byu.minecraft.shopkeepers.mixin.invoker.CopperGolemOxidationTimerSetter;
+import edu.byu.minecraft.shopkeepers.mixin.invoker.MannequinEntityCustomizationInvoker;
+import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.decoration.MannequinEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.ChickenEntity;
@@ -14,6 +17,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.SummonCommand;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
 public class ShopkeeperEntitySummoner {
@@ -38,6 +42,12 @@ public class ShopkeeperEntitySummoner {
             }
             if (entity instanceof CopperGolemEntity copperGolem) {
                 ((CopperGolemOxidationTimerSetter) (Object) copperGolem).setNextOxidationAge(-2L);
+            }
+            if (entity instanceof MannequinEntity mannequin && source.getPlayer() != null) {
+                MannequinEntityCustomizationInvoker asInvoker = (MannequinEntityCustomizationInvoker) mannequin;
+                asInvoker.invokeSetMannequinProfile(ProfileComponent.ofStatic(source.getPlayer().getGameProfile()));
+                asInvoker.invokeSetImmovable(true);
+                asInvoker.invokeSetDescription(Text.of("NPC Shopkeeper"));
             }
         }
         return entity;
