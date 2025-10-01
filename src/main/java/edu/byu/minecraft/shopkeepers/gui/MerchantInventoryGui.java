@@ -7,6 +7,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
@@ -30,10 +31,10 @@ public class MerchantInventoryGui extends SimpleGui {
                 .withUnderline(true);
     }
 
-    private final MobEntity shopkeeper;
+    private final LivingEntity shopkeeper;
     private final SimpleInventory inventoryPage;
 
-    public MerchantInventoryGui(ServerPlayerEntity player, MobEntity shopkeeper) {
+    public MerchantInventoryGui(ServerPlayerEntity player, LivingEntity shopkeeper) {
         super(ScreenHandlerType.GENERIC_9X6, player, false);
         this.shopkeeper = shopkeeper;
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());

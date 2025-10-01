@@ -1,11 +1,12 @@
 package edu.byu.minecraft.shopkeepers.customization.equipment;
 
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class MobEquipmentCustomizations<E extends MobEntity> implements EquipmentCustomization<E> {
+public class MobEquipmentCustomizations<E extends LivingEntity> implements EquipmentCustomization<E> {
     private final EquipmentSlot slot;
     private final String slotDescription;
     private final Item descriptionItem;

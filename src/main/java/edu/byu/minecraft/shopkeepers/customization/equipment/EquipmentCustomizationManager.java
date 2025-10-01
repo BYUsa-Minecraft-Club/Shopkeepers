@@ -1,7 +1,7 @@
 package edu.byu.minecraft.shopkeepers.customization.equipment;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.EndermanEntity;
-import net.minecraft.entity.mob.MobEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 public class EquipmentCustomizationManager {
 
     @SuppressWarnings({"unchecked"})
-    public static <E extends MobEntity> List<EquipmentCustomization<E>> getEquipmentOptions(E entity) {
+    public static <E extends LivingEntity> List<EquipmentCustomization<E>> getEquipmentOptions(E entity) {
         List<EquipmentCustomization<E>> equipmentOptions = new ArrayList<>();
 
         ArmorCustomizations.addArmorCustomizations(entity, equipmentOptions);

@@ -15,7 +15,7 @@ import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
 import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -227,8 +227,9 @@ public class Commands {
 
             Entity testEntity = ShopkeeperEntitySummoner.summon(context.getSource(), entity,
                     new Vec3d(executor.getX(), -100, executor.getZ()), false, false);
-            if(!(testEntity instanceof MobEntity)) {
-                context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " is not a mob, not adding"));
+            if(!(testEntity instanceof LivingEntity)) {
+                context.getSource().sendMessage(Text.of(entity.value().getName().getString() +
+                        " is not a living entity, not adding"));
                 testEntity.kill(executor.getEntityWorld());
                 return 0;
             }
@@ -272,7 +273,7 @@ public class Commands {
                 .filter(sd -> sd.owners().contains(executor.getUuid()))
                 .mapToDouble(sd -> 1.0 / sd.owners().size())
                 .sum();
-        int maxShops = Shopkeepers.getData().getMaxOwnedShops();;
+        int maxShops = Shopkeepers.getData().getMaxOwnedShops();
         String maxShopOwner = "the";
         if(Shopkeepers.getData().getPlayerMaxOwnedShops().containsKey(executor.getUuid())) {
             maxShops = Shopkeepers.getData().getPlayerMaxOwnedShops().get(executor.getUuid());

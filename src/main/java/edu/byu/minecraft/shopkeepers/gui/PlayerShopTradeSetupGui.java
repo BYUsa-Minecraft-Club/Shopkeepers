@@ -2,6 +2,7 @@ package edu.byu.minecraft.shopkeepers.gui;
 
 import edu.byu.minecraft.Shopkeepers;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
@@ -12,7 +13,7 @@ import net.minecraft.text.Text;
 public class PlayerShopTradeSetupGui extends TradeSetupGui {
 
 
-    public PlayerShopTradeSetupGui(ServerPlayerEntity player, MobEntity shopkeeper) {
+    public PlayerShopTradeSetupGui(ServerPlayerEntity player, LivingEntity shopkeeper) {
         super(ScreenHandlerType.GENERIC_9X5, player, shopkeeper, 8);
         this.setTitle(Text.of("Player shop setup"));
     }

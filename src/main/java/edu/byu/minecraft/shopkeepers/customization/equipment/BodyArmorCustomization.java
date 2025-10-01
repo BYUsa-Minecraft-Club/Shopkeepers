@@ -1,6 +1,7 @@
 package edu.byu.minecraft.shopkeepers.customization.equipment;
 
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -8,7 +9,7 @@ import net.minecraft.item.Items;
 import java.util.List;
 
 public class BodyArmorCustomization {
-    static <E extends MobEntity> void addBodyArmorCustomization(E entity, List<EquipmentCustomization<E>> list) {
+    static <E extends LivingEntity> void addBodyArmorCustomization(E entity, List<EquipmentCustomization<E>> list) {
         if(entity.canEquip(new ItemStack(Items.LEATHER_HORSE_ARMOR), EquipmentSlot.BODY)) {
             list.add(new MobEquipmentCustomizations<>(EquipmentSlot.BODY, "armor", Items.LEATHER_HORSE_ARMOR));
         }

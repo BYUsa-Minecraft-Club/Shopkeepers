@@ -1,11 +1,12 @@
 package edu.byu.minecraft.shopkeepers.customization.equipment;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 
-public class HandEquipmentCustomizations<E extends MobEntity> implements EquipmentCustomization<E> {
+public class HandEquipmentCustomizations<E extends LivingEntity> implements EquipmentCustomization<E> {
     private final Hand hand;
     private final String slotDescription;
     private final Item descriptionItem;

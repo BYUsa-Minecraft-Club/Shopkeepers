@@ -6,7 +6,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import edu.byu.minecraft.Shopkeepers;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.command.ServerCommandSource;
 
 import java.lang.reflect.Field;
@@ -35,17 +35,17 @@ public class CustomSuggestionProviders {
         return builder.buildFuture();
     }
 
-    private static final Set<EntityType<?>> MOB_ENTITIES;
-    private static final Set<EntityType<?>> SIDE_EFFECT_MOB_ENTITIES =
-            Set.of(EntityType.ENDER_DRAGON, EntityType.WITHER); /*Ender dragons are not interactable and withers show
-                                                                  a boss bar. I don't want either of those, so I'm
-                                                                  just not going to make them options in the first place */
+    private static final Set<EntityType<?>> LIVING_ENTITIES;
+    private static final Set<EntityType<?>> SIDE_EFFECT_ENTITIES =
+            Set.of(EntityType.ENDER_DRAGON, EntityType.WITHER);
+    /*Ender dragons are not interactable and withers show a boss bar. I don't want either of those, so I'm just not
+    going to make them options in the first place. Also players aren't summonable (use a mannequin instead) */
 
     static {
-        MOB_ENTITIES = Arrays.stream(EntityType.class.getDeclaredFields())
+        LIVING_ENTITIES = Arrays.stream(EntityType.class.getDeclaredFields())
                 .filter(field -> Modifier.isStatic(field.getModifiers()))
                 .filter(field -> field.getType() == EntityType.class)
-                .filter(field -> MobEntity.class.isAssignableFrom(
+                .filter(field -> LivingEntity.class.isAssignableFrom(
                         (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0]))
                 .map((Function<Field, EntityType<?>>) field -> {
                     field.setAccessible(true);
@@ -55,13 +55,13 @@ public class CustomSuggestionProviders {
                         throw new RuntimeException(e);
                     }
                 })
-                .filter(type -> !SIDE_EFFECT_MOB_ENTITIES.contains(type))
+                .filter(type -> !SIDE_EFFECT_ENTITIES.contains(type))
                 .collect(Collectors.toCollection(HashSet::new));
     }
 
     public static CompletableFuture<Suggestions> unaddedEntityTypes(CommandContext<ServerCommandSource> ctx,
                                                    SuggestionsBuilder builder) {
-        MOB_ENTITIES.stream()
+        LIVING_ENTITIES.stream()
                 .filter(type -> !Shopkeepers.getData().getAllowedShopkeepers().contains(type))
                 .map(EntityType::getUntranslatedName)
                 .filter(s -> CommandSource.shouldSuggest(builder.getRemaining(), s))

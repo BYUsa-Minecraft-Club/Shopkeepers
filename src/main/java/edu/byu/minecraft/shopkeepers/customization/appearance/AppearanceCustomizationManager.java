@@ -24,6 +24,7 @@ public class AppearanceCustomizationManager {
             case CatEntity ce -> CatCustomizations.getCatCustomizations(ce);
             case ChickenEntity ce -> ChickenCustomizations.getChickenCustomizations(ce);
             case CreeperEntity ce -> CreeperCustomizations.getCreeperCustomizations(ce);
+            case CopperGolemEntity cge -> CopperGolemCustomizations.getCopperGolemCustomizations(cge);
             case CowEntity ce -> CowCustomizations.getCowCustomizations(ce);
             case FrogEntity fe -> FrogCustomizations.getFrogCustomizations(fe);
             case FoxEntity fe -> FoxCustomizations.getFoxCustomizations(fe);

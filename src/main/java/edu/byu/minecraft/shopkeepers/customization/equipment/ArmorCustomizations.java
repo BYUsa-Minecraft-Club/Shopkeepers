@@ -1,13 +1,14 @@
 package edu.byu.minecraft.shopkeepers.customization.equipment;
 
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.*;
 import net.minecraft.item.Items;
 
 import java.util.List;
 
 public class ArmorCustomizations {
-    static <E extends MobEntity> void addArmorCustomizations(E entity, List<EquipmentCustomization<E>> list) {
+    static <E extends LivingEntity> void addArmorCustomizations(E entity, List<EquipmentCustomization<E>> list) {
         if(canVisuallyEquipArmor(entity)) {
             list.add(new MobEquipmentCustomizations<>(EquipmentSlot.HEAD, "helmet", Items.LEATHER_HELMET));
             list.add(new MobEquipmentCustomizations<>(EquipmentSlot.CHEST, "chestplate", Items.LEATHER_CHESTPLATE));
@@ -16,7 +17,7 @@ public class ArmorCustomizations {
         }
     }
 
-    private static boolean canVisuallyEquipArmor(MobEntity mob) {
+    private static boolean canVisuallyEquipArmor(LivingEntity mob) {
         return mob instanceof ZombieEntity || mob instanceof AbstractSkeletonEntity ||
                 mob instanceof AbstractPiglinEntity || mob instanceof GiantEntity;
     }

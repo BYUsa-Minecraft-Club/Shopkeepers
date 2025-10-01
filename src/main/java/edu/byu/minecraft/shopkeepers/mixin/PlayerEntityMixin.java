@@ -7,7 +7,7 @@ import edu.byu.minecraft.shopkeepers.gui.AdminShopTradeSetupGui;
 import edu.byu.minecraft.shopkeepers.gui.OfferGui;
 import edu.byu.minecraft.shopkeepers.gui.PlayerShopTradeSetupGui;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -43,14 +43,14 @@ public abstract class PlayerEntityMixin {
         if (shopkeeperData != null && player.getEntityWorld().getServer() != null) {
             if(shopkeeperData.isAdmin() && player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry())) {
                 if(shopkeeperData.trades().isEmpty()) {
-                    new AdminShopTradeSetupGui(player, (MobEntity) entity).open();
+                    new AdminShopTradeSetupGui(player, (LivingEntity) entity).open();
                 } else {
-                    new OfferGui(player, (MobEntity) entity).open();
+                    new OfferGui(player, (LivingEntity) entity).open();
                 }
             } else if (shopkeeperData.owners().contains(player.getUuid())) {
-                new PlayerShopTradeSetupGui(player, (MobEntity) entity).open();
+                new PlayerShopTradeSetupGui(player, (LivingEntity) entity).open();
             } else {
-                new OfferGui(player, (MobEntity) entity).open();
+                new OfferGui(player, (LivingEntity) entity).open();
             }
 
             cir.setReturnValue(ActionResult.CONSUME);

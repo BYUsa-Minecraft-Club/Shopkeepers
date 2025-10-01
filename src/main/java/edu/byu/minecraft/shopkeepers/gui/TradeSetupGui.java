@@ -19,6 +19,7 @@ import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
@@ -35,11 +36,11 @@ import java.util.function.Predicate;
 
 public abstract class TradeSetupGui extends SimpleGui {
 
-    protected final MobEntity shopkeeper;
+    protected final LivingEntity shopkeeper;
     protected final SimpleInventory tradeItems;
     protected final int maxTrades;
 
-    public TradeSetupGui(ScreenHandlerType<?> type, ServerPlayerEntity player, MobEntity shopkeeper, int maxTrades) {
+    public TradeSetupGui(ScreenHandlerType<?> type, ServerPlayerEntity player, LivingEntity shopkeeper, int maxTrades) {
         super(type, player, false);
         this.shopkeeper = shopkeeper;
         this.maxTrades = maxTrades;
@@ -122,7 +123,7 @@ public abstract class TradeSetupGui extends SimpleGui {
     }
 
     protected void equipmentOptions(int slot) {
-        List<EquipmentCustomization<MobEntity>> equipmentOptions =
+        List<EquipmentCustomization<LivingEntity>> equipmentOptions =
                 EquipmentCustomizationManager.getEquipmentOptions(shopkeeper);
         if(equipmentOptions.isEmpty()) {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
