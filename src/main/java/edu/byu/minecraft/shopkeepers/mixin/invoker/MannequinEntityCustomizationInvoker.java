@@ -11,6 +11,9 @@ public interface MannequinEntityCustomizationInvoker {
     @Invoker("setMannequinProfile")
     void invokeSetMannequinProfile(ProfileComponent pc);
 
+    @Invoker("getMannequinProfile")
+    ProfileComponent invokeGetMannequinProfile();
+
     @Invoker("setImmovable")
     void invokeSetImmovable(boolean immovable);
 

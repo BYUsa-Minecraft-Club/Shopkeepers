@@ -1,10 +1,13 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
+import eu.pb4.sgui.api.gui.GuiInterface;
+import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.decoration.MannequinEntity;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.*;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +16,9 @@ public class AppearanceCustomizationManager {
 
     @SuppressWarnings({"unchecked", "rawtypes"}) /* I know this is annoying, but this is the best way I figured out
     how to get the generics to work to make the customizations extendible */
-    public static <E extends Entity> List<AppearanceCustomization<E>> getAppearanceOptions(E entity) {
+    public static <E extends Entity> List<AppearanceCustomization<E>> getAppearanceOptions(E entity,
+                                                                                           ServerPlayerEntity player,
+                                                                                           SimpleGui currentGui) {
 
         //specific types
         List customization = switch (entity) {
@@ -36,7 +41,7 @@ public class AppearanceCustomizationManager {
             case HorseEntity he -> HorseCustomizations.getHorseCustomizations(he);
             case IronGolemEntity ie -> IronGolemCustomizations.getIronGolemCustomizations(ie);
             case LlamaEntity le -> LlamaCustomizations.getLlamaCustomizations(le); //also covers trader llama as TraderLlamaEntity extends LlamaEntity
-            case MannequinEntity me -> MannequinCustomizations.getMannequinCustomizations(me);
+            case MannequinEntity me -> MannequinCustomizations.getMannequinCustomizations(me, player, currentGui);
             case MooshroomEntity me -> MooshroomCustomizations.getMooshroomCustomizations(me);
             case PandaEntity pe -> PandaCustomizations.getPandaCustomizations(pe);
             case ParrotEntity pe -> ParrotCustomizations.getParrotCustomizations(pe);

@@ -106,7 +106,7 @@ public abstract class TradeSetupGui extends SimpleGui {
     //returns whether there's something important now in the slot
     protected boolean appearanceOptions(int slot) {
         List<AppearanceCustomization<Entity>> appearanceOptions =
-                AppearanceCustomizationManager.getAppearanceOptions(shopkeeper);
+                AppearanceCustomizationManager.getAppearanceOptions(shopkeeper, player, this);
         if (appearanceOptions.isEmpty()) {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
             return false;
