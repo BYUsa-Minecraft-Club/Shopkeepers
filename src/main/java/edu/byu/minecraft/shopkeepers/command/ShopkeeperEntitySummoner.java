@@ -45,7 +45,7 @@ public class ShopkeeperEntitySummoner {
             }
             if (entity instanceof MannequinEntity mannequin && source.getPlayer() != null) {
                 MannequinEntityCustomizationInvoker asInvoker = (MannequinEntityCustomizationInvoker) mannequin;
-                asInvoker.invokeSetMannequinProfile(ProfileComponent.ofStatic(source.getPlayer().getGameProfile()));
+                asInvoker.invokeSetMannequinProfile(ProfileComponent.ofDynamic(source.getPlayer().getUuid()));
                 asInvoker.invokeSetImmovable(true);
                 asInvoker.invokeSetDescription(Text.of("NPC Shopkeeper"));
             }
