@@ -152,7 +152,7 @@ public class VillagerCustomizations {
 
             @Override
             public VillagerTypes<E> setNext(E shopkeeper) {
-                Types next = CustomizationUtils.nextAlphabetically(type, Types.values());
+                Types next = CustomizationUtils.nextEnum(type, Types.values());
                 shopkeeper.setVillagerData(
                         shopkeeper.getVillagerData().withType(shopkeeper.getRegistryManager(), next.type));
                 return new VillagerTypes<>(next);

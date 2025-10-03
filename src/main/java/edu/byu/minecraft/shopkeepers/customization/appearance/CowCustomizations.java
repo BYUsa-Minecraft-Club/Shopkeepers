@@ -65,7 +65,7 @@ public class CowCustomizations {
 
         @Override
         public AppearanceCustomization<CowEntity> setNext(CowEntity shopkeeper) {
-            Variant next = CustomizationUtils.nextAlphabetically(variant, Variant.values());
+            Variant next = CustomizationUtils.nextEnum(variant, Variant.values());
             shopkeeper.setVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
             return new CowVariantCustomization(next);
         }

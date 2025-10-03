@@ -80,7 +80,7 @@ public class CatCustomizations {
 
         @Override
         public AppearanceCustomization<CatEntity> setNext(CatEntity shopkeeper) {
-            Variant next = CustomizationUtils.nextAlphabetically(variant, Variant.values());
+            Variant next = CustomizationUtils.nextEnum(variant, Variant.values());
             ((CatEntityVariationSetter) shopkeeper).invokeSetVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
             return new CatVariantCustomization(next);
         }
@@ -105,7 +105,7 @@ public class CatCustomizations {
 
         @Override
         public AppearanceCustomization<CatEntity> setNext(CatEntity shopkeeper) {
-            DyeColor next = CustomizationUtils.nextAlphabetically(color, DyeColor.values());
+            DyeColor next = CustomizationUtils.nextInOrder(color);
             ((CatEntityVariationSetter) shopkeeper).invokeSetCollarColor(next);
             return new CatCollarCustomization(next);
         }

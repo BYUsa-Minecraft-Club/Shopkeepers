@@ -40,7 +40,7 @@ public class FoxCustomizations {
 
             @Override
             public AppearanceCustomization<FoxEntity> setNext(FoxEntity shopkeeper) {
-                FoxEntity.Variant next = CustomizationUtils.nextAlphabetically(variant, FoxEntity.Variant.values());
+                FoxEntity.Variant next = CustomizationUtils.nextEnum(variant, FoxEntity.Variant.values());
                 ((FoxEntityVariationSetter) shopkeeper).invokeSetVariant(next);
                 return new FoxVariantCustomization(next);
             }
@@ -80,7 +80,7 @@ public class FoxCustomizations {
 
         @Override
         public AppearanceCustomization<FoxEntity> setNext(FoxEntity shopkeeper) {
-            FoxPosition next = CustomizationUtils.nextAlphabetically(position(), FoxPosition.values());
+            FoxPosition next = CustomizationUtils.nextEnum(position(), FoxPosition.values());
             ((FoxEntityVariationSetter) shopkeeper).invokeSetSleeping(next == FoxPosition.SLEEPING);
             shopkeeper.setSitting(next == FoxPosition.SITTING);
             shopkeeper.setCrouching(next == FoxPosition.SNEAKING);

@@ -46,7 +46,7 @@ public class CopperGolemCustomizations {
 
         @Override
         public AppearanceCustomization<CopperGolemEntity> setNext(CopperGolemEntity shopkeeper) {
-            Oxidizable.OxidationLevel next = CustomizationUtils.nextAlphabetically(level, Oxidizable.OxidationLevel.values());
+            Oxidizable.OxidationLevel next = CustomizationUtils.nextEnum(level, Oxidizable.OxidationLevel.values());
             shopkeeper.setOxidationLevel(next);
             ((CopperGolemOxidationTimerSetter) (Object) shopkeeper).setNextOxidationAge(-2L);
             return new CopperGolemOxidationCustomization(next);

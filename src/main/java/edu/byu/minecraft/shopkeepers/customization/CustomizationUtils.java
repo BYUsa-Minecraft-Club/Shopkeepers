@@ -9,9 +9,14 @@ import java.util.Comparator;
 
 public class CustomizationUtils {
     public static enum DyeColorWithNone {
-        NONE, WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, GRAY, LIGHT_GRAY, CYAN, PURPLE, BLUE, BROWN,
-        GREEN, RED, BLACK
+        NONE, WHITE, LIGHT_GRAY, GRAY, BLACK, PINK, RED, ORANGE, BROWN, YELLOW, LIME, GREEN, CYAN, LIGHT_BLUE, BLUE,
+        PURPLE, MAGENTA
     }
+    
+    private static final DyeColor[] ORDERED_DYE_COLORS =
+            new DyeColor[]{DyeColor.WHITE, DyeColor.LIGHT_GRAY, DyeColor.GRAY, DyeColor.BLACK, DyeColor.PINK,
+                    DyeColor.RED, DyeColor.ORANGE, DyeColor.BROWN, DyeColor.YELLOW, DyeColor.LIME, DyeColor.GREEN,
+                    DyeColor.CYAN, DyeColor.LIGHT_BLUE, DyeColor.BLUE, DyeColor.PURPLE, DyeColor.MAGENTA};
 
     public static String capitalize(String s) {
         String[] split = s.split("[_ ]");
@@ -25,14 +30,16 @@ public class CustomizationUtils {
         return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
 
-    public static <E extends Enum<E>> E nextAlphabetically(E e, E[] values) {
-        values = Arrays.copyOf(values, values.length);
-        Arrays.sort(values, Comparator.comparing(Enum::name));
+    public static DyeColor nextInOrder(DyeColor e) {
         int index = 0;
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] == e) index = i;
+        for (int i = 0; i < ORDERED_DYE_COLORS.length; i++) {
+            if (ORDERED_DYE_COLORS[i] == e) index = i;
         }
-        return values[(index + 1) % values.length];
+        return ORDERED_DYE_COLORS[(index + 1) % ORDERED_DYE_COLORS.length];
+    }
+
+    public static <E extends Enum<E>> E nextEnum(E e, E[] values) {
+        return values[(e.ordinal() + 1) % values.length];
     }
 
     public static Item getDyeItem(DyeColor dyeColor) {

@@ -66,7 +66,7 @@ public class PigCustomizations {
 
         @Override
         public AppearanceCustomization<PigEntity> setNext(PigEntity shopkeeper) {
-            Variant next = CustomizationUtils.nextAlphabetically(variant, Variant.values());
+            Variant next = CustomizationUtils.nextEnum(variant, Variant.values());
             ((PigEntityVariantSetter) shopkeeper).invokeSetVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
             return new PigVariantCustomization(next);
         }

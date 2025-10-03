@@ -62,7 +62,7 @@ public class SheepCustomizations {
 
         @Override
         public AppearanceCustomization<SheepEntity> setNext(SheepEntity shopkeeper) {
-            DyeColor next = CustomizationUtils.nextAlphabetically(color, DyeColor.values());
+            DyeColor next = CustomizationUtils.nextInOrder(color);
             shopkeeper.setColor(next);
             return new SheepColorCustomization(next);
         }

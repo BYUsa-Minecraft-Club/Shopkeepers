@@ -40,7 +40,7 @@ public class TropicalFishCustomizations {
 
         @Override
         public AppearanceCustomization<TropicalFishEntity> setNext(TropicalFishEntity shopkeeper) {
-            var next = CustomizationUtils.nextAlphabetically(pattern, TropicalFishEntity.Pattern.values());
+            var next = CustomizationUtils.nextEnum(pattern, TropicalFishEntity.Pattern.values());
             ((TropicalFishEntityVariationSetter)shopkeeper).invokeSetVariety(next);
             return new TropicalFishPatternCustomization(next);
         }
@@ -66,7 +66,7 @@ public class TropicalFishCustomizations {
 
         @Override
         public AppearanceCustomization<TropicalFishEntity> setNext(TropicalFishEntity shopkeeper) {
-            DyeColor next = CustomizationUtils.nextAlphabetically(color, DyeColor.values());
+            DyeColor next = CustomizationUtils.nextInOrder(color);
             ((TropicalFishEntityVariationSetter)shopkeeper).invokeSetBaseColor(next);
             return new TropicalFishBaseColorCustomization(next);
         }
@@ -92,7 +92,7 @@ public class TropicalFishCustomizations {
 
         @Override
         public AppearanceCustomization<TropicalFishEntity> setNext(TropicalFishEntity shopkeeper) {
-            DyeColor next = CustomizationUtils.nextAlphabetically(color, DyeColor.values());
+            DyeColor next = CustomizationUtils.nextInOrder(color);
             ((TropicalFishEntityVariationSetter)shopkeeper).invokeSetPatternColor(next);
             return new TropicalFishPatternColorCustomization(next);
         }

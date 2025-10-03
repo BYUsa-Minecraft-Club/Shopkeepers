@@ -43,7 +43,7 @@ public class LlamaCustomizations {
 
             @Override
             public AppearanceCustomization<LlamaEntity> setNext(LlamaEntity shopkeeper) {
-                LlamaEntity.Variant next = CustomizationUtils.nextAlphabetically(variant, LlamaEntity.Variant.values());
+                LlamaEntity.Variant next = CustomizationUtils.nextEnum(variant, LlamaEntity.Variant.values());
                 ((LlamaEntityVariantSetter) shopkeeper).invokeSetVariant(next);
                 return new LlamaVariantCustomization(next);
             }

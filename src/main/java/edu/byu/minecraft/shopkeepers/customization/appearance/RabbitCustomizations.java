@@ -45,7 +45,7 @@ public class RabbitCustomizations {
 
             @Override
             public AppearanceCustomization<RabbitEntity> setNext(RabbitEntity shopkeeper) {
-                RabbitEntity.Variant next = CustomizationUtils.nextAlphabetically(variant, RabbitEntity.Variant.values());
+                RabbitEntity.Variant next = CustomizationUtils.nextEnum(variant, RabbitEntity.Variant.values());
                 ((RabbitEntityVariantSetter) shopkeeper).invokeSetVariant(next);
                 return new RabbitVariantCustomization(next);
             }

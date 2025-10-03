@@ -48,7 +48,7 @@ public class ShulkerCustomizations {
 
         @Override
         public AppearanceCustomization<ShulkerEntity> setNext(ShulkerEntity shopkeeper) {
-            DyeColorWithNone next = CustomizationUtils.nextAlphabetically(color, DyeColorWithNone.values());
+            DyeColorWithNone next = CustomizationUtils.nextEnum(color, DyeColorWithNone.values());
             Optional<DyeColor> colorOptional =
                     (next == DyeColorWithNone.NONE) ? Optional.empty() : Optional.of(DyeColor.valueOf(next.name()));
             ((ShulkerEntityVariationSetter) shopkeeper).invokeSetColor(colorOptional);
@@ -87,7 +87,7 @@ public class ShulkerCustomizations {
 
         @Override
         public AppearanceCustomization<ShulkerEntity> setNext(ShulkerEntity shopkeeper) {
-            Direction next = CustomizationUtils.nextAlphabetically(direction(), Direction.values());
+            Direction next = CustomizationUtils.nextEnum(direction(), Direction.values());
             ((ShulkerEntityVariationSetter) shopkeeper).invokeSetAttachedFace(next);
             return new ShulkerAttachedFaceCustomization(next);
         }
@@ -130,7 +130,7 @@ public class ShulkerCustomizations {
 
         @Override
         public AppearanceCustomization<ShulkerEntity> setNext(ShulkerEntity shopkeeper) {
-            PeekHeight next = CustomizationUtils.nextAlphabetically(peekHeight, PeekHeight.values());
+            PeekHeight next = CustomizationUtils.nextEnum(peekHeight, PeekHeight.values());
             ((ShulkerEntityVariationSetter) shopkeeper).invokeSetPeekAmount(switch (next) {
                 case CLOSED -> 0;
                 case PEEKING -> 30;

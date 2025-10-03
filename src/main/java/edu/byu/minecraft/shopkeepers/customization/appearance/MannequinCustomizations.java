@@ -79,7 +79,7 @@ public class MannequinCustomizations {
 
         @Override
         public AppearanceCustomization<MannequinEntity> setNext(MannequinEntity shopkeeper) {
-            MannequinPose next = CustomizationUtils.nextAlphabetically(mannequinPose, MannequinPose.values());
+            MannequinPose next = CustomizationUtils.nextEnum(mannequinPose, MannequinPose.values());
             shopkeeper.setPose(next.pose);
             return new MannequinPoseCustomization(next);
         }

@@ -44,7 +44,7 @@ public class PandaCustomizations {
 
         @Override
         public AppearanceCustomization<PandaEntity> setNext(PandaEntity shopkeeper) {
-            PandaEntity.Gene next = CustomizationUtils.nextAlphabetically(gene, PandaEntity.Gene.values());
+            PandaEntity.Gene next = CustomizationUtils.nextEnum(gene, PandaEntity.Gene.values());
             shopkeeper.setMainGene(next);
             shopkeeper.setHiddenGene(next);
             return new PandaGeneCustomization(next);
