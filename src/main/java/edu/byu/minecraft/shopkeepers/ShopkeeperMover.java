@@ -37,7 +37,7 @@ public class ShopkeeperMover {
         if(isShopkeeperTeleportItem) {
             NbtElement nbtElement = customNbt.copyNbt().get(SHOPKEEPER_ID_KEY);
             Optional<UUID> uuidResult = nbtElement.asString().map(UUID::fromString);
-            if (!uuidResult.isPresent()) {
+            if (uuidResult.isEmpty()) {
                 player.sendMessage(Text.of(
                         "Shopkeeper teleport key is present but unreadable. Please try again or contact an admin"));
             } else {
@@ -46,8 +46,7 @@ public class ShopkeeperMover {
                 if(data == null) {
                     player.sendMessage(Text.of("An unknown error occurred. Please try again or contact an admin"));
                 }
-                else if (!data.owners().contains(player.getUuid()) &&
-                        !player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry())) {
+                else if (!data.owners().contains(player.getUuid()) && !Shopkeepers.isAdmin(player)) {
                     player.sendMessage(Text.of("Error: You are not an admin and do not own this shop"));
                 }
                 else {

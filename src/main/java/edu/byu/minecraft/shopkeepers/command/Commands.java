@@ -281,9 +281,9 @@ public class Commands {
         }
         if (ownedShops >= maxShops) {
             String relationshipDescription = (ownedShops == maxShops) ? "at" : "greater than";
-            if(executor.getEntityWorld().getServer().getPlayerManager().isOperator(executor.getPlayerConfigEntry())) {
+            if(Shopkeepers.isAdmin(executor)) {
                 executor.sendMessage(Text.of(String.format("Warning: you already own %.2f current shops (adjusted for multiple owners)," +
-                        " %s %s normal max of %d. Since you are a server operator," +
+                        " %s %s normal max of %d. Since you are a shopkeepers administrator," +
                         " you are allowed to bypass the limit. Continuing with shop creation.",
                         ownedShops, relationshipDescription, maxShopOwner, maxShops)));
             } else {

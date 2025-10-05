@@ -1,6 +1,7 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import com.mojang.authlib.GameProfile;
+import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.gui.TextInputGui;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.MannequinEntityCustomizationInvoker;
@@ -23,8 +24,8 @@ public class MannequinCustomizations {
                                                                                             ServerPlayerEntity player,
                                                                                             SimpleGui currentGui) {
         List<AppearanceCustomization<MannequinEntity>> customizations = new ArrayList<>();
-        if (player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry())) {
-            customizations.add(new Test(entity, player, currentGui));
+        if (Shopkeepers.isAdmin(player)) {
+            customizations.add(new MannequinProfileCustomization(entity, player, currentGui));
         }
         customizations.add(new MannequinPoseCustomization(entity));
         return customizations;
@@ -85,7 +86,7 @@ public class MannequinCustomizations {
         }
     }
 
-    private record Test(MannequinEntity mannequin, ServerPlayerEntity player, SimpleGui currentGui)
+    private record MannequinProfileCustomization(MannequinEntity mannequin, ServerPlayerEntity player, SimpleGui currentGui)
             implements AppearanceCustomization<MannequinEntity> {
 
         @Override

@@ -43,25 +43,20 @@ public class OfferGui extends MerchantGui {
     }
 
     private final LivingEntity shopkeeper;
-    private final boolean isAdmin;
-    private final boolean isOwner;
+    private boolean isAdmin = false;
+    private boolean isOwner = false;
 
     public OfferGui(ServerPlayerEntity player, LivingEntity shopkeeper) {
         super(player, false);
         this.shopkeeper = shopkeeper;
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
 
-        if(player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry())) {
-            isAdmin = true;
-            isOwner = false;
-            addTrade(new TradeOffer(adminEditTradeBuyItem, adminEditTradeSellItem, 1, 0, 0));
-        } else if(shopkeeperData.owners().contains(player.getUuid())) {
-            isAdmin = false;
+        if(shopkeeperData.owners().contains(player.getUuid())) {
             isOwner = true;
             addTrade(new TradeOffer(ownerEditTradeBuyItem, ownerEditTradeSellItem, 1, 0, 0));
-        } else {
-            isAdmin = false;
-            isOwner = false;
+        } else if(Shopkeepers.isAdmin(player)) {
+            isAdmin = true;
+            addTrade(new TradeOffer(adminEditTradeBuyItem, adminEditTradeSellItem, 1, 0, 0));
         }
 
         for (TradeData trade : shopkeeperData.trades()) {

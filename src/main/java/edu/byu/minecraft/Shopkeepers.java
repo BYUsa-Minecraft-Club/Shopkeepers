@@ -3,10 +3,12 @@ package edu.byu.minecraft;
 import edu.byu.minecraft.shopkeepers.command.Commands;
 import edu.byu.minecraft.shopkeepers.data.SaveData;
 import edu.byu.minecraft.shopkeepers.lock.InteractionLocks;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,5 +39,9 @@ public class Shopkeepers implements ModInitializer {
 
 	public static InteractionLocks getInteractionLocks() {
 		return interactionLocks;
+	}
+
+	public static boolean isAdmin(ServerPlayerEntity player) {
+		return Permissions.check(player, MOD_ID + ".admin", 4);
 	}
 }

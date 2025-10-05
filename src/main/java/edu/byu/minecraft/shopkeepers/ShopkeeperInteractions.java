@@ -40,7 +40,7 @@ public class ShopkeeperInteractions {
     public static boolean openGui(Entity entity, ServerPlayerEntity player) {
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(entity.getUuid());
         if (shopkeeperData != null) {
-            if(shopkeeperData.isAdmin() && player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry())) {
+            if(shopkeeperData.isAdmin() && Shopkeepers.isAdmin(player)) {
                 if(shopkeeperData.trades().isEmpty()) {
                     new AdminShopTradeSetupGui(player, (LivingEntity) entity).open();
                 } else {

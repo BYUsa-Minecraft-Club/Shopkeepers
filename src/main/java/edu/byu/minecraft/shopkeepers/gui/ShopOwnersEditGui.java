@@ -39,7 +39,7 @@ public class ShopOwnersEditGui extends SimpleGui {
     private void setupSlots() {
         ShopkeeperData data = Shopkeepers.getData().getShopkeeperData().get(shopkeeperId);
 
-        boolean isAdmin = player.getEntityWorld().getServer().getPlayerManager().isOperator(player.getPlayerConfigEntry());
+        boolean isAdmin = Shopkeepers.isAdmin(player);
 
         if (!isAdmin && !data.owners().contains(player.getUuid())) {
             close();

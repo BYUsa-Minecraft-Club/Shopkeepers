@@ -7,7 +7,7 @@ Shopkeepers usage:
 | /shopkeepers make &lt;approved entity type&gt; | Creates a new shopkeeper, owned by you        |
 | /shopkeepers shopentities                      | Lists out the entity types approved by admins |
 
-Admin commands:
+Admin commands (requires `shopkeepers.admin` luckperms permission (or server operator):
 
 | Command                                                                    | Description                                                                                                                                                         |
 |----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -22,3 +22,4 @@ Admin commands:
 | /shopkeepers admin playershoplimit remove &lt;player name&gt;              | Removes the specific limit for specified player (reverts to default)                                                                                                |
 | /shopkeepers admin playershoplimit list                                    | Lists shop limits for any player with a limit set                                                                                                                   |
 
+Aditionally, any player with the luckperms permission `shopkeepers.admin` (or is a server operator) may set the shown player of a mannequin shopkeeper. Other players cannot make this edit.
