@@ -52,7 +52,6 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
                 .setItemName(Text.of("Open Shopkeeper Inventory"))
                 .setCallback(() -> {
                     this.close();
-                    Shopkeepers.getInteractionLocks().tryAcquireLock(shopkeeper.getUuid(), player.getUuid());
                     new MerchantInventoryGui(player, shopkeeper).open();
                 })
                 .build());

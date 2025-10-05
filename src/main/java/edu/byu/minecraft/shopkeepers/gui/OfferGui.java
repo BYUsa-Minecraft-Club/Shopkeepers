@@ -93,12 +93,10 @@ public class OfferGui extends MerchantGui {
             } else {
                 new PlayerShopTradeSetupGui(player, shopkeeper).open();
             }
-            Shopkeepers.getInteractionLocks().tryAcquireLock(shopkeeper.getUuid(), player.getUuid());
         } else if(isOwner && ItemStack.areEqual(offer.getSellItem(), ownerEditTradeSellItem) &&
                 offer.getFirstBuyItem().matches(ownerEditTradeSellItem)) {
             this.close();
             new PlayerShopTradeSetupGui(player, shopkeeper).open();
-            Shopkeepers.getInteractionLocks().tryAcquireLock(shopkeeper.getUuid(), player.getUuid());
         }
     }
 
