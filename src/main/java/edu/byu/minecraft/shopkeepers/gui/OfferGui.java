@@ -116,8 +116,6 @@ public class OfferGui extends MerchantGui {
             }
             shopkeeperData.removeItems(offer.getSellItem(), offer.getSellItem().getCount());
 
-            Shopkeepers.getData().markDirty();
-
             boolean changedTrades = false;
             for (int i = 0; i < shopkeeperData.trades().size(); i++) {
                 TradeOffer tradeOffer = this.merchant.getOffers().get(i);
@@ -135,6 +133,8 @@ public class OfferGui extends MerchantGui {
 
         Map<UUID, Integer> uses = shopkeeperData.trades().get((isAdmin || isOwner) ? index - 1 : index).uses();
         uses.put(player.getUuid(), uses.getOrDefault(player.getUuid(), 0) + 1);
+
+        Shopkeepers.getData().markDirty();
     }
 
     private TradeOffer getOfferWithCorrectMaxUses(TradeData base, ShopkeeperData shopkeeperData) {
