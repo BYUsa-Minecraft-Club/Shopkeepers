@@ -36,7 +36,7 @@ public class AngerableCustomization<E extends Entity & Angerable> implements App
     public AppearanceCustomization<E> setNext(E shopkeeper) {
         shopkeeper.stopAnger();
         if (!isAngry) {
-            shopkeeper.setAngerTime(2099999999);
+            shopkeeper.setAngerDuration(2099999999);
         }
         return new AngerableCustomization<>(!isAngry);
     }
