@@ -1,11 +1,11 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
-import net.minecraft.entity.passive.AxolotlEntity;
+import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(AxolotlEntity.class)
+@Mixin(Axolotl.class)
 public interface AxolotlEntityVariantSetter {
     @Invoker(value = "setVariant")
-    public void invokeSetVariant(AxolotlEntity.Variant variant);
+    public void invokeSetVariant(Axolotl.Variant variant);
 }

@@ -1,21 +1,20 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 
-import net.minecraft.entity.passive.PufferfishEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.fish.Pufferfish;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class PufferfishCustomizations {
-    public static List<AppearanceCustomization<PufferfishEntity>> getPufferfishCustomizations(PufferfishEntity entity) {
-        List<AppearanceCustomization<PufferfishEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Pufferfish>> getPufferfishCustomizations(Pufferfish entity) {
+        List<AppearanceCustomization<Pufferfish>> customizations = new ArrayList<>();
         customizations.add(new PufferfishSizeCustomization(entity.getPuffState()));
         return customizations;
     }
 
-    private record PufferfishSizeCustomization(int size) implements AppearanceCustomization<PufferfishEntity> {
+    private record PufferfishSizeCustomization(int size) implements AppearanceCustomization<Pufferfish> {
 
         @Override
         public String customizationDescription() {
@@ -43,7 +42,7 @@ public class PufferfishCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<PufferfishEntity> setNext(PufferfishEntity shopkeeper) {
+        public AppearanceCustomization<Pufferfish> setNext(Pufferfish shopkeeper) {
             int next = (size + 1) % 3;
             shopkeeper.setPuffState(next);
             return new PufferfishSizeCustomization(next);

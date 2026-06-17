@@ -1,21 +1,20 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
-import net.minecraft.entity.passive.BatEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class BatCustomizations {
 
-    public static List<AppearanceCustomization<BatEntity>> getBatCustomizations(BatEntity bat) {
-        List<AppearanceCustomization<BatEntity>> customizations = new ArrayList<>();
-        customizations.add(new BatRoostingCustomization(bat.isRoosting()));
+    public static List<AppearanceCustomization<Bat>> getBatCustomizations(Bat bat) {
+        List<AppearanceCustomization<Bat>> customizations = new ArrayList<>();
+        customizations.add(new BatRoostingCustomization(bat.isResting()));
         return customizations;
     }
 
-    private record BatRoostingCustomization(boolean isRoosting) implements AppearanceCustomization<BatEntity> {
+    private record BatRoostingCustomization(boolean isRoosting) implements AppearanceCustomization<Bat> {
 
         @Override
         public String customizationDescription() {
@@ -33,8 +32,8 @@ public class BatCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<BatEntity> setNext(BatEntity shopkeeper) {
-            shopkeeper.setRoosting(!isRoosting);
+        public AppearanceCustomization<Bat> setNext(Bat shopkeeper) {
+            shopkeeper.setResting(!isRoosting);
             return new BatRoostingCustomization(!isRoosting);
         }
     }

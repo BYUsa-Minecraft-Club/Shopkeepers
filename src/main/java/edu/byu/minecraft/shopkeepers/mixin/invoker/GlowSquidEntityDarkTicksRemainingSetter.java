@@ -1,11 +1,11 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
-import net.minecraft.entity.passive.GlowSquidEntity;
+import net.minecraft.world.entity.animal.squid.GlowSquid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(GlowSquidEntity.class)
+@Mixin(GlowSquid.class)
 public interface GlowSquidEntityDarkTicksRemainingSetter {
-    @Invoker(value = "setDarkTicksRemaining")
+    @Invoker(value = "setDarkTicks")
     public void invokeSetDarkTicksRemaining(int ticks);
 }

@@ -1,24 +1,23 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.mixin.invoker.BeeEntityVariationSetter;
-import net.minecraft.entity.passive.BeeEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.bee.Bee;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class BeeCustomizations {
 
-    public static List<AppearanceCustomization<BeeEntity>> getBeeCustomizations(BeeEntity bee) {
-        List<AppearanceCustomization<BeeEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Bee>> getBeeCustomizations(Bee bee) {
+        List<AppearanceCustomization<Bee>> customizations = new ArrayList<>();
         customizations.add(new BeeNectarCustomization(bee.hasNectar()));
         customizations.add(new BeeStingerCustomization(!bee.hasStung()));
         customizations.add(new AngerableCustomization<>(bee));
         return customizations;
     }
 
-    private record BeeNectarCustomization(boolean hasNectar) implements AppearanceCustomization<BeeEntity> {
+    private record BeeNectarCustomization(boolean hasNectar) implements AppearanceCustomization<Bee> {
 
         @Override
         public String customizationDescription() {
@@ -36,13 +35,13 @@ public class BeeCustomizations {
         }
 
         @Override
-        public BeeNectarCustomization setNext(BeeEntity shopkeeper) {
+        public BeeNectarCustomization setNext(Bee shopkeeper) {
             ((BeeEntityVariationSetter) shopkeeper).invokeSetHasNectar(!hasNectar);
             return new BeeNectarCustomization(!hasNectar);
         }
     }
 
-    private record BeeStingerCustomization(boolean hasStinger) implements AppearanceCustomization<BeeEntity> {
+    private record BeeStingerCustomization(boolean hasStinger) implements AppearanceCustomization<Bee> {
 
         @Override
         public String customizationDescription() {
@@ -60,7 +59,7 @@ public class BeeCustomizations {
         }
 
         @Override
-        public BeeStingerCustomization setNext(BeeEntity shopkeeper) {
+        public BeeStingerCustomization setNext(Bee shopkeeper) {
             ((BeeEntityVariationSetter) shopkeeper).invokeSetHasStung(hasStinger); //since this is a negative, we set
             // it to what the boolean currently is rather than will be
             return new BeeStingerCustomization(!hasStinger);

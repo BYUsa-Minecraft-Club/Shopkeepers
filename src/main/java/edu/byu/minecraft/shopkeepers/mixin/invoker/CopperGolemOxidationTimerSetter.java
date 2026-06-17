@@ -1,11 +1,11 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
-import net.minecraft.entity.passive.CopperGolemEntity;
+import net.minecraft.world.entity.animal.golem.CopperGolem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(CopperGolemEntity.class)
+@Mixin(CopperGolem.class)
 public interface CopperGolemOxidationTimerSetter {
-    @Accessor("nextOxidationAge")
+    @Accessor("nextWeatheringTick")
     void setNextOxidationAge(long nextOxidationAge);
 }

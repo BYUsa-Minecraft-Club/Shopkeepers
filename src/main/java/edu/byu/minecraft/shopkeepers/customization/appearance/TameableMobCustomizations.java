@@ -1,22 +1,21 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class TameableMobCustomizations {
 
-    public static <E extends TameableEntity> List<AppearanceCustomization<E>> getTameableCustomizations(E entity) {
+    public static <E extends TamableAnimal> List<AppearanceCustomization<E>> getTameableCustomizations(E entity) {
         List<AppearanceCustomization<E>> customizations = new ArrayList<>();
         customizations.add(new TamedCustomization<>(entity));
         customizations.add(new SittingCustomization<>(entity));
         return customizations;
     }
 
-    static class TamedCustomization<E extends TameableEntity> implements AppearanceCustomization<E> {
+    static class TamedCustomization<E extends TamableAnimal> implements AppearanceCustomization<E> {
 
         private final boolean isTamed;
 
@@ -24,8 +23,8 @@ public class TameableMobCustomizations {
             this.isTamed = isTamed;
         }
 
-        private TamedCustomization(TameableEntity tameableEntity) {
-            this(tameableEntity.isTamed());
+        private TamedCustomization(TamableAnimal tameableEntity) {
+            this(tameableEntity.isTame());
         }
 
         @Override
@@ -44,21 +43,21 @@ public class TameableMobCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<E> setNext(TameableEntity shopkeeper) {
-            shopkeeper.setTamed(!isTamed, true);
+        public AppearanceCustomization<E> setNext(TamableAnimal shopkeeper) {
+            shopkeeper.setTame(!isTamed, true);
             return new TamedCustomization<>(!isTamed);
         }
     }
 
-    static class SittingCustomization<E extends TameableEntity> implements AppearanceCustomization<E> {
+    static class SittingCustomization<E extends TamableAnimal> implements AppearanceCustomization<E> {
         private final boolean isSitting;
 
         private SittingCustomization(boolean isSitting) {
             this.isSitting = isSitting;
         }
 
-        private SittingCustomization(TameableEntity tameableEntity) {
-            this(tameableEntity.isSitting());
+        private SittingCustomization(TamableAnimal tameableEntity) {
+            this(tameableEntity.isOrderedToSit());
         }
 
         @Override
@@ -77,8 +76,8 @@ public class TameableMobCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<E> setNext(TameableEntity shopkeeper) {
-            shopkeeper.setSitting(!isSitting);
+        public AppearanceCustomization<E> setNext(TamableAnimal shopkeeper) {
+            shopkeeper.setOrderedToSit(!isSitting);
             shopkeeper.setInSittingPose(!isSitting);
             return new SittingCustomization<>(!isSitting);
         }

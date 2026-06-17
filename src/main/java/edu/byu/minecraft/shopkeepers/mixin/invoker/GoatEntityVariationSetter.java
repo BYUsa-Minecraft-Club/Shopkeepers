@@ -1,21 +1,21 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
 import edu.byu.minecraft.shopkeepers.customization.appearance.GoatCustomizations;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.passive.GoatEntity;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.world.entity.animal.goat.Goat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(GoatEntity.class)
+@Mixin(Goat.class)
 public abstract class GoatEntityVariationSetter implements GoatCustomizations.GoatEditor {
-    @Accessor(value = "RIGHT_HORN")
-    public static TrackedData<Boolean> accessRightHorn() {
+    @Accessor(value = "DATA_HAS_RIGHT_HORN")
+    public static EntityDataAccessor<Boolean> accessRightHorn() {
         throw new AssertionError();
     }
 
-    @Accessor(value = "LEFT_HORN")
-    public static TrackedData<Boolean> accessLeftHorn() {
+    @Accessor(value = "DATA_HAS_LEFT_HORN")
+    public static EntityDataAccessor<Boolean> accessLeftHorn() {
         throw new AssertionError();
     }
 

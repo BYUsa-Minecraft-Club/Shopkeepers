@@ -4,11 +4,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import edu.byu.minecraft.Shopkeepers;
-import net.minecraft.command.CommandSource;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.command.ServerCommandSource;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -16,21 +11,25 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 
 public class CustomSuggestionProviders {
-    public static CompletableFuture<Suggestions> allPlayers(CommandContext<ServerCommandSource> ctx, SuggestionsBuilder builder) {
-        List<String> onlinePlayers = List.of(ctx.getSource().getServer().getPlayerManager().getPlayerNames());
+    public static CompletableFuture<Suggestions> allPlayers(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
+        List<String> onlinePlayers = List.of(ctx.getSource().getServer().getPlayerList().getPlayerNamesArray());
         Map<Boolean, List<String>> hi = Shopkeepers.getData().getPlayers().values().stream()
-                .filter(s -> CommandSource.shouldSuggest(builder.getRemaining().toLowerCase(), s.toLowerCase()))
+                .filter(s -> SharedSuggestionProvider.matchesSubStr(builder.getRemaining().toLowerCase(), s.toLowerCase()))
                 .collect(Collectors.partitioningBy(onlinePlayers::contains));
         List<String> suggestions = hi.get(!hi.get(true).isEmpty());
         suggestions.forEach(builder::suggest);
         return builder.buildFuture();
     }
 
-    public static CompletableFuture<Suggestions> approvedShopkeeperEntities(CommandContext<ServerCommandSource> ctx, SuggestionsBuilder builder) {
-        Shopkeepers.getData().getAllowedShopkeepers().stream().map(EntityType::getUntranslatedName)
-                .filter(s -> CommandSource.shouldSuggest(builder.getRemaining(), s))
+    public static CompletableFuture<Suggestions> approvedShopkeeperEntities(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
+        Shopkeepers.getData().getAllowedShopkeepers().stream().map(EntityType::toShortString)
+                .filter(s -> SharedSuggestionProvider.matchesSubStr(builder.getRemaining(), s))
                 .forEach(builder::suggest);
         return builder.buildFuture();
     }
@@ -59,12 +58,12 @@ public class CustomSuggestionProviders {
                 .collect(Collectors.toCollection(HashSet::new));
     }
 
-    public static CompletableFuture<Suggestions> unaddedEntityTypes(CommandContext<ServerCommandSource> ctx,
+    public static CompletableFuture<Suggestions> unaddedEntityTypes(CommandContext<CommandSourceStack> ctx,
                                                    SuggestionsBuilder builder) {
         LIVING_ENTITIES.stream()
                 .filter(type -> !Shopkeepers.getData().getAllowedShopkeepers().contains(type))
-                .map(EntityType::getUntranslatedName)
-                .filter(s -> CommandSource.shouldSuggest(builder.getRemaining(), s))
+                .map(EntityType::toShortString)
+                .filter(s -> SharedSuggestionProvider.matchesSubStr(builder.getRemaining(), s))
                 .forEach(builder::suggest);
         return builder.buildFuture();
     }

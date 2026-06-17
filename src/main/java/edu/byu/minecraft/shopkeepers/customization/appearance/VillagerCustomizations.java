@@ -1,19 +1,18 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.village.VillagerDataContainer;
-import net.minecraft.village.VillagerProfession;
-import net.minecraft.village.VillagerType;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.villager.VillagerDataHolder;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.VillagerType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class VillagerCustomizations {
-    public static <E extends Entity & VillagerDataContainer> List<AppearanceCustomization<E>> getVillagerCustomizations(E villagerDataContainerEntity) {
+    public static <E extends Entity & VillagerDataHolder> List<AppearanceCustomization<E>> getVillagerCustomizations(E villagerDataContainerEntity) {
         List<AppearanceCustomization<E>> customizations = new ArrayList<>();
         customizations.add(VillagerProfessions.getCurrentprofession(villagerDataContainerEntity));
         customizations.add(VillagerTypes.getCurrentType(villagerDataContainerEntity));
@@ -21,7 +20,7 @@ public class VillagerCustomizations {
         return customizations;
     }
 
-    private record VillagerProfessions<E extends Entity & VillagerDataContainer>(Professions profession) implements
+    private record VillagerProfessions<E extends Entity & VillagerDataHolder>(Professions profession) implements
             AppearanceCustomization<E> {
         private enum Professions {
             NONE(VillagerProfession.NONE),
@@ -40,16 +39,16 @@ public class VillagerCustomizations {
             TOOLSMITH(VillagerProfession.TOOLSMITH),
             WEAPONSMITH(VillagerProfession.WEAPONSMITH);
 
-            private final RegistryKey<VillagerProfession> profession;
+            private final ResourceKey<VillagerProfession> profession;
 
-            private Professions(RegistryKey<VillagerProfession> Profession) {
+            private Professions(ResourceKey<VillagerProfession> Profession) {
                 this.profession = Profession;
             }
         }
 
-        public static <E extends Entity & VillagerDataContainer> VillagerProfessions<E> getCurrentprofession(VillagerDataContainer shopkeeper) {
-            RegistryKey<VillagerProfession> profession =
-                    shopkeeper.getVillagerData().profession().getKey().orElseThrow();
+        public static <E extends Entity & VillagerDataHolder> VillagerProfessions<E> getCurrentprofession(VillagerDataHolder shopkeeper) {
+            ResourceKey<VillagerProfession> profession =
+                    shopkeeper.getVillagerData().profession().unwrapKey().orElseThrow();
             for(Professions vt : Professions.values()) {
                 if(vt.profession == profession) {
                     return new VillagerProfessions<>(vt);
@@ -65,7 +64,7 @@ public class VillagerCustomizations {
 
         @Override
         public String currentDescription() {
-            return CustomizationUtils.capitalize(profession.profession.getValue().getPath());
+            return CustomizationUtils.capitalize(profession.profession.identifier().getPath());
         }
 
         @Override
@@ -93,12 +92,12 @@ public class VillagerCustomizations {
         public VillagerProfessions<E> setNext(E shopkeeper) {
             Professions next =
                     Professions.values()[(profession.ordinal() + 1) % Professions.values().length];
-            shopkeeper.setVillagerData(shopkeeper.getVillagerData().withProfession(shopkeeper.getRegistryManager(), next.profession));
+            shopkeeper.setVillagerData(shopkeeper.getVillagerData().withProfession(shopkeeper.registryAccess(), next.profession));
             return new VillagerProfessions<>(next);
         }
     }
 
-    private record VillagerTypes<E extends Entity & VillagerDataContainer>(Types type) implements
+    private record VillagerTypes<E extends Entity & VillagerDataHolder>(Types type) implements
             AppearanceCustomization<E> {
 
             private enum Types {
@@ -110,15 +109,15 @@ public class VillagerCustomizations {
                 SWAMP(VillagerType.SWAMP),
                 TAIGA(VillagerType.TAIGA);
 
-                private final RegistryKey<VillagerType> type;
+                private final ResourceKey<VillagerType> type;
 
-                private Types(RegistryKey<VillagerType> type) {
+                private Types(ResourceKey<VillagerType> type) {
                     this.type = type;
                 }
             }
 
-        public static <E extends Entity & VillagerDataContainer> VillagerTypes<E> getCurrentType(E shopkeeper) {
-                RegistryKey<VillagerType> type = shopkeeper.getVillagerData().type().getKey().orElseThrow();
+        public static <E extends Entity & VillagerDataHolder> VillagerTypes<E> getCurrentType(E shopkeeper) {
+                ResourceKey<VillagerType> type = shopkeeper.getVillagerData().type().unwrapKey().orElseThrow();
                 for (Types vt : Types.values()) {
                     if (vt.type == type) {
                         return new VillagerTypes<>(vt);
@@ -134,7 +133,7 @@ public class VillagerCustomizations {
 
             @Override
             public String currentDescription() {
-                return CustomizationUtils.capitalize(type.type.getValue().getPath());
+                return CustomizationUtils.capitalize(type.type.identifier().getPath());
             }
 
             @Override
@@ -154,13 +153,13 @@ public class VillagerCustomizations {
             public VillagerTypes<E> setNext(E shopkeeper) {
                 Types next = CustomizationUtils.nextEnum(type, Types.values());
                 shopkeeper.setVillagerData(
-                        shopkeeper.getVillagerData().withType(shopkeeper.getRegistryManager(), next.type));
+                        shopkeeper.getVillagerData().withType(shopkeeper.registryAccess(), next.type));
                 return new VillagerTypes<>(next);
             }
 
     }
 
-    private static class VillagerLevels<E extends Entity & VillagerDataContainer> implements
+    private static class VillagerLevels<E extends Entity & VillagerDataHolder> implements
             AppearanceCustomization<E> {
 
         int level;
@@ -168,7 +167,7 @@ public class VillagerCustomizations {
             this.level = level;
         }
 
-        public static <E extends Entity & VillagerDataContainer> VillagerLevels<E> getCurrentLevel(E shopkeeper) {
+        public static <E extends Entity & VillagerDataHolder> VillagerLevels<E> getCurrentLevel(E shopkeeper) {
             return new VillagerLevels<>(shopkeeper.getVillagerData().level());
         }
 

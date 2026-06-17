@@ -3,30 +3,29 @@ package edu.byu.minecraft.shopkeepers.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import edu.byu.minecraft.Shopkeepers;
-import net.minecraft.entity.EntityType;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Uuids;
-import net.minecraft.world.PersistentState;
-import net.minecraft.world.PersistentStateType;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import java.util.*;
 
-public class SaveData extends PersistentState {
+public class SaveData extends SavedData {
     public static final Codec<SaveData> OLD_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.unboundedMap(Uuids.CODEC, ShopkeeperData.CODEC).fieldOf("data").forGetter(SaveData::getShopkeeperData),
+            Codec.unboundedMap(UUIDUtil.AUTHLIB_CODEC, ShopkeeperData.CODEC).fieldOf("data").forGetter(SaveData::getShopkeeperData),
             EntityType.CODEC.listOf().fieldOf("allowedShopkeepers").forGetter(SaveData::getAllowedShopkeepers),
-            Codec.unboundedMap(Uuids.CODEC, Codec.STRING).fieldOf("players").forGetter(SaveData::getPlayers),
+            Codec.unboundedMap(UUIDUtil.AUTHLIB_CODEC, Codec.STRING).fieldOf("players").forGetter(SaveData::getPlayers),
             Codec.INT.fieldOf("maxOwnedShops").forGetter(SaveData::getMaxOwnedShops)
     ).apply(instance, (data, allowed, players, max) ->
             new SaveData(data, allowed, players, max, Map.of())));
 
     public static final Codec<SaveData> NEW_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.unboundedMap(Uuids.CODEC, ShopkeeperData.CODEC).fieldOf("data").forGetter(SaveData::getShopkeeperData),
+            Codec.unboundedMap(UUIDUtil.AUTHLIB_CODEC, ShopkeeperData.CODEC).fieldOf("data").forGetter(SaveData::getShopkeeperData),
             EntityType.CODEC.listOf().fieldOf("allowedShopkeepers").forGetter(SaveData::getAllowedShopkeepers),
-            Codec.unboundedMap(Uuids.CODEC, Codec.STRING).fieldOf("players").forGetter(SaveData::getPlayers),
+            Codec.unboundedMap(UUIDUtil.AUTHLIB_CODEC, Codec.STRING).fieldOf("players").forGetter(SaveData::getPlayers),
             Codec.INT.fieldOf("maxOwnedShops").forGetter(SaveData::getMaxOwnedShops),
-            Codec.unboundedMap(Uuids.CODEC, Codec.INT).fieldOf("playerMaxOwnedShops").forGetter(SaveData::getPlayerMaxOwnedShops)
+            Codec.unboundedMap(UUIDUtil.AUTHLIB_CODEC, Codec.INT).fieldOf("playerMaxOwnedShops").forGetter(SaveData::getPlayerMaxOwnedShops)
     ).apply(instance, SaveData::new));
 
     public static final Codec<SaveData> CODEC = Codec.withAlternative(NEW_CODEC, OLD_CODEC);
@@ -58,15 +57,15 @@ public class SaveData extends PersistentState {
     }
 
     public static SaveData getServerState(MinecraftServer server) {
-        return server.getOverworld().getPersistentStateManager()
-                .getOrCreate(new PersistentStateType<>(Shopkeepers.MOD_ID, SaveData::new, CODEC, null));
+        return server.overworld().getDataStorage()
+                .computeIfAbsent(new SavedDataType<>(Shopkeepers.MOD_ID, SaveData::new, CODEC, null));
     }
 
-    public void checkPlayer(ServerPlayerEntity player) {
-        if(!players.containsKey(player.getUuid()) ||
-                !Objects.equals(players.get(player.getUuid()), player.getGameProfile().name())) {
-            players.put(player.getUuid(), player.getGameProfile().name());
-            markDirty();
+    public void checkPlayer(ServerPlayer player) {
+        if(!players.containsKey(player.getUUID()) ||
+                !Objects.equals(players.get(player.getUUID()), player.getGameProfile().name())) {
+            players.put(player.getUUID(), player.getGameProfile().name());
+            setDirty();
         }
     }
 

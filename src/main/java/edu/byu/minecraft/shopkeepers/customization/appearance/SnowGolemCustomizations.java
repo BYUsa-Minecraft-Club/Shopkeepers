@@ -1,22 +1,21 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
-import net.minecraft.entity.passive.SnowGolemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.golem.SnowGolem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class SnowGolemCustomizations {
 
-    public static List<AppearanceCustomization<SnowGolemEntity>> getSnowGolemCustomizations(SnowGolemEntity snowGolem) {
-        List<AppearanceCustomization<SnowGolemEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<SnowGolem>> getSnowGolemCustomizations(SnowGolem snowGolem) {
+        List<AppearanceCustomization<SnowGolem>> customizations = new ArrayList<>();
         customizations.add(new SnowGolemPumpkinCustomization(snowGolem.hasPumpkin()));
         return customizations;
     }
 
     private record SnowGolemPumpkinCustomization(boolean hasPumpkin) implements
-            AppearanceCustomization<SnowGolemEntity> {
+            AppearanceCustomization<SnowGolem> {
 
         @Override
         public String customizationDescription() {
@@ -34,8 +33,8 @@ public class SnowGolemCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<SnowGolemEntity> setNext(SnowGolemEntity shopkeeper) {
-            shopkeeper.setHasPumpkin(!hasPumpkin);
+        public AppearanceCustomization<SnowGolem> setNext(SnowGolem shopkeeper) {
+            shopkeeper.setPumpkin(!hasPumpkin);
             return new SnowGolemPumpkinCustomization(!hasPumpkin);
         }
     }

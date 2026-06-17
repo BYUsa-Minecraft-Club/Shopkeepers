@@ -2,23 +2,22 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.RabbitEntityVariantSetter;
-import net.minecraft.entity.passive.RabbitEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.rabbit.Rabbit;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class RabbitCustomizations {
 
-    public static List<AppearanceCustomization<RabbitEntity>> getRabbitCustomizations(RabbitEntity rabbit) {
-        List<AppearanceCustomization<RabbitEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Rabbit>> getRabbitCustomizations(Rabbit rabbit) {
+        List<AppearanceCustomization<Rabbit>> customizations = new ArrayList<>();
         customizations.add(new RabbitVariantCustomization(rabbit.getVariant()));
         return customizations;
     }
 
-    private record RabbitVariantCustomization(RabbitEntity.Variant variant) implements
-            AppearanceCustomization<RabbitEntity> {
+    private record RabbitVariantCustomization(Rabbit.Variant variant) implements
+            AppearanceCustomization<Rabbit> {
 
         @Override
             public String customizationDescription() {
@@ -44,8 +43,8 @@ public class RabbitCustomizations {
             }
 
             @Override
-            public AppearanceCustomization<RabbitEntity> setNext(RabbitEntity shopkeeper) {
-                RabbitEntity.Variant next = CustomizationUtils.nextEnum(variant, RabbitEntity.Variant.values());
+            public AppearanceCustomization<Rabbit> setNext(Rabbit shopkeeper) {
+                Rabbit.Variant next = CustomizationUtils.nextEnum(variant, Rabbit.Variant.values());
                 ((RabbitEntityVariantSetter) shopkeeper).invokeSetVariant(next);
                 return new RabbitVariantCustomization(next);
             }

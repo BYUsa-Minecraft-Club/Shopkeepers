@@ -1,22 +1,21 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class CreeperCustomizations {
-    public static List<AppearanceCustomization<CreeperEntity>> getCreeperCustomizations(CreeperEntity entity) {
-        List<AppearanceCustomization<CreeperEntity>> customizations = new ArrayList<>();
-        customizations.add(new CreeperChargedCustomization(entity.isCharged()));
+    public static List<AppearanceCustomization<Creeper>> getCreeperCustomizations(Creeper entity) {
+        List<AppearanceCustomization<Creeper>> customizations = new ArrayList<>();
+        customizations.add(new CreeperChargedCustomization(entity.isPowered()));
         return customizations;
     }
 
     private record CreeperChargedCustomization(boolean isCharged)
-            implements AppearanceCustomization<CreeperEntity> {
+            implements AppearanceCustomization<Creeper> {
 
         @Override
         public String customizationDescription() {
@@ -34,7 +33,7 @@ public class CreeperCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<CreeperEntity> setNext(CreeperEntity shopkeeper) {
+        public AppearanceCustomization<Creeper> setNext(Creeper shopkeeper) {
             ((CreeperEditor) shopkeeper).shopkeepers$setCharged(!isCharged);
             return new CreeperChargedCustomization(!isCharged);
         }

@@ -5,42 +5,40 @@ import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemLore;
 
 public class MerchantInventoryGui extends SimpleGui {
     private static final Style INVENTORY_INFO_STYLE;
 
     static {
         INVENTORY_INFO_STYLE = Style.EMPTY
-                .withColor(DyeColor.ORANGE.getSignColor())
+                .withColor(DyeColor.ORANGE.getTextColor())
                 .withItalic(true)
-                .withUnderline(true);
+                .withUnderlined(true);
     }
 
     private final LivingEntity shopkeeper;
-    private final SimpleInventory inventoryPage;
+    private final SimpleContainer inventoryPage;
 
-    public MerchantInventoryGui(ServerPlayerEntity player, LivingEntity shopkeeper) {
-        super(ScreenHandlerType.GENERIC_9X6, player, false);
+    public MerchantInventoryGui(ServerPlayer player, LivingEntity shopkeeper) {
+        super(MenuType.GENERIC_9x6, player, false);
         this.shopkeeper = shopkeeper;
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
 
         int starterSize = shopkeeperData.inventory().size();
-        inventoryPage = new SimpleInventory(54 - starterSize);
+        inventoryPage = new SimpleContainer(54 - starterSize);
 
         for(int i = 0; i < starterSize; i++) {
             setupSlot(i, shopkeeperData.inventory().get(i).getStack(), shopkeeperData);
@@ -49,7 +47,7 @@ public class MerchantInventoryGui extends SimpleGui {
         for(int i = starterSize; i < 54; i++) {
             this.setSlotRedirect(i, new Slot(inventoryPage, i - starterSize, 0, 0));
         }
-        setTitle(Text.of(shopkeeper.getName().getString() + " Inventory"));
+        setTitle(Component.nullToEmpty(shopkeeper.getName().getString() + " Inventory"));
     }
 
     private void setupSlot(int i, ItemStack stack, ShopkeeperData shopkeeperData) {
@@ -61,13 +59,13 @@ public class MerchantInventoryGui extends SimpleGui {
             ItemStack copy = stack.copy();
             copy.setCount(1);
             setSlot(i, GuiElementBuilder.from(copy)
-                    .setName(Text.of(String.format("(%d) %s", amount,
-                            stack.getName().getString())).getWithStyle(stack.getName().getStyle()).getFirst())
+                    .setName(Component.nullToEmpty(String.format("(%d) %s", amount,
+                            stack.getHoverName().getString())).toFlatList(stack.getHoverName().getStyle()).getFirst())
                     .setLore(makeLore(copy))
                     .setCallback((index, clickType, slotActionType) -> {
                         if(clickType == ClickType.MOUSE_LEFT_SHIFT || clickType == ClickType.MOUSE_RIGHT_SHIFT) {
                             boolean hasMore = true;
-                            while(hasMore && player.getInventory().getEmptySlot() != -1) {
+                            while(hasMore && player.getInventory().getFreeSlot() != -1) {
                                 hasMore = giveStack(shopkeeperData, stack, false);
                             }
                         }
@@ -76,24 +74,24 @@ public class MerchantInventoryGui extends SimpleGui {
                         }
 
                         setupSlot(i, stack, shopkeeperData);
-                        Shopkeepers.getData().markDirty();
+                        Shopkeepers.getData().setDirty();
                     }));
         }
     }
 
-    private List<Text> makeLore(ItemStack stack) {
-        LoreComponent loreComponent = stack.getComponents().get(DataComponentTypes.LORE);
-        List<Text> lore = new ArrayList<>(loreComponent == null ? List.of() : loreComponent.styledLines());
-        lore.add(Text.empty());
-        lore.addAll(Text.of("Right Click to receive one").getWithStyle(INVENTORY_INFO_STYLE));
-        lore.addAll(Text.of("Left Click to receive one stack").getWithStyle(INVENTORY_INFO_STYLE));
-        lore.addAll(Text.of("Shift Click to fill inventory").getWithStyle(INVENTORY_INFO_STYLE));
-        lore.add(Text.empty());
+    private List<Component> makeLore(ItemStack stack) {
+        ItemLore loreComponent = stack.getComponents().get(DataComponents.LORE);
+        List<Component> lore = new ArrayList<>(loreComponent == null ? List.of() : loreComponent.styledLines());
+        lore.add(Component.empty());
+        lore.addAll(Component.nullToEmpty("Right Click to receive one").toFlatList(INVENTORY_INFO_STYLE));
+        lore.addAll(Component.nullToEmpty("Left Click to receive one stack").toFlatList(INVENTORY_INFO_STYLE));
+        lore.addAll(Component.nullToEmpty("Shift Click to fill inventory").toFlatList(INVENTORY_INFO_STYLE));
+        lore.add(Component.empty());
         return lore;
     }
 
     private boolean giveStack(ShopkeeperData shopkeeperData, ItemStack stack, boolean maxOne) {
-        int maxSize = maxOne ? 1 : stack.getMaxCount();
+        int maxSize = maxOne ? 1 : stack.getMaxStackSize();
         Integer amountHeld = shopkeeperData.inventoryGet(stack);
         if (amountHeld == null || amountHeld <= 0) {
             return false;
@@ -101,7 +99,7 @@ public class MerchantInventoryGui extends SimpleGui {
         int giveSize = Math.min(maxSize, amountHeld);
         ItemStack copy = stack.copy();
         copy.setCount(giveSize);
-        player.giveOrDropStack(copy);
+        player.handleExtraItemsCreatedOnUse(copy);
         shopkeeperData.removeItems(stack, giveSize); //this should subtract the amount from the inventoryEntry we currently have
         return amountHeld > giveSize;
     }
@@ -120,19 +118,19 @@ public class MerchantInventoryGui extends SimpleGui {
 
     @Override
     public void onClose() {
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
 
         for(ItemStack inventoryItemStack : inventoryPage) {
             if(!inventoryItemStack.isEmpty()) {
                 shopkeeperData.addItems(inventoryItemStack, inventoryItemStack.getCount());
             }
         }
-        Shopkeepers.getData().markDirty();
+        Shopkeepers.getData().setDirty();
     }
 
     @Override
     public void onScreenHandlerClosed() {
         super.onScreenHandlerClosed();
-        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid(), player.getUuid());
+        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUUID(), player.getUUID());
     }
 }

@@ -1,15 +1,12 @@
 package edu.byu.minecraft.shopkeepers.mixin;
 
 import edu.byu.minecraft.shopkeepers.ShopkeeperMover;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,11 +18,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ItemStackMixin {
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
-    public void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+    public void use(Level world, Player user, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack is = (ItemStack) (Object) this;
 
-        if(user instanceof ServerPlayerEntity player && ShopkeeperMover.moved(is, player)) {
-            cir.setReturnValue(ActionResult.SUCCESS);
+        if(user instanceof ServerPlayer player && ShopkeeperMover.moved(is, player)) {
+            cir.setReturnValue(InteractionResult.SUCCESS);
             cir.cancel();
         }
     }

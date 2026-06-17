@@ -1,22 +1,21 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
-import net.minecraft.entity.passive.GoatEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.goat.Goat;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class GoatCustomizations {
-    public static List<AppearanceCustomization<GoatEntity>> getGoatCustomizations(GoatEntity entity) {
-        List<AppearanceCustomization<GoatEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Goat>> getGoatCustomizations(Goat entity) {
+        List<AppearanceCustomization<Goat>> customizations = new ArrayList<>();
         customizations.add(new GoatRightHornCustomization(entity.hasRightHorn()));
         customizations.add(new GoatLeftHornCustomization(entity.hasLeftHorn()));
         return customizations;
     }
 
     private record GoatLeftHornCustomization(boolean hasHorn)
-            implements AppearanceCustomization<GoatEntity> {
+            implements AppearanceCustomization<Goat> {
 
         @Override
         public String customizationDescription() {
@@ -34,14 +33,14 @@ public class GoatCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<GoatEntity> setNext(GoatEntity shopkeeper) {
+        public AppearanceCustomization<Goat> setNext(Goat shopkeeper) {
             ((GoatEditor) shopkeeper).shopkeepers$setHasHorn(false, !hasHorn);
             return new GoatLeftHornCustomization(!hasHorn);
         }
     }
 
     private record GoatRightHornCustomization(boolean hasHorn)
-            implements AppearanceCustomization<GoatEntity> {
+            implements AppearanceCustomization<Goat> {
 
         @Override
         public String customizationDescription() {
@@ -59,7 +58,7 @@ public class GoatCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<GoatEntity> setNext(GoatEntity shopkeeper) {
+        public AppearanceCustomization<Goat> setNext(Goat shopkeeper) {
             ((GoatEditor) shopkeeper).shopkeepers$setHasHorn(true, !hasHorn);
             return new GoatRightHornCustomization(!hasHorn);
         }

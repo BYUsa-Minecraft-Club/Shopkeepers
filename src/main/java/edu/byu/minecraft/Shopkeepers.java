@@ -8,7 +8,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ public class Shopkeepers implements ModInitializer {
 		return interactionLocks;
 	}
 
-	public static boolean isAdmin(ServerPlayerEntity player) {
+	public static boolean isAdmin(ServerPlayer player) {
 		return Permissions.check(player, MOD_ID + ".admin", 4);
 	}
 }

@@ -1,22 +1,22 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
-import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.entity.decoration.MannequinEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.decoration.Mannequin;
+import net.minecraft.world.item.component.ResolvableProfile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(MannequinEntity.class)
+@Mixin(Mannequin.class)
 public interface MannequinEntityCustomizationInvoker {
-    @Invoker("setMannequinProfile")
-    void invokeSetMannequinProfile(ProfileComponent pc);
+    @Invoker("setProfile")
+    void invokeSetMannequinProfile(ResolvableProfile pc);
 
-    @Invoker("getMannequinProfile")
-    ProfileComponent invokeGetMannequinProfile();
+    @Invoker("getProfile")
+    ResolvableProfile invokeGetMannequinProfile();
 
     @Invoker("setImmovable")
     void invokeSetImmovable(boolean immovable);
 
     @Invoker("setDescription")
-    void invokeSetDescription(Text description);
+    void invokeSetDescription(Component description);
 }

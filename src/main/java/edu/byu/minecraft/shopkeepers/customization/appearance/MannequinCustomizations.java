@@ -6,24 +6,23 @@ import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.gui.TextInputGui;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.MannequinEntityCustomizationInvoker;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.decoration.MannequinEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.decoration.Mannequin;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 
 public class MannequinCustomizations {
-    public static List<AppearanceCustomization<MannequinEntity>> getMannequinCustomizations(MannequinEntity entity,
-                                                                                            ServerPlayerEntity player,
+    public static List<AppearanceCustomization<Mannequin>> getMannequinCustomizations(Mannequin entity,
+                                                                                            ServerPlayer player,
                                                                                             SimpleGui currentGui) {
-        List<AppearanceCustomization<MannequinEntity>> customizations = new ArrayList<>();
+        List<AppearanceCustomization<Mannequin>> customizations = new ArrayList<>();
         if (Shopkeepers.isAdmin(player)) {
             customizations.add(new MannequinProfileCustomization(entity, player, currentGui));
         }
@@ -32,18 +31,18 @@ public class MannequinCustomizations {
     }
 
     private record MannequinPoseCustomization(MannequinPose mannequinPose)
-            implements AppearanceCustomization<MannequinEntity> {
+            implements AppearanceCustomization<Mannequin> {
         private enum MannequinPose {
-            STANDING(EntityPose.STANDING), CROUCHING(EntityPose.CROUCHING), SWIMMING(EntityPose.SWIMMING),
-            GLIDING(EntityPose.GLIDING);
+            STANDING(Pose.STANDING), CROUCHING(Pose.CROUCHING), SWIMMING(Pose.SWIMMING),
+            GLIDING(Pose.FALL_FLYING);
 
-            private final EntityPose pose;
+            private final Pose pose;
 
-            private MannequinPose(EntityPose pose) {
+            private MannequinPose(Pose pose) {
                 this.pose = pose;
             }
 
-            private static MannequinPose of(EntityPose pose) {
+            private static MannequinPose of(Pose pose) {
                 for (MannequinPose mannequinPose : MannequinPose.values()) {
                     if (mannequinPose.pose.equals(pose)) {
                         return mannequinPose;
@@ -54,7 +53,7 @@ public class MannequinCustomizations {
 
         }
 
-        private MannequinPoseCustomization(MannequinEntity mannequin) {
+        private MannequinPoseCustomization(Mannequin mannequin) {
             this(MannequinPose.of(mannequin.getPose()));
         }
 
@@ -79,15 +78,15 @@ public class MannequinCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<MannequinEntity> setNext(MannequinEntity shopkeeper) {
+        public AppearanceCustomization<Mannequin> setNext(Mannequin shopkeeper) {
             MannequinPose next = CustomizationUtils.nextEnum(mannequinPose, MannequinPose.values());
             shopkeeper.setPose(next.pose);
             return new MannequinPoseCustomization(next);
         }
     }
 
-    private record MannequinProfileCustomization(MannequinEntity mannequin, ServerPlayerEntity player, SimpleGui currentGui)
-            implements AppearanceCustomization<MannequinEntity> {
+    private record MannequinProfileCustomization(Mannequin mannequin, ServerPlayer player, SimpleGui currentGui)
+            implements AppearanceCustomization<Mannequin> {
 
         @Override
         public String customizationDescription() {
@@ -96,11 +95,11 @@ public class MannequinCustomizations {
 
         @Override
         public String currentDescription() {
-            GameProfile profile = ((MannequinEntityCustomizationInvoker) mannequin).invokeGetMannequinProfile().getGameProfile();
+            GameProfile profile = ((MannequinEntityCustomizationInvoker) mannequin).invokeGetMannequinProfile().partialProfile();
             String name = profile.name();
             if (name == null || name.isBlank()) {
-                name = mannequin.getEntityWorld().getServer().getApiServices().profileResolver()
-                        .getProfileById(profile.id()).map(GameProfile::name).orElse(null);
+                name = mannequin.level().getServer().services().profileResolver()
+                        .fetchById(profile.id()).map(GameProfile::name).orElse(null);
             }
             return Objects.requireNonNullElseGet(name, () -> "Unknown player with id " + profile.id());
         }
@@ -111,7 +110,7 @@ public class MannequinCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<MannequinEntity> setNext(MannequinEntity shopkeeper) {
+        public AppearanceCustomization<Mannequin> setNext(Mannequin shopkeeper) {
             String start = currentDescription();
             if (start.length() > 16) {
                 start = "username";
@@ -119,18 +118,18 @@ public class MannequinCustomizations {
 
             new TextInputGui(player, start, (str) -> {
                 if (str.length() > 16) {
-                    player.sendMessage(Text.of("Usernames are max 16 characters"));
+                    player.sendSystemMessage(Component.nullToEmpty("Usernames are max 16 characters"));
                     return;
                 }
                 Optional<GameProfile> profile =
-                        shopkeeper.getEntityWorld().getServer().getApiServices().profileResolver()
-                                .getProfileByName(str);
+                        shopkeeper.level().getServer().services().profileResolver()
+                                .fetchByName(str);
 
                 if(profile.isPresent()) {
-                    ProfileComponent component = ProfileComponent.ofDynamic(profile.get().id());
+                    ResolvableProfile component = ResolvableProfile.createUnresolved(profile.get().id());
                     ((MannequinEntityCustomizationInvoker) shopkeeper).invokeSetMannequinProfile(component);
                 } else {
-                    player.sendMessage(Text.of("Could not find player with username " + str));
+                    player.sendSystemMessage(Component.nullToEmpty("Could not find player with username " + str));
                 }
             }, currentGui).open();
             return this;

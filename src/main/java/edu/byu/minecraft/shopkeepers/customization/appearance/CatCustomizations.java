@@ -2,19 +2,18 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.CatEntityVariationSetter;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.CatVariant;
-import net.minecraft.entity.passive.CatVariants;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.DyeColor;
-
 import java.util.List;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.animal.feline.Cat;
+import net.minecraft.world.entity.animal.feline.CatVariant;
+import net.minecraft.world.entity.animal.feline.CatVariants;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class CatCustomizations {
-    public static List<AppearanceCustomization<CatEntity>> getCatCustomizations(CatEntity entity) {
-        List<AppearanceCustomization<CatEntity>> customizations =
+    public static List<AppearanceCustomization<Cat>> getCatCustomizations(Cat entity) {
+        List<AppearanceCustomization<Cat>> customizations =
                 TameableMobCustomizations.getTameableCustomizations(entity);
         customizations.add(new CatVariantCustomization(entity));
         customizations.add(new CatCollarCustomization(entity.getCollarColor()));
@@ -22,7 +21,7 @@ public class CatCustomizations {
     }
 
     private record CatVariantCustomization(Variant variant)
-            implements AppearanceCustomization<CatEntity> {
+            implements AppearanceCustomization<Cat> {
         private enum Variant {
             TABBY(CatVariants.TABBY),
             BLACK(CatVariants.BLACK),
@@ -36,12 +35,12 @@ public class CatCustomizations {
             JELLIE(CatVariants.JELLIE),
             ALL_BLACK(CatVariants.ALL_BLACK);
             
-            private final RegistryKey<CatVariant> key;
-            private Variant(RegistryKey<CatVariant> key) {
+            private final ResourceKey<CatVariant> key;
+            private Variant(ResourceKey<CatVariant> key) {
                 this.key = key;
             }
 
-            private static Variant of(RegistryKey<CatVariant> key) {
+            private static Variant of(ResourceKey<CatVariant> key) {
                 for (Variant variant : Variant.values()) {
                     if (variant.key.equals(key)) {
                         return variant;
@@ -51,8 +50,8 @@ public class CatCustomizations {
             }
         }
 
-        private CatVariantCustomization(CatEntity cat) {
-            this(Variant.of(cat.getVariant().getKey().orElseThrow()));
+        private CatVariantCustomization(Cat cat) {
+            this(Variant.of(cat.getVariant().unwrapKey().orElseThrow()));
         }
 
         @Override
@@ -79,14 +78,14 @@ public class CatCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<CatEntity> setNext(CatEntity shopkeeper) {
+        public AppearanceCustomization<Cat> setNext(Cat shopkeeper) {
             Variant next = CustomizationUtils.nextEnum(variant, Variant.values());
-            ((CatEntityVariationSetter) shopkeeper).invokeSetVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
+            ((CatEntityVariationSetter) shopkeeper).invokeSetVariant(shopkeeper.registryAccess().getOrThrow(next.key));
             return new CatVariantCustomization(next);
         }
     }
     
-    private record CatCollarCustomization(DyeColor color) implements AppearanceCustomization<CatEntity> {
+    private record CatCollarCustomization(DyeColor color) implements AppearanceCustomization<Cat> {
 
         @Override
         public String customizationDescription() {
@@ -104,7 +103,7 @@ public class CatCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<CatEntity> setNext(CatEntity shopkeeper) {
+        public AppearanceCustomization<Cat> setNext(Cat shopkeeper) {
             DyeColor next = CustomizationUtils.nextInOrder(color);
             ((CatEntityVariationSetter) shopkeeper).invokeSetCollarColor(next);
             return new CatCollarCustomization(next);

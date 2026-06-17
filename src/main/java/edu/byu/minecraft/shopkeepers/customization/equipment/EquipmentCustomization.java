@@ -1,8 +1,8 @@
 package edu.byu.minecraft.shopkeepers.customization.equipment;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public interface EquipmentCustomization<E extends Entity> {
         /**

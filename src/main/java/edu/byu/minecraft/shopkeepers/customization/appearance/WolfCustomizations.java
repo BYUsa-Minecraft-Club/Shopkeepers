@@ -2,19 +2,18 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.WolfEntityVariationAccesor;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.passive.WolfVariant;
-import net.minecraft.entity.passive.WolfVariants;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.DyeColor;
-
 import java.util.List;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.animal.wolf.Wolf;
+import net.minecraft.world.entity.animal.wolf.WolfVariant;
+import net.minecraft.world.entity.animal.wolf.WolfVariants;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class WolfCustomizations {
-    public static List<AppearanceCustomization<WolfEntity>> getWolfCustomizations(WolfEntity entity) {
-        List<AppearanceCustomization<WolfEntity>> customizations =
+    public static List<AppearanceCustomization<Wolf>> getWolfCustomizations(Wolf entity) {
+        List<AppearanceCustomization<Wolf>> customizations =
                 TameableMobCustomizations.getTameableCustomizations(entity);
         customizations.add(new WolfVariantCustomization(entity));
         customizations.add(new WolfCollarCustomization(entity.getCollarColor()));
@@ -23,7 +22,7 @@ public class WolfCustomizations {
     }
 
     private record WolfVariantCustomization(Variant variant)
-            implements AppearanceCustomization<WolfEntity> {
+            implements AppearanceCustomization<Wolf> {
         private enum Variant {
             PALE(WolfVariants.PALE),
             SPOTTED(WolfVariants.SPOTTED),
@@ -35,12 +34,12 @@ public class WolfCustomizations {
             CHESTNUT(WolfVariants.CHESTNUT),
             STRIPED(WolfVariants.STRIPED);
             
-            private final RegistryKey<WolfVariant> key;
-            private Variant(RegistryKey<WolfVariant> key) {
+            private final ResourceKey<WolfVariant> key;
+            private Variant(ResourceKey<WolfVariant> key) {
                 this.key = key;
             }
 
-            private static Variant of(RegistryKey<WolfVariant> key) {
+            private static Variant of(ResourceKey<WolfVariant> key) {
                 for (Variant variant : Variant.values()) {
                     if (variant.key.equals(key)) {
                         return variant;
@@ -50,8 +49,8 @@ public class WolfCustomizations {
             }
         }
 
-        private WolfVariantCustomization(WolfEntity wolf) {
-            this(Variant.of(((WolfEntityVariationAccesor) wolf).invokeGetVariant().getKey().orElseThrow()));
+        private WolfVariantCustomization(Wolf wolf) {
+            this(Variant.of(((WolfEntityVariationAccesor) wolf).invokeGetVariant().unwrapKey().orElseThrow()));
         }
 
         @Override
@@ -80,14 +79,14 @@ public class WolfCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<WolfEntity> setNext(WolfEntity shopkeeper) {
+        public AppearanceCustomization<Wolf> setNext(Wolf shopkeeper) {
             Variant next = CustomizationUtils.nextEnum(variant, Variant.values());
-            ((WolfEntityVariationAccesor) shopkeeper).invokeSetVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
+            ((WolfEntityVariationAccesor) shopkeeper).invokeSetVariant(shopkeeper.registryAccess().getOrThrow(next.key));
             return new WolfVariantCustomization(next);
         }
     }
     
-    private record WolfCollarCustomization(DyeColor color) implements AppearanceCustomization<WolfEntity> {
+    private record WolfCollarCustomization(DyeColor color) implements AppearanceCustomization<Wolf> {
 
         @Override
         public String customizationDescription() {
@@ -105,7 +104,7 @@ public class WolfCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<WolfEntity> setNext(WolfEntity shopkeeper) {
+        public AppearanceCustomization<Wolf> setNext(Wolf shopkeeper) {
             DyeColor next = CustomizationUtils.nextInOrder(color);
             ((WolfEntityVariationAccesor) shopkeeper).invokeSetCollarColor(next);
             return new WolfCollarCustomization(next);

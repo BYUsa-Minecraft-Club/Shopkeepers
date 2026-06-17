@@ -1,7 +1,7 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
 
 public interface AppearanceCustomization<E extends Entity> {
     String customizationDescription();

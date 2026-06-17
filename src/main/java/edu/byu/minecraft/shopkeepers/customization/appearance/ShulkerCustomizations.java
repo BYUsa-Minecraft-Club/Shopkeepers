@@ -3,29 +3,28 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils.DyeColorWithNone;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.ShulkerEntityVariationSetter;
-import net.minecraft.entity.mob.ShulkerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.Direction;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.monster.Shulker;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class ShulkerCustomizations {
 
-    public static List<AppearanceCustomization<ShulkerEntity>> getShulkerCustomizations(ShulkerEntity shulker) {
-        List<AppearanceCustomization<ShulkerEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Shulker>> getShulkerCustomizations(Shulker shulker) {
+        List<AppearanceCustomization<Shulker>> customizations = new ArrayList<>();
         customizations.add(ShulkerColorCustomization.forShulker(shulker));
         customizations.add(new ShulkerAttachedFaceCustomization(shulker));
         customizations.add(new ShulkerPeekHeightCustomization(shulker));
         return customizations;
     }
 
-    private record ShulkerColorCustomization(DyeColorWithNone color) implements AppearanceCustomization<ShulkerEntity> {
+    private record ShulkerColorCustomization(DyeColorWithNone color) implements AppearanceCustomization<Shulker> {
 
-        private static ShulkerColorCustomization forShulker(ShulkerEntity shulker) {
+        private static ShulkerColorCustomization forShulker(Shulker shulker) {
             DyeColor color = shulker.getColor();
             return new ShulkerColorCustomization(color == null ? DyeColorWithNone.NONE : DyeColorWithNone.valueOf(color.name()));
         }
@@ -47,7 +46,7 @@ public class ShulkerCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<ShulkerEntity> setNext(ShulkerEntity shopkeeper) {
+        public AppearanceCustomization<Shulker> setNext(Shulker shopkeeper) {
             DyeColorWithNone next = CustomizationUtils.nextEnum(color, DyeColorWithNone.values());
             Optional<DyeColor> colorOptional =
                     (next == DyeColorWithNone.NONE) ? Optional.empty() : Optional.of(DyeColor.valueOf(next.name()));
@@ -57,10 +56,10 @@ public class ShulkerCustomizations {
     }
 
     private record ShulkerAttachedFaceCustomization(Direction direction) implements
-            AppearanceCustomization<ShulkerEntity> {
+            AppearanceCustomization<Shulker> {
 
-        private ShulkerAttachedFaceCustomization(ShulkerEntity shulker) {
-            this(shulker.getAttachedFace());
+        private ShulkerAttachedFaceCustomization(Shulker shulker) {
+            this(shulker.getAttachFace());
         }
 
         @Override
@@ -86,7 +85,7 @@ public class ShulkerCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<ShulkerEntity> setNext(ShulkerEntity shopkeeper) {
+        public AppearanceCustomization<Shulker> setNext(Shulker shopkeeper) {
             Direction next = CustomizationUtils.nextEnum(direction(), Direction.values());
             ((ShulkerEntityVariationSetter) shopkeeper).invokeSetAttachedFace(next);
             return new ShulkerAttachedFaceCustomization(next);
@@ -94,13 +93,13 @@ public class ShulkerCustomizations {
     }
 
     private record ShulkerPeekHeightCustomization(PeekHeight peekHeight) implements
-            AppearanceCustomization<ShulkerEntity> {
+            AppearanceCustomization<Shulker> {
 
         private enum PeekHeight {
             CLOSED, PEEKING, OPEN
         }
 
-        private ShulkerPeekHeightCustomization(ShulkerEntity shulker) {
+        private ShulkerPeekHeightCustomization(Shulker shulker) {
             this(switch (((ShulkerEntityVariationSetter) shulker).invokeGetPeekAmount()) {
                 case 0 -> PeekHeight.CLOSED;
                 case 30 -> PeekHeight.PEEKING;
@@ -129,7 +128,7 @@ public class ShulkerCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<ShulkerEntity> setNext(ShulkerEntity shopkeeper) {
+        public AppearanceCustomization<Shulker> setNext(Shulker shopkeeper) {
             PeekHeight next = CustomizationUtils.nextEnum(peekHeight, PeekHeight.values());
             ((ShulkerEntityVariationSetter) shopkeeper).invokeSetPeekAmount(switch (next) {
                 case CLOSED -> 0;

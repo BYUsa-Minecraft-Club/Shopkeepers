@@ -1,36 +1,35 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.entity.passive.ChickenVariant;
-import net.minecraft.entity.passive.ChickenVariants;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.animal.chicken.Chicken;
+import net.minecraft.world.entity.animal.chicken.ChickenVariant;
+import net.minecraft.world.entity.animal.chicken.ChickenVariants;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class ChickenCustomizations {
-    public static List<AppearanceCustomization<ChickenEntity>> getChickenCustomizations(ChickenEntity entity) {
-        List<AppearanceCustomization<ChickenEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Chicken>> getChickenCustomizations(Chicken entity) {
+        List<AppearanceCustomization<Chicken>> customizations = new ArrayList<>();
         customizations.add(new ChickenVariantCustomization(entity));
         return customizations;
     }
 
     private record ChickenVariantCustomization(Variant variant)
-            implements AppearanceCustomization<ChickenEntity> {
+            implements AppearanceCustomization<Chicken> {
         private enum Variant {
             TEMPERATE(ChickenVariants.TEMPERATE),
             WARM(ChickenVariants.WARM),
             COLD(ChickenVariants.COLD);
             
-            private final RegistryKey<ChickenVariant> key;
-            private Variant(RegistryKey<ChickenVariant> key) {
+            private final ResourceKey<ChickenVariant> key;
+            private Variant(ResourceKey<ChickenVariant> key) {
                 this.key = key;
             }
 
-            private static Variant of(RegistryKey<ChickenVariant> key) {
+            private static Variant of(ResourceKey<ChickenVariant> key) {
                 for (Variant variant : Variant.values()) {
                     if (variant.key.equals(key)) {
                         return variant;
@@ -40,8 +39,8 @@ public class ChickenCustomizations {
             }
         }
 
-        private ChickenVariantCustomization(ChickenEntity chicken) {
-            this(Variant.of(chicken.getVariant().getKey().orElseThrow()));
+        private ChickenVariantCustomization(Chicken chicken) {
+            this(Variant.of(chicken.getVariant().unwrapKey().orElseThrow()));
         }
 
         @Override
@@ -64,9 +63,9 @@ public class ChickenCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<ChickenEntity> setNext(ChickenEntity shopkeeper) {
+        public AppearanceCustomization<Chicken> setNext(Chicken shopkeeper) {
             Variant next = CustomizationUtils.nextEnum(variant, Variant.values());
-            shopkeeper.setVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
+            shopkeeper.setVariant(shopkeeper.registryAccess().getOrThrow(next.key));
             return new ChickenVariantCustomization(next);
         }
     }

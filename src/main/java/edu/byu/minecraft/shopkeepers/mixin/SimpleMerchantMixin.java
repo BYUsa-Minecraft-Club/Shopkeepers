@@ -2,23 +2,23 @@ package edu.byu.minecraft.shopkeepers.mixin;
 
 import edu.byu.minecraft.shopkeepers.gui.OfferGui;
 import eu.pb4.sgui.virtual.merchant.VirtualMerchantScreenHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.village.SimpleMerchant;
-import net.minecraft.village.TradeOffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.npc.ClientSideMerchant;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.trading.MerchantOffer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(SimpleMerchant.class)
+@Mixin(ClientSideMerchant.class)
 public class SimpleMerchantMixin {
 
-    @Inject(method = "trade", at = @At("TAIL"))
-    public void injectTrade(TradeOffer offer, CallbackInfo ci) {
-        PlayerEntity player = ((SimpleMerchant) (Object) this).getCustomer();
-        if (player instanceof ServerPlayerEntity &&
-                player.currentScreenHandler instanceof VirtualMerchantScreenHandler vmsh &&
+    @Inject(method = "notifyTrade", at = @At("TAIL"))
+    public void injectTrade(MerchantOffer offer, CallbackInfo ci) {
+        Player player = ((ClientSideMerchant) (Object) this).getTradingPlayer();
+        if (player instanceof ServerPlayer &&
+                player.containerMenu instanceof VirtualMerchantScreenHandler vmsh &&
                 vmsh.getGui() instanceof OfferGui og) {
             og.afterTrade(offer);
         }

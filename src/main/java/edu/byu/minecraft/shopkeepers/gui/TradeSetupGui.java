@@ -12,53 +12,49 @@ import edu.byu.minecraft.shopkeepers.data.ShopkeeperInventoryEntry;
 import edu.byu.minecraft.shopkeepers.data.TradeData;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import net.minecraft.component.ComponentChanges;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.MergedComponentMap;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.SpawnEggItem;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.scanner.NbtCollector;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-
 import java.util.*;
 import java.util.function.Predicate;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ItemLore;
 
 public abstract class TradeSetupGui extends SimpleGui {
 
     protected final LivingEntity shopkeeper;
-    protected final SimpleInventory tradeItems;
+    protected final SimpleContainer tradeItems;
     protected final int maxTrades;
 
-    public TradeSetupGui(ScreenHandlerType<?> type, ServerPlayerEntity player, LivingEntity shopkeeper, int maxTrades) {
+    public TradeSetupGui(MenuType<?> type, ServerPlayer player, LivingEntity shopkeeper, int maxTrades) {
         super(type, player, false);
         this.shopkeeper = shopkeeper;
         this.maxTrades = maxTrades;
-        tradeItems = new SimpleInventory(((int) Math.ceil(maxTrades / 9.0)) * 27);
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
+        tradeItems = new SimpleContainer(((int) Math.ceil(maxTrades / 9.0)) * 27);
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
         List<TradeData> trades = shopkeeperData.trades();
         for (int i = 0; i < trades.size(); i++) {
             int page = i / 9;
             int indexOnPage = i % 9;
             int index = (27 * page) + indexOnPage;
             TradeData tradeOffer = trades.get(i);
-            tradeItems.setStack(index, tradeOffer.firstBuyItem().copy());
+            tradeItems.setItem(index, tradeOffer.firstBuyItem().copy());
             if (tradeOffer.secondBuyItem().isPresent()) {
-                tradeItems.setStack(index + 9, tradeOffer.secondBuyItem().get().copy());
+                tradeItems.setItem(index + 9, tradeOffer.secondBuyItem().get().copy());
             }
-            tradeItems.setStack(index + 18, tradeOffer.sellItem().copy());
+            tradeItems.setItem(index + 18, tradeOffer.sellItem().copy());
         }
 
         setupSlots();
@@ -67,13 +63,13 @@ public abstract class TradeSetupGui extends SimpleGui {
     protected abstract void setupSlots();
 
     protected void showUses(int slot, int trade, boolean showPlayerNames) {
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
         if(shopkeeperData.trades().size() > trade && shopkeeperData.trades().get(trade) != null) {
             TradeData tradeData = shopkeeperData.trades().get(trade);
 
             int totalUses = tradeData.uses().values().stream().mapToInt(v -> v).sum();
             var guiBuilder = new GuiElementBuilder(totalUses == 0 ? Items.BOOK : Items.WRITTEN_BOOK)
-                    .setItemName(Text.of(String.format("Trade used %d times", totalUses)));
+                    .setItemName(Component.nullToEmpty(String.format("Trade used %d times", totalUses)));
 
             if(showPlayerNames) {
                 guiBuilder.setLore(tradeData.uses().entrySet().stream()
@@ -81,23 +77,23 @@ public abstract class TradeSetupGui extends SimpleGui {
                                 entry.getValue())).sorted((o1, o2) -> {
                             if (Objects.equals(o1.getValue(), o2.getValue())) return o1.getKey().compareTo(o2.getKey());
                             return o2.getValue().compareTo(o1.getValue());
-                        }).map(entry -> Text.of(String.format("%s: %d", entry.getKey(), entry.getValue())))
+                        }).map(entry -> Component.nullToEmpty(String.format("%s: %d", entry.getKey(), entry.getValue())))
                         .toList());
             }
 
             setSlot(slot, guiBuilder.build());
         } else {
-            setSlot(slot, new GuiElementBuilder(Items.PAPER).setItemName(Text.of("Create trade to track uses")));
+            setSlot(slot, new GuiElementBuilder(Items.PAPER).setItemName(Component.nullToEmpty("Create trade to track uses")));
         }
     }
 
     protected void setName(int slot) {
-        GuiElementBuilder builder = new GuiElementBuilder(Items.NAME_TAG).setItemName(Text.of("Change name"));
+        GuiElementBuilder builder = new GuiElementBuilder(Items.NAME_TAG).setItemName(Component.nullToEmpty("Change name"));
         if (shopkeeper.getCustomName() != null) {
-            builder.setLore(List.of(Text.of("Current name:"), shopkeeper.getName()));
+            builder.setLore(List.of(Component.nullToEmpty("Current name:"), shopkeeper.getName()));
         }
         builder.setCallback(() -> new TextInputGui(player, shopkeeper.getName().getString(), (str) -> {
-            shopkeeper.setCustomName(Text.of(str));
+            shopkeeper.setCustomName(Component.nullToEmpty(str));
             setName(slot);
         }, this).open());
         this.setSlot(slot, builder.build());
@@ -111,13 +107,13 @@ public abstract class TradeSetupGui extends SimpleGui {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
             return false;
         } else if (appearanceOptions.size() > 1) {
-            Item egg = SpawnEggItem.forEntity(shopkeeper.getType());
-            if(egg == null && shopkeeper instanceof ArmorStandEntity) {
+            Item egg = SpawnEggItem.byId(shopkeeper.getType());
+            if(egg == null && shopkeeper instanceof ArmorStand) {
                 egg = Items.ARMOR_STAND;
             }
             setSlot(slot, new GuiElementBuilder(egg != null ? egg : Items.LIME_DYE)
-                    .setItemName(Text.of(String.format("Edit %s Appearance Options",
-                            CustomizationUtils.capitalize(shopkeeper.getType().getName().getString()))))
+                    .setItemName(Component.nullToEmpty(String.format("Edit %s Appearance Options",
+                            CustomizationUtils.capitalize(shopkeeper.getType().getDescription().getString()))))
                     .setCallback(() -> new MobAppearanceGui<>(player, shopkeeper, appearanceOptions, this).open())
                     .build());
             return true;
@@ -134,8 +130,8 @@ public abstract class TradeSetupGui extends SimpleGui {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
         } else {
             setSlot(slot, new GuiElementBuilder(equipmentOptions.getFirst().getDescriptionItem())
-                    .setItemName(Text.of(String.format("Edit %s Equipment Options",
-                                    CustomizationUtils.capitalize(shopkeeper.getType().getName().getString()))))
+                    .setItemName(Component.nullToEmpty(String.format("Edit %s Equipment Options",
+                                    CustomizationUtils.capitalize(shopkeeper.getType().getDescription().getString()))))
                     .setCallback(() -> new MobEquipmentGui<>(player, shopkeeper, equipmentOptions, this).open())
                     .build());
         }
@@ -144,7 +140,7 @@ public abstract class TradeSetupGui extends SimpleGui {
 
     protected void openTradeMenu(int slot) {
         this.setSlot(slot,
-                new GuiElementBuilder(Items.BELL).setItemName(Text.of("Open Trade Menu")).setCallback(() -> {
+                new GuiElementBuilder(Items.BELL).setItemName(Component.nullToEmpty("Open Trade Menu")).setCallback(() -> {
             this.close();
             new OfferGui(player, shopkeeper).open();
         }).build());
@@ -152,34 +148,34 @@ public abstract class TradeSetupGui extends SimpleGui {
 
     protected void teleportShopkeeper(int slot) {
         setSlot(slot, new GuiElementBuilder(Items.ENDER_PEARL)
-                .setName(Text.of("Move Shopkeeper"))
+                .setName(Component.nullToEmpty("Move Shopkeeper"))
                 .setCallback(() -> {
-                    if(player.getInventory().containsAny(stack -> {
-                        NbtComponent nbt = stack.getComponents().get(DataComponentTypes.CUSTOM_DATA);
-                        return nbt != null && nbt.copyNbt().contains(ShopkeeperMover.SHOPKEEPER_ID_KEY);
+                    if(player.getInventory().hasAnyMatching(stack -> {
+                        CustomData nbt = stack.getComponents().get(DataComponents.CUSTOM_DATA);
+                        return nbt != null && nbt.copyTag().contains(ShopkeeperMover.SHOPKEEPER_ID_KEY);
                     })) {
-                        player.sendMessage(Text.of("You already have a teleport item in your inventory"));
+                        player.sendSystemMessage(Component.nullToEmpty("You already have a teleport item in your inventory"));
                         return;
                     }
 
-                    NbtCompound nbt = new NbtCompound();
-                    nbt.putString(ShopkeeperMover.SHOPKEEPER_ID_KEY, shopkeeper.getUuid().toString());
+                    CompoundTag nbt = new CompoundTag();
+                    nbt.putString(ShopkeeperMover.SHOPKEEPER_ID_KEY, shopkeeper.getUUID().toString());
 
                     String teleportItemName = "Move " + (shopkeeper.hasCustomName() ?
                             Objects.requireNonNull(shopkeeper.getCustomName()).getString() :
                             ("your " + shopkeeper.getName().getString().toLowerCase() + " shopkeeper"));
 
-                    ItemStack teleportItemStack = new ItemStack(Items.ENDER_PEARL.getRegistryEntry(), 1,
-                            ComponentChanges.builder()
-                                    .add(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt))
-                                    .add(DataComponentTypes.CUSTOM_NAME, Text.of(teleportItemName))
-                                    .add(DataComponentTypes.LORE, new LoreComponent(List.of(Text.empty(),
-                                            Text.of("Use this item to move"), Text.of(teleportItemName.substring(5)),
-                                            Text.of("to your current location"), Text.empty())))
-                                    .add(DataComponentTypes.MAX_STACK_SIZE, 1)
+                    ItemStack teleportItemStack = new ItemStack(Items.ENDER_PEARL.builtInRegistryHolder(), 1,
+                            DataComponentPatch.builder()
+                                    .set(DataComponents.CUSTOM_DATA, CustomData.of(nbt))
+                                    .set(DataComponents.CUSTOM_NAME, Component.nullToEmpty(teleportItemName))
+                                    .set(DataComponents.LORE, new ItemLore(List.of(Component.empty(),
+                                            Component.nullToEmpty("Use this item to move"), Component.nullToEmpty(teleportItemName.substring(5)),
+                                            Component.nullToEmpty("to your current location"), Component.empty())))
+                                    .set(DataComponents.MAX_STACK_SIZE, 1)
                                     .build());
 
-                    player.giveOrDropStack(teleportItemStack);
+                    player.handleExtraItemsCreatedOnUse(teleportItemStack);
 
                     ShopkeeperMover.addToShopkeeperCache(shopkeeper);
                 }));
@@ -187,19 +183,19 @@ public abstract class TradeSetupGui extends SimpleGui {
 
     protected void disbandShopkeeper(int slot) {
         this.setSlot(slot,
-                new GuiElementBuilder(Items.BARRIER).setItemName(Text.of("Disband Shopkeeper")).setCallback(() -> {
+                new GuiElementBuilder(Items.BARRIER).setItemName(Component.nullToEmpty("Disband Shopkeeper")).setCallback(() -> {
                     new ConfirmationGui(player, "disband shopkeeper", this, () -> {
-                        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
+                        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
 
                         for(TradeData tradeData : shopkeeperData.trades()) {
                             if(tradeData.firstBuyItem() != null && !tradeData.firstBuyItem().isEmpty()) {
-                                player.giveOrDropStack(tradeData.firstBuyItem());
+                                player.handleExtraItemsCreatedOnUse(tradeData.firstBuyItem());
                             }
                             if(tradeData.secondBuyItem().isPresent() && !tradeData.secondBuyItem().get().isEmpty()) {
-                                player.giveOrDropStack(tradeData.secondBuyItem().get());
+                                player.handleExtraItemsCreatedOnUse(tradeData.secondBuyItem().get());
                             }
                             if(tradeData.sellItem() != null && !tradeData.sellItem().isEmpty()) {
-                                player.giveOrDropStack(tradeData.sellItem());
+                                player.handleExtraItemsCreatedOnUse(tradeData.sellItem());
                             }
                         }
 
@@ -211,24 +207,24 @@ public abstract class TradeSetupGui extends SimpleGui {
                                 ItemStack copy2 = copy.copy();
                                 copy2.setCount(maxCount);
                                 numItems -= maxCount;
-                                player.giveOrDropStack(copy2);
+                                player.handleExtraItemsCreatedOnUse(copy2);
                             }
                             if(numItems > 0) {
                                 copy.setCount(numItems);
-                                player.giveOrDropStack(copy);
+                                player.handleExtraItemsCreatedOnUse(copy);
                             }
                         }
 
-                        Shopkeepers.getData().getShopkeeperData().remove(shopkeeper.getUuid());
+                        Shopkeepers.getData().getShopkeeperData().remove(shopkeeper.getUUID());
 
                         for (EquipmentSlot equipmentSlot : EquipmentSlot.VALUES) {
-                            ItemStack stack = shopkeeper.getEquippedStack(equipmentSlot);
-                            player.giveOrDropStack(stack);
-                            shopkeeper.equipStack(equipmentSlot, ItemStack.EMPTY);
+                            ItemStack stack = shopkeeper.getItemBySlot(equipmentSlot);
+                            player.handleExtraItemsCreatedOnUse(stack);
+                            shopkeeper.setItemSlot(equipmentSlot, ItemStack.EMPTY);
                         }
 
-                        shopkeeper.setPosition(shopkeeper.getX(), -1000, shopkeeper.getZ());
-                        shopkeeper.kill(player.getEntityWorld());
+                        shopkeeper.setPos(shopkeeper.getX(), -1000, shopkeeper.getZ());
+                        shopkeeper.kill(player.level());
                     }).open();
                 }).build());
     }
@@ -246,7 +242,7 @@ public abstract class TradeSetupGui extends SimpleGui {
 
     @Override
     public void onClose() {
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
         boolean changed = false;
         for(int i = 0; i < maxTrades; i++) {
             int page = i / 9;
@@ -275,36 +271,36 @@ public abstract class TradeSetupGui extends SimpleGui {
         }
         if(changed) {
             shopkeeperData.trades().removeIf(Objects::isNull);
-            Shopkeepers.getData().markDirty();
+            Shopkeepers.getData().setDirty();
         }
     }
 
     @Override
     public void onScreenHandlerClosed() {
         super.onScreenHandlerClosed();
-        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUuid(), player.getUuid());
+        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUUID(), player.getUUID());
     }
 
     protected TradeData validateTradeOrGiveBack(int i) {
-        boolean firstBuyItemPresent = !tradeItems.getStack(i).isEmpty();
-        boolean secondBuyItemPresent = !tradeItems.getStack(i + 9).isEmpty();
-        boolean sellItemPresent = !tradeItems.getStack(i + 18).isEmpty();
+        boolean firstBuyItemPresent = !tradeItems.getItem(i).isEmpty();
+        boolean secondBuyItemPresent = !tradeItems.getItem(i + 9).isEmpty();
+        boolean sellItemPresent = !tradeItems.getItem(i + 18).isEmpty();
         if (firstBuyItemPresent && sellItemPresent) {
-            ItemStack firstBuyItem = tradeItems.getStack(i).copy();
+            ItemStack firstBuyItem = tradeItems.getItem(i).copy();
             Optional<ItemStack> secondBuyItem =
-                    secondBuyItemPresent ? Optional.of(tradeItems.getStack(i + 9).copy()) : Optional.empty();
-            ItemStack sellItem = tradeItems.getStack(i + 18).copy();
+                    secondBuyItemPresent ? Optional.of(tradeItems.getItem(i + 9).copy()) : Optional.empty();
+            ItemStack sellItem = tradeItems.getItem(i + 18).copy();
             return new TradeData(firstBuyItem, secondBuyItem, sellItem, new HashMap<>());
         }
         else {
             if(firstBuyItemPresent) {
-                player.giveOrDropStack(tradeItems.getStack(i));
+                player.handleExtraItemsCreatedOnUse(tradeItems.getItem(i));
             }
             if(secondBuyItemPresent) {
-                player.giveOrDropStack(tradeItems.getStack(i + 9));
+                player.handleExtraItemsCreatedOnUse(tradeItems.getItem(i + 9));
             }
             if(sellItemPresent) {
-                player.giveOrDropStack(tradeItems.getStack(i + 18));
+                player.handleExtraItemsCreatedOnUse(tradeItems.getItem(i + 18));
             }
             return null;
         }

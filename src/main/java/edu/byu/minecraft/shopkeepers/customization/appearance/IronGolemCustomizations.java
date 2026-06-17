@@ -1,24 +1,23 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
-import net.minecraft.entity.passive.Cracks;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.Crackiness;
+import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class IronGolemCustomizations {
 
-    public static List<AppearanceCustomization<IronGolemEntity>> getIronGolemCustomizations(IronGolemEntity ironGolem) {
-        List<AppearanceCustomization<IronGolemEntity>> customizations = new ArrayList<>();
-        customizations.add(new IronGolemCrackCustomization(ironGolem.getCrackLevel()));
+    public static List<AppearanceCustomization<IronGolem>> getIronGolemCustomizations(IronGolem ironGolem) {
+        List<AppearanceCustomization<IronGolem>> customizations = new ArrayList<>();
+        customizations.add(new IronGolemCrackCustomization(ironGolem.getCrackiness()));
         return customizations;
     }
 
-    private record IronGolemCrackCustomization(Cracks.CrackLevel crackLevel)
-            implements AppearanceCustomization<IronGolemEntity> {
+    private record IronGolemCrackCustomization(Crackiness.Level crackLevel)
+            implements AppearanceCustomization<IronGolem> {
 
         @Override
         public String customizationDescription() {
@@ -41,8 +40,8 @@ public class IronGolemCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<IronGolemEntity> setNext(IronGolemEntity shopkeeper) {
-            var next = CustomizationUtils.nextEnum(crackLevel, Cracks.CrackLevel.values());
+        public AppearanceCustomization<IronGolem> setNext(IronGolem shopkeeper) {
+            var next = CustomizationUtils.nextEnum(crackLevel, Crackiness.Level.values());
             shopkeeper.setHealth(switch (next) {
                 case NONE -> 80.0F;
                 case LOW -> 60.0F;

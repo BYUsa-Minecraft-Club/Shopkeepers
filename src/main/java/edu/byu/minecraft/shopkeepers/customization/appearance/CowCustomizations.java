@@ -1,36 +1,35 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
-import net.minecraft.entity.passive.CowEntity;
-import net.minecraft.entity.passive.CowVariant;
-import net.minecraft.entity.passive.CowVariants;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.animal.cow.Cow;
+import net.minecraft.world.entity.animal.cow.CowVariant;
+import net.minecraft.world.entity.animal.cow.CowVariants;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class CowCustomizations {
-    public static List<AppearanceCustomization<CowEntity>> getCowCustomizations(CowEntity entity) {
-        List<AppearanceCustomization<CowEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Cow>> getCowCustomizations(Cow entity) {
+        List<AppearanceCustomization<Cow>> customizations = new ArrayList<>();
         customizations.add(new CowVariantCustomization(entity));
         return customizations;
     }
 
     private record CowVariantCustomization(Variant variant)
-            implements AppearanceCustomization<CowEntity> {
+            implements AppearanceCustomization<Cow> {
         private enum Variant {
             TEMPERATE(CowVariants.TEMPERATE),
             WARM(CowVariants.WARM),
             COLD(CowVariants.COLD);
             
-            private final RegistryKey<CowVariant> key;
-            private Variant(RegistryKey<CowVariant> key) {
+            private final ResourceKey<CowVariant> key;
+            private Variant(ResourceKey<CowVariant> key) {
                 this.key = key;
             }
 
-            private static Variant of(RegistryKey<CowVariant> key) {
+            private static Variant of(ResourceKey<CowVariant> key) {
                 for (Variant variant : Variant.values()) {
                     if (variant.key.equals(key)) {
                         return variant;
@@ -40,8 +39,8 @@ public class CowCustomizations {
             }
         }
 
-        private CowVariantCustomization(CowEntity cow) {
-            this(Variant.of(cow.getVariant().getKey().orElseThrow()));
+        private CowVariantCustomization(Cow cow) {
+            this(Variant.of(cow.getVariant().unwrapKey().orElseThrow()));
         }
 
         @Override
@@ -64,9 +63,9 @@ public class CowCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<CowEntity> setNext(CowEntity shopkeeper) {
+        public AppearanceCustomization<Cow> setNext(Cow shopkeeper) {
             Variant next = CustomizationUtils.nextEnum(variant, Variant.values());
-            shopkeeper.setVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
+            shopkeeper.setVariant(shopkeeper.registryAccess().getOrThrow(next.key));
             return new CowVariantCustomization(next);
         }
     }

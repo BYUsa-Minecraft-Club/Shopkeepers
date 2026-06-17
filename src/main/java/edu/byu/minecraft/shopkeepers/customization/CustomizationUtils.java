@@ -1,11 +1,10 @@
 package edu.byu.minecraft.shopkeepers.customization;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.DyeColor;
-
 import java.util.Arrays;
 import java.util.Comparator;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class CustomizationUtils {
     public static enum DyeColorWithNone {

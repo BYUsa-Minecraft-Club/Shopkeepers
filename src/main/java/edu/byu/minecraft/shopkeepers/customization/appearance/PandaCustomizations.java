@@ -1,23 +1,22 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
-import net.minecraft.entity.passive.PandaEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.panda.Panda;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class PandaCustomizations {
 
-    public static List<AppearanceCustomization<PandaEntity>> getPandaCustomizations(PandaEntity panda) {
-        List<AppearanceCustomization<PandaEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Panda>> getPandaCustomizations(Panda panda) {
+        List<AppearanceCustomization<Panda>> customizations = new ArrayList<>();
         customizations.add(new PandaGeneCustomization(panda.getMainGene()));
         return customizations;
     }
 
-    private record PandaGeneCustomization(PandaEntity.Gene gene)
-            implements AppearanceCustomization<PandaEntity> {
+    private record PandaGeneCustomization(Panda.Gene gene)
+            implements AppearanceCustomization<Panda> {
 
         @Override
         public String customizationDescription() {
@@ -43,8 +42,8 @@ public class PandaCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<PandaEntity> setNext(PandaEntity shopkeeper) {
-            PandaEntity.Gene next = CustomizationUtils.nextEnum(gene, PandaEntity.Gene.values());
+        public AppearanceCustomization<Panda> setNext(Panda shopkeeper) {
+            Panda.Gene next = CustomizationUtils.nextEnum(gene, Panda.Gene.values());
             shopkeeper.setMainGene(next);
             shopkeeper.setHiddenGene(next);
             return new PandaGeneCustomization(next);

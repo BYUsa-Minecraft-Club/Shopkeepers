@@ -2,24 +2,23 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.DyeColor;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class SheepCustomizations {
-    public static List<AppearanceCustomization<SheepEntity>> getSheepCustomizations(SheepEntity entity) {
-        List<AppearanceCustomization<SheepEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Sheep>> getSheepCustomizations(Sheep entity) {
+        List<AppearanceCustomization<Sheep>> customizations = new ArrayList<>();
         customizations.add(new SheepShearedCustomization(entity.isSheared()));
         customizations.add(new SheepColorCustomization(entity.getColor()));
         return customizations;
     }
 
     private record SheepShearedCustomization(boolean isSheared)
-            implements AppearanceCustomization<SheepEntity> {
+            implements AppearanceCustomization<Sheep> {
 
         @Override
         public String customizationDescription() {
@@ -37,13 +36,13 @@ public class SheepCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<SheepEntity> setNext(SheepEntity shopkeeper) {
+        public AppearanceCustomization<Sheep> setNext(Sheep shopkeeper) {
             shopkeeper.setSheared(!isSheared);
             return new SheepShearedCustomization(!isSheared);
         }
     }
     
-    private record SheepColorCustomization(DyeColor color) implements AppearanceCustomization<SheepEntity> {
+    private record SheepColorCustomization(DyeColor color) implements AppearanceCustomization<Sheep> {
 
         @Override
         public String customizationDescription() {
@@ -61,7 +60,7 @@ public class SheepCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<SheepEntity> setNext(SheepEntity shopkeeper) {
+        public AppearanceCustomization<Sheep> setNext(Sheep shopkeeper) {
             DyeColor next = CustomizationUtils.nextInOrder(color);
             shopkeeper.setColor(next);
             return new SheepColorCustomization(next);

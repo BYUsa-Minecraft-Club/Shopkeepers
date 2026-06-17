@@ -3,20 +3,19 @@ package edu.byu.minecraft.shopkeepers.gui;
 import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Items;
 
 public class AdminShopTradeSetupGui extends TradeSetupGui {
 
 
-    public AdminShopTradeSetupGui(ServerPlayerEntity player, LivingEntity shopkeeper) {
-        super(ScreenHandlerType.GENERIC_9X5, player, shopkeeper, 45);
-        this.setTitle(Text.of("Admin shop setup"));
+    public AdminShopTradeSetupGui(ServerPlayer player, LivingEntity shopkeeper) {
+        super(MenuType.GENERIC_9x5, player, shopkeeper, 45);
+        this.setTitle(Component.nullToEmpty("Admin shop setup"));
     }
 
     protected void setupSlots() {
@@ -41,17 +40,17 @@ public class AdminShopTradeSetupGui extends TradeSetupGui {
             this.setSlotRedirect(i, new Slot(tradeItems, (27 * page) + i, 0, 0));
         }
 
-        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUuid());
+        ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
         for(int i = 0; i < 9; i++) {
             showUses(27 + i, (9 * page) + i, true);
         }
 
         this.setSlot(36, page > 0 ?
-                new GuiElementBuilder(Items.ARROW).setItemName(Text.of("Previous Page")).setCallback(() -> setupPage(page - 1)).build() :
+                new GuiElementBuilder(Items.ARROW).setItemName(Component.nullToEmpty("Previous Page")).setCallback(() -> setupPage(page - 1)).build() :
                 GuiUtils.EMPTY_SLOT);
 
         this.setSlot(44, page < 4 ?
-                new GuiElementBuilder(Items.ARROW).setItemName(Text.of("Next Page")).setCallback(() -> setupPage(page + 1)).build() :
+                new GuiElementBuilder(Items.ARROW).setItemName(Component.nullToEmpty("Next Page")).setCallback(() -> setupPage(page + 1)).build() :
                 GuiUtils.EMPTY_SLOT);
     }
 }

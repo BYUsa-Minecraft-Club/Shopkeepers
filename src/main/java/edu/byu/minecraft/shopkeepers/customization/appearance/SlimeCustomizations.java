@@ -1,21 +1,20 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 
-import net.minecraft.entity.mob.SlimeEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class SlimeCustomizations {
-    public static List<AppearanceCustomization<SlimeEntity>> getSlimeCustomizations(SlimeEntity entity) {
-        List<AppearanceCustomization<SlimeEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Slime>> getSlimeCustomizations(Slime entity) {
+        List<AppearanceCustomization<Slime>> customizations = new ArrayList<>();
         customizations.add(new SlimeSizeCustomization(entity.getSize()));
         return customizations;
     }
 
-    private record SlimeSizeCustomization(int size) implements AppearanceCustomization<SlimeEntity> {
+    private record SlimeSizeCustomization(int size) implements AppearanceCustomization<Slime> {
 
         @Override
         public String customizationDescription() {
@@ -45,7 +44,7 @@ public class SlimeCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<SlimeEntity> setNext(SlimeEntity shopkeeper) {
+        public AppearanceCustomization<Slime> setNext(Slime shopkeeper) {
             int next = (size % 4) + 1;
             shopkeeper.setSize(next, true);
             return new SlimeSizeCustomization(next);

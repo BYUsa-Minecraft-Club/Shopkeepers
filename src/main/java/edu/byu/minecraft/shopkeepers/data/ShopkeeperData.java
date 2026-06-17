@@ -2,12 +2,11 @@ package edu.byu.minecraft.shopkeepers.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Uuids;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.item.ItemStack;
 
 public record ShopkeeperData (List<TradeData> trades, List<ShopkeeperInventoryEntry> inventory, boolean isAdmin, List<UUID> owners) {
 
@@ -15,14 +14,14 @@ public record ShopkeeperData (List<TradeData> trades, List<ShopkeeperInventoryEn
             TradeData.CODEC.listOf().fieldOf("trades").forGetter(ShopkeeperData::trades),
             ShopkeeperInventoryEntry.CODEC.listOf().fieldOf("inventory").forGetter(ShopkeeperData::inventory),
             Codec.BOOL.fieldOf("isAdmin").forGetter(ShopkeeperData::isAdmin),
-            Uuids.CODEC.listOf().fieldOf("owners").forGetter(ShopkeeperData::owners)
+            UUIDUtil.AUTHLIB_CODEC.listOf().fieldOf("owners").forGetter(ShopkeeperData::owners)
     ).apply(instance, (trades, inventory, isAdmin, owners) ->
             new ShopkeeperData(new ArrayList<>(trades), new ArrayList<>(inventory), isAdmin, new ArrayList<>(owners))));
 
 
     public int inventoryIndexOf(ItemStack stack) {
         for (int i = 0; i < inventory.size(); i++) {
-            if (ItemStack.areItemsAndComponentsEqual(inventory.get(i).getStack(), stack)) {
+            if (ItemStack.isSameItemSameComponents(inventory.get(i).getStack(), stack)) {
                 return i;
             }
         }

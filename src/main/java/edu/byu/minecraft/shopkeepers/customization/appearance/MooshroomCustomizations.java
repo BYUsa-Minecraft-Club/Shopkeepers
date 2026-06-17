@@ -2,23 +2,22 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.MooshroomEntityVariantSetter;
-import net.minecraft.entity.passive.MooshroomEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.cow.MushroomCow;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class MooshroomCustomizations {
 
-    public static List<AppearanceCustomization<MooshroomEntity>> getMooshroomCustomizations(MooshroomEntity mooshroom) {
-        List<AppearanceCustomization<MooshroomEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<MushroomCow>> getMooshroomCustomizations(MushroomCow mooshroom) {
+        List<AppearanceCustomization<MushroomCow>> customizations = new ArrayList<>();
         customizations.add(new MooshroomVariantCustomization(mooshroom.getVariant()));
         return customizations;
     }
 
-    private record MooshroomVariantCustomization(MooshroomEntity.Variant variant) implements
-            AppearanceCustomization<MooshroomEntity> {
+    private record MooshroomVariantCustomization(MushroomCow.Variant variant) implements
+            AppearanceCustomization<MushroomCow> {
 
         @Override
             public String customizationDescription() {
@@ -39,8 +38,8 @@ public class MooshroomCustomizations {
             }
 
             @Override
-            public AppearanceCustomization<MooshroomEntity> setNext(MooshroomEntity shopkeeper) {
-                MooshroomEntity.Variant next = CustomizationUtils.nextEnum(variant, MooshroomEntity.Variant.values());
+            public AppearanceCustomization<MushroomCow> setNext(MushroomCow shopkeeper) {
+                MushroomCow.Variant next = CustomizationUtils.nextEnum(variant, MushroomCow.Variant.values());
                 ((MooshroomEntityVariantSetter) shopkeeper).invokeSetVariant(next);
                 return new MooshroomVariantCustomization(next);
             }

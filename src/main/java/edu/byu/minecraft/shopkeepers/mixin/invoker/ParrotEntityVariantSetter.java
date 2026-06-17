@@ -1,11 +1,11 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
-import net.minecraft.entity.passive.ParrotEntity;
+import net.minecraft.world.entity.animal.parrot.Parrot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(ParrotEntity.class)
+@Mixin(Parrot.class)
 public interface ParrotEntityVariantSetter {
     @Invoker(value = "setVariant")
-    public void invokeSetVariant(ParrotEntity.Variant variant);
+    public void invokeSetVariant(Parrot.Variant variant);
 }

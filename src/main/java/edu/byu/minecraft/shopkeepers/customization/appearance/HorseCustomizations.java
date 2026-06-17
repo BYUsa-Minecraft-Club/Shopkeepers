@@ -2,26 +2,25 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.HorseEntityVariantSetter;
-import net.minecraft.entity.passive.HorseColor;
-import net.minecraft.entity.passive.HorseEntity;
-import net.minecraft.entity.passive.HorseMarking;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.equine.Horse;
+import net.minecraft.world.entity.animal.equine.Markings;
+import net.minecraft.world.entity.animal.equine.Variant;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class HorseCustomizations {
 
-    public static List<AppearanceCustomization<HorseEntity>> getHorseCustomizations(HorseEntity horse) {
-        List<AppearanceCustomization<HorseEntity>> customizations = new ArrayList<>();
-        customizations.add(new HorseBaseColorCustomization(horse.getHorseColor()));
-        customizations.add(new HorseMarkingCustomization(horse.getMarking()));
+    public static List<AppearanceCustomization<Horse>> getHorseCustomizations(Horse horse) {
+        List<AppearanceCustomization<Horse>> customizations = new ArrayList<>();
+        customizations.add(new HorseBaseColorCustomization(horse.getVariant()));
+        customizations.add(new HorseMarkingCustomization(horse.getMarkings()));
         return customizations;
     }
 
-    private record HorseBaseColorCustomization(HorseColor baseColor)
-            implements AppearanceCustomization<HorseEntity> {
+    private record HorseBaseColorCustomization(Variant baseColor)
+            implements AppearanceCustomization<Horse> {
 
         @Override
         public String customizationDescription() {
@@ -47,15 +46,15 @@ public class HorseCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<HorseEntity> setNext(HorseEntity shopkeeper) {
-            HorseColor next = CustomizationUtils.nextEnum(baseColor, HorseColor.values());
-            ((HorseEntityVariantSetter) shopkeeper).invokeSetVariant(next, shopkeeper.getMarking());
+        public AppearanceCustomization<Horse> setNext(Horse shopkeeper) {
+            Variant next = CustomizationUtils.nextEnum(baseColor, Variant.values());
+            ((HorseEntityVariantSetter) shopkeeper).invokeSetVariant(next, shopkeeper.getMarkings());
             return new HorseBaseColorCustomization(next);
         }
     }
 
-    private record HorseMarkingCustomization(HorseMarking marking)
-            implements AppearanceCustomization<HorseEntity> {
+    private record HorseMarkingCustomization(Markings marking)
+            implements AppearanceCustomization<Horse> {
 
         @Override
         public String customizationDescription() {
@@ -79,9 +78,9 @@ public class HorseCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<HorseEntity> setNext(HorseEntity shopkeeper) {
-            HorseMarking next = CustomizationUtils.nextEnum(marking, HorseMarking.values());
-            ((HorseEntityVariantSetter) shopkeeper).invokeSetVariant(shopkeeper.getHorseColor(), next);
+        public AppearanceCustomization<Horse> setNext(Horse shopkeeper) {
+            Markings next = CustomizationUtils.nextEnum(marking, Markings.values());
+            ((HorseEntityVariantSetter) shopkeeper).invokeSetVariant(shopkeeper.getVariant(), next);
             return new HorseMarkingCustomization(next);
         }
     }

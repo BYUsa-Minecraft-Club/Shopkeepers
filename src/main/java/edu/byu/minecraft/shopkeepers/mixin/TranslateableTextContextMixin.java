@@ -1,6 +1,6 @@
 package edu.byu.minecraft.shopkeepers.mixin;
 
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * This is mostly to fix errors with trades when the "Server Translations API" mod is loaded. Hopefully this doesn't
  * cause other errors, but if this mod causes other errors with translations, this is a good place to start looking
  */
-@Mixin(TranslatableTextContent.class)
+@Mixin(TranslatableContents.class)
 public abstract class TranslateableTextContextMixin {
     @Mutable @Final @Shadow private String fallback;
 

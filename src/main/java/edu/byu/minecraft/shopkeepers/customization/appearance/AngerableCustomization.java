@@ -1,16 +1,16 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.Angerable;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
-public class AngerableCustomization<E extends Entity & Angerable> implements AppearanceCustomization<E> {
+public class AngerableCustomization<E extends Entity & NeutralMob> implements AppearanceCustomization<E> {
 
     private final boolean isAngry;
 
-    AngerableCustomization(Angerable angerable) {
-        this(angerable.hasAngerTime());
+    AngerableCustomization(NeutralMob angerable) {
+        this(angerable.isAngry());
     }
 
     AngerableCustomization(boolean isAngry) {
@@ -34,9 +34,9 @@ public class AngerableCustomization<E extends Entity & Angerable> implements App
 
     @Override
     public AppearanceCustomization<E> setNext(E shopkeeper) {
-        shopkeeper.stopAnger();
+        shopkeeper.stopBeingAngry();
         if (!isAngry) {
-            shopkeeper.setAngerDuration(2099999999);
+            shopkeeper.setTimeToRemainAngry(2099999999);
         }
         return new AngerableCustomization<>(!isAngry);
     }

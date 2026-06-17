@@ -1,24 +1,23 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
-import net.minecraft.entity.mob.BoggedEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.monster.skeleton.Bogged;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class BoggedCustomizations {
 
-    public static List<AppearanceCustomization<BoggedEntity>> getBoggedCustomizations(BoggedEntity bogged) {
-        List<AppearanceCustomization<BoggedEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Bogged>> getBoggedCustomizations(Bogged bogged) {
+        List<AppearanceCustomization<Bogged>> customizations = new ArrayList<>();
         customizations.add(new BoggedShearedCustomization(bogged));
         return customizations;
     }
 
     private record BoggedShearedCustomization(boolean isSheared)
-            implements AppearanceCustomization<BoggedEntity> {
+            implements AppearanceCustomization<Bogged> {
 
-        private BoggedShearedCustomization(BoggedEntity bogged) {
+        private BoggedShearedCustomization(Bogged bogged) {
             this(bogged.isSheared());
         }
         @Override
@@ -37,7 +36,7 @@ public class BoggedCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<BoggedEntity> setNext(BoggedEntity shopkeeper) {
+        public AppearanceCustomization<Bogged> setNext(Bogged shopkeeper) {
             shopkeeper.setSheared(!isSheared());
             return new BoggedShearedCustomization(!isSheared);
         }

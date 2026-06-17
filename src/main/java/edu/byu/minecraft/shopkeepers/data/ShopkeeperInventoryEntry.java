@@ -2,7 +2,7 @@ package edu.byu.minecraft.shopkeepers.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public final class ShopkeeperInventoryEntry {
     public static final Codec<ShopkeeperInventoryEntry> CODEC = RecordCodecBuilder.create((instance) -> instance.group(

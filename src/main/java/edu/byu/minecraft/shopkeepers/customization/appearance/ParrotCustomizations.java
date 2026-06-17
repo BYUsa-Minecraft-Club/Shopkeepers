@@ -2,15 +2,14 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.ParrotEntityVariantSetter;
-import net.minecraft.entity.passive.ParrotEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.List;
+import net.minecraft.world.entity.animal.parrot.Parrot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class ParrotCustomizations {
-    public static List<AppearanceCustomization<ParrotEntity>> getParrotCustomizations(ParrotEntity entity) {
-        List<AppearanceCustomization<ParrotEntity>> customizations =
+    public static List<AppearanceCustomization<Parrot>> getParrotCustomizations(Parrot entity) {
+        List<AppearanceCustomization<Parrot>> customizations =
                 TameableMobCustomizations.getTameableCustomizations(entity);
 
         //I don't think taming makes a visual difference for parrots
@@ -20,8 +19,8 @@ public class ParrotCustomizations {
         return customizations;
     }
 
-    private record ParrotVariantCustomization(ParrotEntity.Variant variant)
-            implements AppearanceCustomization<ParrotEntity> {
+    private record ParrotVariantCustomization(Parrot.Variant variant)
+            implements AppearanceCustomization<Parrot> {
 
         @Override
         public String customizationDescription() {
@@ -45,8 +44,8 @@ public class ParrotCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<ParrotEntity> setNext(ParrotEntity shopkeeper) {
-            ParrotEntity.Variant next = CustomizationUtils.nextEnum(variant, ParrotEntity.Variant.values());
+        public AppearanceCustomization<Parrot> setNext(Parrot shopkeeper) {
+            Parrot.Variant next = CustomizationUtils.nextEnum(variant, Parrot.Variant.values());
             ((ParrotEntityVariantSetter) shopkeeper).invokeSetVariant(next);
             return new ParrotVariantCustomization(next);
         }

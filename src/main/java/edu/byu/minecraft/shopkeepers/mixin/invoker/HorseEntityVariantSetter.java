@@ -1,14 +1,14 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
 
-import net.minecraft.entity.passive.HorseColor;
-import net.minecraft.entity.passive.HorseEntity;
-import net.minecraft.entity.passive.HorseMarking;
+import net.minecraft.world.entity.animal.equine.Horse;
+import net.minecraft.world.entity.animal.equine.Markings;
+import net.minecraft.world.entity.animal.equine.Variant;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(HorseEntity.class)
+@Mixin(Horse.class)
 public interface HorseEntityVariantSetter {
-    @Invoker(value = "setHorseVariant")
-    public void invokeSetVariant(HorseColor color, HorseMarking marking);
+    @Invoker(value = "setVariantAndMarkings")
+    public void invokeSetVariant(Variant color, Markings marking);
 }

@@ -2,23 +2,22 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.SalmonEntityVariantSetter;
-import net.minecraft.entity.passive.SalmonEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.fish.Salmon;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class SalmonCustomizations {
 
-    public static List<AppearanceCustomization<SalmonEntity>> getSalmonCustomizations(SalmonEntity salmon) {
-        List<AppearanceCustomization<SalmonEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Salmon>> getSalmonCustomizations(Salmon salmon) {
+        List<AppearanceCustomization<Salmon>> customizations = new ArrayList<>();
         customizations.add(new SalmonVariantCustomization(salmon.getVariant()));
         return customizations;
     }
 
-    private record SalmonVariantCustomization(SalmonEntity.Variant variant) implements
-            AppearanceCustomization<SalmonEntity> {
+    private record SalmonVariantCustomization(Salmon.Variant variant) implements
+            AppearanceCustomization<Salmon> {
 
         @Override
             public String customizationDescription() {
@@ -40,8 +39,8 @@ public class SalmonCustomizations {
             }
 
             @Override
-            public AppearanceCustomization<SalmonEntity> setNext(SalmonEntity shopkeeper) {
-                SalmonEntity.Variant next = CustomizationUtils.nextEnum(variant, SalmonEntity.Variant.values());
+            public AppearanceCustomization<Salmon> setNext(Salmon shopkeeper) {
+                Salmon.Variant next = CustomizationUtils.nextEnum(variant, Salmon.Variant.values());
                 ((SalmonEntityVariantSetter) shopkeeper).invokeSetVariant(next);
                 return new SalmonVariantCustomization(next);
             }

@@ -1,24 +1,24 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
-import net.minecraft.entity.mob.ShulkerEntity;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.Optional;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.monster.Shulker;
+import net.minecraft.world.item.DyeColor;
 
-@Mixin(ShulkerEntity.class)
+@Mixin(Shulker.class)
 public interface ShulkerEntityVariationSetter {
-    @Invoker(value = "setColor")
+    @Invoker(value = "setVariant")
     public void invokeSetColor(Optional<DyeColor> color);
 
-    @Invoker(value = "getPeekAmount")
+    @Invoker(value = "getRawPeekAmount")
     public int invokeGetPeekAmount();
 
-    @Invoker(value = "setPeekAmount")
+    @Invoker(value = "setRawPeekAmount")
     public void invokeSetPeekAmount(int peekAmount);
 
-    @Invoker(value = "setAttachedFace")
+    @Invoker(value = "setAttachFace")
     public void invokeSetAttachedFace(Direction face);
 }

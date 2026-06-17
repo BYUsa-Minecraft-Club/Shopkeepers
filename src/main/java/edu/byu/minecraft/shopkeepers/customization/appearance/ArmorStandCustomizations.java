@@ -1,25 +1,24 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.mixin.invoker.ArmorStandEntityCustomizationInvoker;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class ArmorStandCustomizations {
 
-    public static List<AppearanceCustomization<ArmorStandEntity>> getArmorStandCustomizations(ArmorStandEntity armorStand) {
-        List<AppearanceCustomization<ArmorStandEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<ArmorStand>> getArmorStandCustomizations(ArmorStand armorStand) {
+        List<AppearanceCustomization<ArmorStand>> customizations = new ArrayList<>();
         customizations.add(new ArmorStandSmallCustomization(armorStand.isSmall()));
-        customizations.add(new ArmorStandShowArmsCustomization(armorStand.shouldShowArms()));
-        customizations.add(new ArmorStandShowBasePlateCustomization(armorStand.shouldShowBasePlate()));
+        customizations.add(new ArmorStandShowArmsCustomization(armorStand.showArms()));
+        customizations.add(new ArmorStandShowBasePlateCustomization(armorStand.showBasePlate()));
         return customizations;
     }
 
     private record ArmorStandShowArmsCustomization(boolean showArms)
-            implements AppearanceCustomization<ArmorStandEntity> {
+            implements AppearanceCustomization<ArmorStand> {
 
         @Override
         public String customizationDescription() {
@@ -37,14 +36,14 @@ public class ArmorStandCustomizations {
         }
 
         @Override
-        public ArmorStandShowArmsCustomization setNext(ArmorStandEntity shopkeeper) {
+        public ArmorStandShowArmsCustomization setNext(ArmorStand shopkeeper) {
             shopkeeper.setShowArms(!showArms);
             return new ArmorStandShowArmsCustomization(!showArms);
         }
     }
 
     private record ArmorStandShowBasePlateCustomization(boolean showBasePlate)
-            implements AppearanceCustomization<ArmorStandEntity> {
+            implements AppearanceCustomization<ArmorStand> {
 
         @Override
         public String customizationDescription() {
@@ -62,14 +61,14 @@ public class ArmorStandCustomizations {
         }
 
         @Override
-        public ArmorStandShowBasePlateCustomization setNext(ArmorStandEntity shopkeeper) {
-            shopkeeper.setHideBasePlate(showBasePlate);
+        public ArmorStandShowBasePlateCustomization setNext(ArmorStand shopkeeper) {
+            shopkeeper.setNoBasePlate(showBasePlate);
             return new ArmorStandShowBasePlateCustomization(!showBasePlate);
         }
     }
 
     private record ArmorStandSmallCustomization(boolean isSmall)
-            implements AppearanceCustomization<ArmorStandEntity> {
+            implements AppearanceCustomization<ArmorStand> {
 
         @Override
         public String customizationDescription() {
@@ -87,7 +86,7 @@ public class ArmorStandCustomizations {
         }
 
         @Override
-        public ArmorStandSmallCustomization setNext(ArmorStandEntity shopkeeper) {
+        public ArmorStandSmallCustomization setNext(ArmorStand shopkeeper) {
             ((ArmorStandEntityCustomizationInvoker) shopkeeper).invokeSetSmall(!isSmall);
             return new ArmorStandSmallCustomization(!isSmall);
         }

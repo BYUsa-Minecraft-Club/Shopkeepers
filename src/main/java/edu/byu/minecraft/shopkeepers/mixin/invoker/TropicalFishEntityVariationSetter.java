@@ -1,11 +1,11 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
-import net.minecraft.entity.passive.TropicalFishEntity;
-import net.minecraft.util.DyeColor;
+import net.minecraft.world.entity.animal.fish.TropicalFish;
+import net.minecraft.world.item.DyeColor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(TropicalFishEntity.class)
+@Mixin(TropicalFish.class)
 public interface TropicalFishEntityVariationSetter {
     @Invoker(value = "setPatternColor")
     public void invokeSetPatternColor(DyeColor color);
@@ -13,6 +13,6 @@ public interface TropicalFishEntityVariationSetter {
     @Invoker(value = "setBaseColor")
     public void invokeSetBaseColor(DyeColor color);
 
-    @Invoker(value = "setVariety")
-    public void invokeSetVariety(TropicalFishEntity.Pattern pattern);
+    @Invoker(value = "setPattern")
+    public void invokeSetVariety(TropicalFish.Pattern pattern);
 }

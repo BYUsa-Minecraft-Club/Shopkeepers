@@ -1,25 +1,24 @@
 package edu.byu.minecraft.shopkeepers.customization.appearance;
 
-import net.minecraft.entity.passive.ArmadilloEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.entity.animal.armadillo.Armadillo;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class ArmadilloCustomizations {
 
-    public static List<AppearanceCustomization<ArmadilloEntity>> getArmadilloCustomizations(ArmadilloEntity armadillo) {
-        List<AppearanceCustomization<ArmadilloEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Armadillo>> getArmadilloCustomizations(Armadillo armadillo) {
+        List<AppearanceCustomization<Armadillo>> customizations = new ArrayList<>();
         customizations.add(new ArmadilloPoseCustomization(armadillo));
         return customizations;
     }
 
     private record ArmadilloPoseCustomization(boolean isRolledUp)
-            implements AppearanceCustomization<ArmadilloEntity> {
+            implements AppearanceCustomization<Armadillo> {
 
-        private ArmadilloPoseCustomization(ArmadilloEntity armadillo) {
-            this(armadillo.getState() == ArmadilloEntity.State.SCARED || armadillo.getState() == ArmadilloEntity.State.ROLLING);
+        private ArmadilloPoseCustomization(Armadillo armadillo) {
+            this(armadillo.getState() == Armadillo.ArmadilloState.SCARED || armadillo.getState() == Armadillo.ArmadilloState.ROLLING);
         }
         @Override
         public String customizationDescription() {
@@ -37,8 +36,8 @@ public class ArmadilloCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<ArmadilloEntity> setNext(ArmadilloEntity shopkeeper) {
-            shopkeeper.setState(isRolledUp ? ArmadilloEntity.State.UNROLLING : ArmadilloEntity.State.ROLLING);
+        public AppearanceCustomization<Armadillo> setNext(Armadillo shopkeeper) {
+            shopkeeper.switchToState(isRolledUp ? Armadillo.ArmadilloState.UNROLLING : Armadillo.ArmadilloState.ROLLING);
             return new ArmadilloPoseCustomization(!isRolledUp);
         }
     }

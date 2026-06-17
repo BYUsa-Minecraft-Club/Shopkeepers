@@ -2,36 +2,35 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import edu.byu.minecraft.shopkeepers.customization.CustomizationUtils;
 import edu.byu.minecraft.shopkeepers.mixin.invoker.FrogEntityVariantSetter;
-import net.minecraft.entity.passive.FrogEntity;
-import net.minecraft.entity.passive.FrogVariant;
-import net.minecraft.entity.passive.FrogVariants;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.animal.frog.Frog;
+import net.minecraft.world.entity.animal.frog.FrogVariant;
+import net.minecraft.world.entity.animal.frog.FrogVariants;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class FrogCustomizations {
-    public static List<AppearanceCustomization<FrogEntity>> getFrogCustomizations(FrogEntity entity) {
-        List<AppearanceCustomization<FrogEntity>> customizations = new ArrayList<>();
+    public static List<AppearanceCustomization<Frog>> getFrogCustomizations(Frog entity) {
+        List<AppearanceCustomization<Frog>> customizations = new ArrayList<>();
         customizations.add(new FrogVariantCustomization(entity));
         return customizations;
     }
 
     private record FrogVariantCustomization(Variant variant)
-            implements AppearanceCustomization<FrogEntity> {
+            implements AppearanceCustomization<Frog> {
         private enum Variant {
             TEMPERATE(FrogVariants.TEMPERATE),
             WARM(FrogVariants.WARM),
             COLD(FrogVariants.COLD);
             
-            private final RegistryKey<FrogVariant> key;
-            private Variant(RegistryKey<FrogVariant> key) {
+            private final ResourceKey<FrogVariant> key;
+            private Variant(ResourceKey<FrogVariant> key) {
                 this.key = key;
             }
 
-            private static Variant of(RegistryKey<FrogVariant> key) {
+            private static Variant of(ResourceKey<FrogVariant> key) {
                 for (Variant variant : Variant.values()) {
                     if (variant.key.equals(key)) {
                         return variant;
@@ -41,8 +40,8 @@ public class FrogCustomizations {
             }
         }
 
-        private FrogVariantCustomization(FrogEntity frog) {
-            this(Variant.of(frog.getVariant().getKey().orElseThrow()));
+        private FrogVariantCustomization(Frog frog) {
+            this(Variant.of(frog.getVariant().unwrapKey().orElseThrow()));
         }
 
         @Override
@@ -65,9 +64,9 @@ public class FrogCustomizations {
         }
 
         @Override
-        public AppearanceCustomization<FrogEntity> setNext(FrogEntity shopkeeper) {
+        public AppearanceCustomization<Frog> setNext(Frog shopkeeper) {
             Variant next = CustomizationUtils.nextEnum(variant, Variant.values());
-            ((FrogEntityVariantSetter) shopkeeper).invokeSetVariant(shopkeeper.getRegistryManager().getEntryOrThrow(next.key));
+            ((FrogEntityVariantSetter) shopkeeper).invokeSetVariant(shopkeeper.registryAccess().getOrThrow(next.key));
             return new FrogVariantCustomization(next);
         }
     }

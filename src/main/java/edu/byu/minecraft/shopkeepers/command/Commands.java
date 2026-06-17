@@ -10,45 +10,43 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import me.lucko.fabric.api.permissions.v0.Permissions;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
-import net.minecraft.command.suggestion.SuggestionProviders;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.ResourceArgument;
+import net.minecraft.commands.synchronization.SuggestionProviders;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.function.Predicate;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 public class Commands {
 
     //actual tab characters (\t) don't display correctly
     private static final String TAB = "    ";
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess,
-                                CommandManager.RegistrationEnvironment environment) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess,
+                                net.minecraft.commands.Commands.CommandSelection environment) {
         dispatcher.register(literal("shopkeepers")
-            .requires((Predicate<ServerCommandSource>) ServerCommandSource::isExecutedByPlayer)
+            .requires((Predicate<CommandSourceStack>) CommandSourceStack::isPlayer)
             .executes(Commands::documentation)
                 .then(literal("help").executes(Commands::documentation))
                 .then(literal("make")
-                    .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
+                    .then(net.minecraft.commands.Commands.argument("entity", ResourceArgument.resource(registryAccess, Registries.ENTITY_TYPE))
                             .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
                             .executes(Commands::makeNormal)))
                 .then(literal("shopentities").executes(Commands::listShopEntities))
@@ -56,16 +54,16 @@ public class Commands {
                     .then(literal("shopentities")
                         .then(literal("list").executes(Commands::listShopEntities))
                         .then(literal("add")
-                            .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
-                                    .suggests(SuggestionProviders.byId(Identifier.ofVanilla("summonable_entities")))
+                            .then(net.minecraft.commands.Commands.argument("entity", ResourceArgument.resource(registryAccess, Registries.ENTITY_TYPE))
+                                    .suggests(SuggestionProviders.getProvider(Identifier.withDefaultNamespace("summonable_entities")))
                                     .suggests(CustomSuggestionProviders::unaddedEntityTypes)
                                     .executes(Commands::addShopEntity)))
                         .then(literal("remove")
-                            .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
+                            .then(net.minecraft.commands.Commands.argument("entity", ResourceArgument.resource(registryAccess, Registries.ENTITY_TYPE))
                                     .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
                                     .executes(Commands::removeShopEntity))))
                     .then(literal("make")
-                        .then(CommandManager.argument("entity", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENTITY_TYPE))
+                        .then(net.minecraft.commands.Commands.argument("entity", ResourceArgument.resource(registryAccess, Registries.ENTITY_TYPE))
                                 .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
                                 .executes(Commands::makeAdmin)))
                     .then(literal("playershoplimit").executes(Commands::playerShopLimitGet)
@@ -73,11 +71,11 @@ public class Commands {
                                 .then(argument("player", StringArgumentType.word())
                                         .suggests(CustomSuggestionProviders::allPlayers)
                                         .executes(Commands::onePlayerShopLimitGet)))
-                        .then(literal("set").then(CommandManager.argument("max", IntegerArgumentType.integer())
+                        .then(literal("set").then(net.minecraft.commands.Commands.argument("max", IntegerArgumentType.integer())
                                 .executes(Commands::playerShopLimitSet))
                                     .then(argument("player", StringArgumentType.word())
                                             .suggests(CustomSuggestionProviders::allPlayers)
-                                                .then(CommandManager.argument("max", IntegerArgumentType.integer())
+                                                .then(net.minecraft.commands.Commands.argument("max", IntegerArgumentType.integer())
                                                         .executes(Commands::onePlayerShopLimitSet))))
                         .then(literal("list").executes(Commands::listShopLimits))
                         .then(literal("remove").then(argument("player", StringArgumentType.word())
@@ -88,7 +86,7 @@ public class Commands {
 
 
 
-    private static int documentation(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    private static int documentation(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         StringBuilder builder = new StringBuilder("Shopkeepers usage:\n");
 
         builder.append(TAB).append("/shopkeepers make <approved entity type>   - Creates a new shopkeeper, owned by you\n");
@@ -110,18 +108,18 @@ public class Commands {
             builder.deleteCharAt(builder.length() - 1);
         }
 
-        Text text = Text.of(builder.toString());
+        Component text = Component.nullToEmpty(builder.toString());
         try {
-                text = text.getWithStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(new URI(
+                text = text.toFlatList(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(new URI(
                         "https://github.com/BYUsa-Minecraft-Club/Shopkeepers/blob/master/README.md"
                 )))).getFirst();
         } catch (URISyntaxException ignored) {}
 
-        context.getSource().sendMessage(text);
+        context.getSource().sendSystemMessage(text);
         return 1;
     }
 
-    private static int listShopLimits(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    private static int listShopLimits(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         StringBuilder builder = new StringBuilder(String.format("Player shop limits: \n  Default Limit: %s\n",
                 Shopkeepers.getData().getMaxOwnedShops()));
         List<String> playersWithLimits = new ArrayList<>();
@@ -132,41 +130,41 @@ public class Commands {
         playersWithLimits.sort(Comparator.naturalOrder());
         playersWithLimits.forEach(builder::append);
         builder.deleteCharAt(builder.length() - 1);
-        context.getSource().sendMessage(Text.of(builder.toString()));
+        context.getSource().sendSystemMessage(Component.nullToEmpty(builder.toString()));
         return 1;
     }
 
-    private static int onePlayerShopLimitRemove(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    private static int onePlayerShopLimitRemove(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         String playerName = StringArgumentType.getString(context, "player");
         UUID playerId = getPlayerId(playerName);
         Integer oldMax = Shopkeepers.getData().getPlayerMaxOwnedShops().remove(playerId);
         if(oldMax == null) {
-            context.getSource().sendMessage(Text.of(String.format("Player %s did not already have a limit", playerName)));
+            context.getSource().sendSystemMessage(Component.nullToEmpty(String.format("Player %s did not already have a limit", playerName)));
             return 0;
         } else {
-            context.getSource().sendMessage(Text.of(String.format("Removed limit from %s (was %d)", playerName, oldMax)));
+            context.getSource().sendSystemMessage(Component.nullToEmpty(String.format("Removed limit from %s (was %d)", playerName, oldMax)));
             return 1;
         }
     }
 
-    private static int onePlayerShopLimitSet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    private static int onePlayerShopLimitSet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         String playerName = StringArgumentType.getString(context, "player");
         int max = IntegerArgumentType.getInteger(context, "max");
         UUID playerId = getPlayerId(playerName);
         Shopkeepers.getData().getPlayerMaxOwnedShops().put(playerId, max);
-        context.getSource().sendMessage(Text.of(String.format("Set new limit for %s of %d", playerName, max)));
+        context.getSource().sendSystemMessage(Component.nullToEmpty(String.format("Set new limit for %s of %d", playerName, max)));
         return 1;
     }
 
-    private static int onePlayerShopLimitGet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    private static int onePlayerShopLimitGet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         String playerName = StringArgumentType.getString(context, "player");
         UUID playerId = getPlayerId(playerName);
         Integer max = Shopkeepers.getData().getPlayerMaxOwnedShops().get(playerId);
         if(max == null) {
-            context.getSource().sendMessage(Text.of(String.format("No specific limit set for %s, default is %d",
+            context.getSource().sendSystemMessage(Component.nullToEmpty(String.format("No specific limit set for %s, default is %d",
                     playerName, Shopkeepers.getData().getMaxOwnedShops())));
         } else {
-            context.getSource().sendMessage(Text.of(String.format("Limit for %s is %d", playerName, max)));
+            context.getSource().sendSystemMessage(Component.nullToEmpty(String.format("Limit for %s is %d", playerName, max)));
         }
         return 1;
     }
@@ -180,64 +178,64 @@ public class Commands {
         throw new CommandSyntaxException(new SimpleCommandExceptionType(errorMessage), errorMessage);
     }
 
-    private static int playerShopLimitGet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        context.getSource().sendMessage(Text.of("The current limit is " + Shopkeepers.getData().getMaxOwnedShops()));
+    private static int playerShopLimitGet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        context.getSource().sendSystemMessage(Component.nullToEmpty("The current limit is " + Shopkeepers.getData().getMaxOwnedShops()));
         return 1;
     }
 
-    private static int playerShopLimitSet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    private static int playerShopLimitSet(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         int newMax = IntegerArgumentType.getInteger(context, "max");
         Shopkeepers.getData().setMaxOwnedShops(newMax);
-        context.getSource().sendMessage(Text.of("New limit set to " + Shopkeepers.getData().getMaxOwnedShops()));
+        context.getSource().sendSystemMessage(Component.nullToEmpty("New limit set to " + Shopkeepers.getData().getMaxOwnedShops()));
         return 1;
     }
 
-    private static int removeShopEntity(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        RegistryEntry.Reference<EntityType<?>>
-                entity = RegistryEntryReferenceArgumentType.getSummonableEntityType(context, "entity");
+    private static int removeShopEntity(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        Holder.Reference<EntityType<?>>
+                entity = ResourceArgument.getSummonableEntityType(context, "entity");
         if(entity == null) {
-            context.getSource().sendMessage(Text.of("That doesn't seem to be a valid entity type"));
+            context.getSource().sendSystemMessage(Component.nullToEmpty("That doesn't seem to be a valid entity type"));
             return 0;
         }
 
         if(Shopkeepers.getData().getAllowedShopkeepers().contains(entity.value())) {
             Shopkeepers.getData().getAllowedShopkeepers().remove(entity.value());
-            Shopkeepers.getData().markDirty();
-            context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " removed"));
+            Shopkeepers.getData().setDirty();
+            context.getSource().sendSystemMessage(Component.nullToEmpty(entity.value().getDescription().getString() + " removed"));
             return 1;
         } else {
-            context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " wasn't already approved, doesn't need to be removed"));
+            context.getSource().sendSystemMessage(Component.nullToEmpty(entity.value().getDescription().getString() + " wasn't already approved, doesn't need to be removed"));
             return 0;
         }
     }
 
-    private static int addShopEntity(CommandContext<ServerCommandSource> context) {
-        ServerPlayerEntity executor = context.getSource().getPlayer();
+    private static int addShopEntity(CommandContext<CommandSourceStack> context) {
+        ServerPlayer executor = context.getSource().getPlayer();
         if(executor == null) {
-            context.getSource().sendMessage(Text.of("this command must be executed by a player"));
+            context.getSource().sendSystemMessage(Component.nullToEmpty("this command must be executed by a player"));
             return 0;
         }
         try {
-            RegistryEntry.Reference<EntityType<?>>
-                    entity = RegistryEntryReferenceArgumentType.getSummonableEntityType(context, "entity");
+            Holder.Reference<EntityType<?>>
+                    entity = ResourceArgument.getSummonableEntityType(context, "entity");
             if(entity == null) {
-                context.getSource().sendMessage(Text.of("That doesn't seem to be a valid entity type"));
+                context.getSource().sendSystemMessage(Component.nullToEmpty("That doesn't seem to be a valid entity type"));
                 return 0;
             }
 
             Entity testEntity = ShopkeeperEntitySummoner.summon(context.getSource(), entity,
-                    new Vec3d(executor.getX(), -100, executor.getZ()), false, false);
+                    new Vec3(executor.getX(), -100, executor.getZ()), false, false);
             if(!(testEntity instanceof LivingEntity)) {
-                context.getSource().sendMessage(Text.of(entity.value().getName().getString() +
+                context.getSource().sendSystemMessage(Component.nullToEmpty(entity.value().getDescription().getString() +
                         " is not a living entity, not adding"));
-                testEntity.kill(executor.getEntityWorld());
+                testEntity.kill(executor.level());
                 return 0;
             }
             else {
                 Shopkeepers.getData().getAllowedShopkeepers().add(entity.value());
-                Shopkeepers.getData().markDirty();
-                context.getSource().sendMessage(Text.of(entity.value().getName().getString() + " added"));
-                testEntity.kill(executor.getEntityWorld());
+                Shopkeepers.getData().setDirty();
+                context.getSource().sendSystemMessage(Component.nullToEmpty(entity.value().getDescription().getString() + " added"));
+                testEntity.kill(executor.level());
                 return 1;
             }
         } catch (Exception e) {
@@ -246,48 +244,48 @@ public class Commands {
         }
     }
 
-    private static int listShopEntities(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    private static int listShopEntities(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         StringBuilder sb = new StringBuilder("Approved Shopkeepers:\n");
         List<EntityType<?>> approvedEntities = new ArrayList<>(Shopkeepers.getData().getAllowedShopkeepers());
         if(approvedEntities.isEmpty()) {
             sb.append("None yet");
         } else {
-            approvedEntities.sort(Comparator.comparing(o -> o.getName().getString()));
+            approvedEntities.sort(Comparator.comparing(o -> o.getDescription().getString()));
             for (var entityType : approvedEntities) {
-                sb.append(TAB).append(entityType.getName().getString()).append("\n");
+                sb.append(TAB).append(entityType.getDescription().getString()).append("\n");
             }
             sb.deleteCharAt(sb.length() - 1);
         }
-        context.getSource().sendMessage(Text.of(sb.toString()));
+        context.getSource().sendSystemMessage(Component.nullToEmpty(sb.toString()));
         return 1;
     }
 
 
-    private static int makeNormal(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity executor = context.getSource().getPlayer();
+    private static int makeNormal(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer executor = context.getSource().getPlayer();
         if (executor == null) {
-            context.getSource().sendMessage(Text.of("this command must be executed by a player"));
+            context.getSource().sendSystemMessage(Component.nullToEmpty("this command must be executed by a player"));
             return 0;
         }
         double ownedShops = Shopkeepers.getData().getShopkeeperData().values().stream()
-                .filter(sd -> sd.owners().contains(executor.getUuid()))
+                .filter(sd -> sd.owners().contains(executor.getUUID()))
                 .mapToDouble(sd -> 1.0 / sd.owners().size())
                 .sum();
         int maxShops = Shopkeepers.getData().getMaxOwnedShops();
         String maxShopOwner = "the";
-        if(Shopkeepers.getData().getPlayerMaxOwnedShops().containsKey(executor.getUuid())) {
-            maxShops = Shopkeepers.getData().getPlayerMaxOwnedShops().get(executor.getUuid());
+        if(Shopkeepers.getData().getPlayerMaxOwnedShops().containsKey(executor.getUUID())) {
+            maxShops = Shopkeepers.getData().getPlayerMaxOwnedShops().get(executor.getUUID());
             maxShopOwner = "your";
         }
         if (ownedShops >= maxShops) {
             String relationshipDescription = (ownedShops == maxShops) ? "at" : "greater than";
             if(Shopkeepers.isAdmin(executor)) {
-                executor.sendMessage(Text.of(String.format("Warning: you already own %.2f current shops (adjusted for multiple owners)," +
+                executor.sendSystemMessage(Component.nullToEmpty(String.format("Warning: you already own %.2f current shops (adjusted for multiple owners)," +
                         " %s %s normal max of %d. Since you are a shopkeepers administrator," +
                         " you are allowed to bypass the limit. Continuing with shop creation.",
                         ownedShops, relationshipDescription, maxShopOwner, maxShops)));
             } else {
-                executor.sendMessage(Text.of(String.format("You already own %.2f current shops (adjusted for multiple owners)," +
+                executor.sendSystemMessage(Component.nullToEmpty(String.format("You already own %.2f current shops (adjusted for multiple owners)," +
                                 " %s %s max of %d. Disband another shop(s) if you want to make a new one",
                         ownedShops, relationshipDescription, maxShopOwner, maxShops)));
                 return 0;
@@ -296,42 +294,42 @@ public class Commands {
         return make(context, false);
     }
 
-    private static int makeAdmin(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    private static int makeAdmin(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         return make(context, true);
     }
 
-    private static int make(CommandContext<ServerCommandSource> context, boolean isAdmin) throws CommandSyntaxException {
-        ServerPlayerEntity executor = context.getSource().getPlayer();
+    private static int make(CommandContext<CommandSourceStack> context, boolean isAdmin) throws CommandSyntaxException {
+        ServerPlayer executor = context.getSource().getPlayer();
         if (executor == null) {
-            context.getSource().sendMessage(Text.of("this command must be executed by a player"));
+            context.getSource().sendSystemMessage(Component.nullToEmpty("this command must be executed by a player"));
             return 0;
         }
         try {
-            RegistryEntry.Reference<EntityType<?>>
-                    entity = RegistryEntryReferenceArgumentType.getSummonableEntityType(context, "entity");
+            Holder.Reference<EntityType<?>>
+                    entity = ResourceArgument.getSummonableEntityType(context, "entity");
             if(entity == null) {
-                Identifier villagerId = Registries.ENTITY_TYPE.getId(EntityType.VILLAGER);
-                entity = Registries.ENTITY_TYPE.get(villagerId).getRegistryEntry();
+                Identifier villagerId = BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VILLAGER);
+                entity = BuiltInRegistries.ENTITY_TYPE.getValue(villagerId).builtInRegistryHolder();
             }
 
             if(!Shopkeepers.getData().getAllowedShopkeepers().contains(entity.value())) {
-                context.getSource().sendMessage(Text.of("That's not an approved shopkeeper entity"));
+                context.getSource().sendSystemMessage(Component.nullToEmpty("That's not an approved shopkeeper entity"));
                 return 0;
             }
 
-            Entity shopkeeper = ShopkeeperEntitySummoner.summon(context.getSource(), entity, executor.getEntityPos(),
-                    executor.isOnGround(), true);
-            shopkeeper.teleport(executor.getEntityWorld(), executor.getX(), executor.getY(), executor.getZ(),
-                    new HashSet<>(), executor.getYaw(), executor.getPitch(), true);
+            Entity shopkeeper = ShopkeeperEntitySummoner.summon(context.getSource(), entity, executor.position(),
+                    executor.onGround(), true);
+            shopkeeper.teleportTo(executor.level(), executor.getX(), executor.getY(), executor.getZ(),
+                    new HashSet<>(), executor.getYRot(), executor.getXRot(), true);
 
             List<UUID> owners = new ArrayList<>();
             if(!isAdmin) {
-                owners.add(executor.getUuid());
+                owners.add(executor.getUUID());
             }
 
-            Shopkeepers.getData().getShopkeeperData().put(shopkeeper.getUuid(), new ShopkeeperData(new ArrayList<>(),
+            Shopkeepers.getData().getShopkeeperData().put(shopkeeper.getUUID(), new ShopkeeperData(new ArrayList<>(),
                     new ArrayList<>(), isAdmin, owners));
-            Shopkeepers.getData().markDirty();
+            Shopkeepers.getData().setDirty();
             return 1;
         } catch (Exception e) {
             Shopkeepers.LOGGER.error("Error making shopkeeper", e);

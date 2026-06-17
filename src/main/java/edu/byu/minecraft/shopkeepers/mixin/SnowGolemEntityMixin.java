@@ -1,14 +1,14 @@
 package edu.byu.minecraft.shopkeepers.mixin;
 
-import net.minecraft.entity.passive.SnowGolemEntity;
+import net.minecraft.world.entity.animal.golem.SnowGolem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(SnowGolemEntity.class)
+@Mixin(SnowGolem.class)
 public class SnowGolemEntityMixin extends EntityMixin {
-    @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getDefaultState()Lnet/minecraft/block/BlockState;"), cancellable = true)
+    @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;defaultBlockState()Lnet/minecraft/world/level/block/state/BlockState;"), cancellable = true)
     private void injectTickMovement(CallbackInfo ci) {
         ifShopkeeperEntity(ci::cancel);
     }

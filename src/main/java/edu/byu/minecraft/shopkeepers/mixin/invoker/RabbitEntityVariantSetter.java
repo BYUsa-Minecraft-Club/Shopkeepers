@@ -1,11 +1,11 @@
 package edu.byu.minecraft.shopkeepers.mixin.invoker;
 
-import net.minecraft.entity.passive.RabbitEntity;
+import net.minecraft.world.entity.animal.rabbit.Rabbit;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(RabbitEntity.class)
+@Mixin(Rabbit.class)
 public interface RabbitEntityVariantSetter {
     @Invoker(value = "setVariant")
-    public void invokeSetVariant(RabbitEntity.Variant variant);
+    public void invokeSetVariant(Rabbit.Variant variant);
 }
