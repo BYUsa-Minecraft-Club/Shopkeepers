@@ -13,7 +13,8 @@ import edu.byu.minecraft.shopkeepers.data.TradeData;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import java.util.*;
-import java.util.function.Predicate;
+
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -107,11 +108,16 @@ public abstract class TradeSetupGui extends SimpleGui {
             setSlot(slot, GuiUtils.EMPTY_SLOT);
             return false;
         } else if (appearanceOptions.size() > 1) {
-            Item egg = SpawnEggItem.byId(shopkeeper.getType());
-            if(egg == null && shopkeeper instanceof ArmorStand) {
+            Optional<Holder<Item>> optionalEgg = SpawnEggItem.byId(shopkeeper.getType());
+            Item egg;
+            if(optionalEgg.isEmpty() && shopkeeper instanceof ArmorStand) {
                 egg = Items.ARMOR_STAND;
+            } else if (optionalEgg.isPresent()) {
+                egg = optionalEgg.get().value();
+            } else {
+                egg = Items.LIME_DYE;
             }
-            setSlot(slot, new GuiElementBuilder(egg != null ? egg : Items.LIME_DYE)
+            setSlot(slot, new GuiElementBuilder(egg)
                     .setItemName(Component.nullToEmpty(String.format("Edit %s Appearance Options",
                             CustomizationUtils.capitalize(shopkeeper.getType().getDescription().getString()))))
                     .setCallback(() -> new MobAppearanceGui<>(player, shopkeeper, appearanceOptions, this).open())
@@ -241,7 +247,7 @@ public abstract class TradeSetupGui extends SimpleGui {
     }
 
     @Override
-    public void onClose() {
+    public void onManualClose() {
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
         boolean changed = false;
         for(int i = 0; i < maxTrades; i++) {
@@ -273,11 +279,6 @@ public abstract class TradeSetupGui extends SimpleGui {
             shopkeeperData.trades().removeIf(Objects::isNull);
             Shopkeepers.getData().setDirty();
         }
-    }
-
-    @Override
-    public void onScreenHandlerClosed() {
-        super.onScreenHandlerClosed();
         Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUUID(), player.getUUID());
     }
 

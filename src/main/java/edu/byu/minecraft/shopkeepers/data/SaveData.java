@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import edu.byu.minecraft.Shopkeepers;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
@@ -58,7 +59,12 @@ public class SaveData extends SavedData {
 
     public static SaveData getServerState(MinecraftServer server) {
         return server.overworld().getDataStorage()
-                .computeIfAbsent(new SavedDataType<>(Shopkeepers.MOD_ID, SaveData::new, CODEC, null));
+                .computeIfAbsent(new SavedDataType<>(
+                        Identifier.fromNamespaceAndPath(Shopkeepers.MOD_ID,"data"),
+                        SaveData::new,
+                        CODEC,
+                        null
+                ));
     }
 
     public void checkPlayer(ServerPlayer player) {

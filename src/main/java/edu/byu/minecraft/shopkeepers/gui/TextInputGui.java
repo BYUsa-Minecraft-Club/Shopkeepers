@@ -32,8 +32,7 @@ public class TextInputGui extends AnvilInputGui {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void onManualClose() {
         if(!Objects.equals(initial, this.getInput())) {
             callback.accept(this.getInput());
             player.setExperienceLevels(player.experienceLevel); //no idea why it works like this but

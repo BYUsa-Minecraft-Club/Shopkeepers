@@ -32,7 +32,7 @@ public class MobEquipmentGui<E extends Entity> extends SimpleGui {
         for(int i = 0; i < equipmentCustomizations.size(); i++) {
             EquipmentCustomization<E> equipment = equipmentCustomizations.get(i);
             inventory.setItem(i, equipment.getInitalStack(shopkeeper).copy());
-            setSlotRedirect(i, new Slot(inventory, i, 0, 0));
+            setSlot(i, new Slot(inventory, i, 0, 0));
             setSlot(i + 9, new GuiElementBuilder(equipment.getDescriptionItem())
                     .setItemName(Component.nullToEmpty(String.format("↑ Place %s in slot above this ↑",
                             equipment.equipmentSlotDescription().toLowerCase()))).build());
@@ -55,7 +55,7 @@ public class MobEquipmentGui<E extends Entity> extends SimpleGui {
     }
 
     @Override
-    public void onClose() {
+    public void onManualClose() {
         for(int i = 0; i < equipmentCustomizations.size(); i++) {
             EquipmentCustomization<E> equipment = equipmentCustomizations.get(i);
             ItemStack itemStack = inventory.getItem(i);
@@ -68,7 +68,5 @@ public class MobEquipmentGui<E extends Entity> extends SimpleGui {
                 equipment.updateEquipment(shopkeeper, ItemStack.EMPTY);
             }
         }
-
-        super.onClose();
     }
 }

@@ -1,7 +1,7 @@
 package edu.byu.minecraft.shopkeepers.mixin;
 
 import edu.byu.minecraft.shopkeepers.gui.OfferGui;
-import eu.pb4.sgui.virtual.merchant.VirtualMerchantScreenHandler;
+import eu.pb4.sgui.impl.virtual.merchant.VirtualMerchantScreenHandler;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.npc.ClientSideMerchant;
 import net.minecraft.world.entity.player.Player;

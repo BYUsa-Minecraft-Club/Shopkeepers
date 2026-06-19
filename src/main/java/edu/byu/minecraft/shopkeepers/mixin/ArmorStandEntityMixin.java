@@ -18,9 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ArmorStand.class)
 public class ArmorStandEntityMixin extends EntityMixin {
 
-    @Inject(method = "interactAt", at = @At("HEAD"), cancellable = true)
-    public void injectInteractAt(Player player, Vec3 hitPos, InteractionHand hand,
-                           CallbackInfoReturnable<InteractionResult> cir) {
+    @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
+    public void injectInteractAt(Player player, InteractionHand hand, Vec3 location, CallbackInfoReturnable<InteractionResult> cir) {
         ArmorStand self = (ArmorStand) (Object) this;
         if(player instanceof ServerPlayer serverPlayer &&
                 ShopkeeperInteractions.openGui(self, serverPlayer)) {

@@ -141,16 +141,15 @@ public class OfferGui extends MerchantGui {
         if(shopkeeperData.isAdmin()) {
             maxUses = Integer.MAX_VALUE;
         }
-        ItemCost firstTradedItem = new ItemCost(base.firstBuyItem().getItemHolder(), base.firstBuyItem().getCount(),
+        ItemCost firstTradedItem = new ItemCost(base.firstBuyItem().typeHolder(), base.firstBuyItem().getCount(),
                 DataComponentExactPredicate.allOf(base.firstBuyItem().getComponents()));
         Optional<ItemCost> secondTradedItem = base.secondBuyItem().map(stack ->
-                new ItemCost(stack.getItemHolder(), stack.getCount(), DataComponentExactPredicate.allOf(stack.getComponents())));
+                new ItemCost(stack.typeHolder(), stack.getCount(), DataComponentExactPredicate.allOf(stack.getComponents())));
         return new MerchantOffer(firstTradedItem, secondTradedItem, base.sellItem(), maxUses, 0, 0);
     }
 
     @Override
-    public void onScreenHandlerClosed() {
-        super.onScreenHandlerClosed();
+    public void onManualClose() {
         Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUUID(), player.getUUID());
     }
 }

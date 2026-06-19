@@ -45,7 +45,7 @@ public class MerchantInventoryGui extends SimpleGui {
         }
 
         for(int i = starterSize; i < 54; i++) {
-            this.setSlotRedirect(i, new Slot(inventoryPage, i - starterSize, 0, 0));
+            this.setSlot(i, new Slot(inventoryPage, i - starterSize, 0, 0));
         }
         setTitle(Component.nullToEmpty(shopkeeper.getName().getString() + " Inventory"));
     }
@@ -62,7 +62,7 @@ public class MerchantInventoryGui extends SimpleGui {
                     .setName(Component.nullToEmpty(String.format("(%d) %s", amount,
                             stack.getHoverName().getString())).toFlatList(stack.getHoverName().getStyle()).getFirst())
                     .setLore(makeLore(copy))
-                    .setCallback((index, clickType, slotActionType) -> {
+                    .setCallback((clickType) -> {
                         if(clickType == ClickType.MOUSE_LEFT_SHIFT || clickType == ClickType.MOUSE_RIGHT_SHIFT) {
                             boolean hasMore = true;
                             while(hasMore && player.getInventory().getFreeSlot() != -1) {
@@ -104,7 +104,6 @@ public class MerchantInventoryGui extends SimpleGui {
         return amountHeld > giveSize;
     }
 
-
     @Override
     protected boolean sendGui() {
         if(GuiUtils.ensureInteractionLock(player, shopkeeper)) {
@@ -116,8 +115,8 @@ public class MerchantInventoryGui extends SimpleGui {
         }
     }
 
-    @Override
-    public void onClose() {
+    private void save() {
+        if (inventoryPage.isEmpty()) return;
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
 
         for(ItemStack inventoryItemStack : inventoryPage) {
@@ -129,8 +128,14 @@ public class MerchantInventoryGui extends SimpleGui {
     }
 
     @Override
-    public void onScreenHandlerClosed() {
-        super.onScreenHandlerClosed();
+    public void onManualClose() {
+        save();
+    }
+
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
         Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUUID(), player.getUUID());
+        save();
     }
 }

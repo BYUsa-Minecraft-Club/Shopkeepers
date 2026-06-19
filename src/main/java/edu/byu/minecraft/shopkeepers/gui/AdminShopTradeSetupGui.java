@@ -37,7 +37,7 @@ public class AdminShopTradeSetupGui extends TradeSetupGui {
 
     private void setupPage(int page) {
         for(int i = 0; i < 27; i++) {
-            this.setSlotRedirect(i, new Slot(tradeItems, (27 * page) + i, 0, 0));
+            this.setSlot(i, new Slot(tradeItems, (27 * page) + i, 0, 0));
         }
 
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());

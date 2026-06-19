@@ -1,6 +1,5 @@
 package edu.byu.minecraft.shopkeepers.gui;
 
-import edu.byu.minecraft.Shopkeepers;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,7 +19,7 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
     protected void setupSlots() {
         for(int i = 0; i < 27; i++) {
             if(i % 9 == 8) continue;
-            this.setSlotRedirect(i, new Slot(tradeItems, i, 0, 0));
+            this.setSlot(i, new Slot(tradeItems, i, 0, 0));
         }
 
         this.setSlot(8, new GuiElementBuilder(Items.YELLOW_STAINED_GLASS_PANE).setItemName(Component.nullToEmpty("← Price #1")).build());
