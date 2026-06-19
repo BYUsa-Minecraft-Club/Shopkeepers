@@ -246,8 +246,7 @@ public abstract class TradeSetupGui extends SimpleGui {
         }
     }
 
-    @Override
-    public void onManualClose() {
+    public void save() {
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
         boolean changed = false;
         for(int i = 0; i < maxTrades; i++) {
@@ -280,6 +279,17 @@ public abstract class TradeSetupGui extends SimpleGui {
             Shopkeepers.getData().setDirty();
         }
         Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUUID(), player.getUUID());
+    }
+
+    @Override
+    public void onManualClose() {
+        save();
+    }
+
+    @Override
+    public void onRemoved() {
+        save();
+        super.onRemoved();
     }
 
     protected TradeData validateTradeOrGiveBack(int i) {
