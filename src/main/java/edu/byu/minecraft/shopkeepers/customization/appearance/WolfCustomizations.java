@@ -66,15 +66,15 @@ public class WolfCustomizations {
         @Override
         public Item getCurrentRepresentationItem() {
             return switch (variant) {
-                case PALE -> Items.LIGHT_GRAY_DYE;
-                case SPOTTED -> Items.ORANGE_DYE;
-                case SNOWY -> Items.WHITE_DYE;
-                case BLACK -> Items.BLACK_DYE;
-                case ASHEN -> Items.LIGHT_BLUE_DYE;
-                case RUSTY -> Items.RED_DYE;
-                case WOODS -> Items.BROWN_DYE;
-                case CHESTNUT -> Items.GRAY_DYE;
-                case STRIPED -> Items.YELLOW_DYE;
+                case PALE -> Items.DYE.lightGray();
+                case SPOTTED -> Items.DYE.orange();
+                case SNOWY -> Items.DYE.white();
+                case BLACK -> Items.DYE.black();
+                case ASHEN -> Items.DYE.lightBlue();
+                case RUSTY -> Items.DYE.red();
+                case WOODS -> Items.DYE.brown();
+                case CHESTNUT -> Items.DYE.gray();
+                case STRIPED -> Items.DYE.yellow();
             };
         }
 

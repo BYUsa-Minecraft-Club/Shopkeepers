@@ -35,11 +35,11 @@ public class ParrotCustomizations {
         @Override
         public Item getCurrentRepresentationItem() {
             return switch (variant) {
-                case RED_BLUE -> Items.RED_DYE;
-                case BLUE -> Items.BLUE_DYE;
-                case GREEN -> Items.LIME_DYE;
-                case YELLOW_BLUE -> Items.LIGHT_BLUE_DYE;
-                case GRAY -> Items.GRAY_DYE;
+                case RED_BLUE -> Items.DYE.red();
+                case BLUE -> Items.DYE.blue();
+                case GREEN -> Items.DYE.green();
+                case YELLOW_BLUE -> Items.DYE.lightBlue();
+                case GRAY -> Items.DYE.gray();
             };
         }
 

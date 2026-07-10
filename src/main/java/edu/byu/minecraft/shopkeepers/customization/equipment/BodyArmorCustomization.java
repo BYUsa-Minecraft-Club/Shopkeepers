@@ -16,12 +16,12 @@ public class BodyArmorCustomization {
             list.add(new MobEquipmentCustomizations<>(EquipmentSlot.BODY, "armor", Items.WOLF_ARMOR));
         }
 
-        if(entity.isEquippableInSlot(new ItemStack(Items.WHITE_HARNESS), EquipmentSlot.BODY)) {
-            list.add(new MobEquipmentCustomizations<>(EquipmentSlot.BODY, "harness", Items.WHITE_HARNESS));
+        if(entity.isEquippableInSlot(new ItemStack(Items.HARNESS.white()), EquipmentSlot.BODY)) {
+            list.add(new MobEquipmentCustomizations<>(EquipmentSlot.BODY, "harness", Items.HARNESS.white()));
         }
 
-        if(entity.isEquippableInSlot(new ItemStack(Items.WHITE_CARPET), EquipmentSlot.BODY)) {
-            list.add(new MobEquipmentCustomizations<>(EquipmentSlot.BODY, "carpet", Items.WHITE_CARPET));
+        if(entity.isEquippableInSlot(new ItemStack(Items.CARPET.white()), EquipmentSlot.BODY)) {
+            list.add(new MobEquipmentCustomizations<>(EquipmentSlot.BODY, "carpet", Items.CARPET.white()));
         }
     }
 }

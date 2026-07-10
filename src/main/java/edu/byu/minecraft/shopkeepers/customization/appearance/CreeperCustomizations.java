@@ -29,7 +29,7 @@ public class CreeperCustomizations {
 
         @Override
         public Item getCurrentRepresentationItem() {
-            return isCharged ? Items.LIGHTNING_ROD : Items.CREEPER_HEAD;
+            return isCharged ? Items.LIGHTNING_ROD.weathering().unaffected() : Items.CREEPER_HEAD;
         }
 
         @Override

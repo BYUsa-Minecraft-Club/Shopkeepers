@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 
 public class CustomSuggestionProviders {
@@ -36,7 +37,7 @@ public class CustomSuggestionProviders {
 
     private static final Set<EntityType<?>> LIVING_ENTITIES;
     private static final Set<EntityType<?>> SIDE_EFFECT_ENTITIES =
-            Set.of(EntityType.ENDER_DRAGON, EntityType.WITHER);
+            Set.of(EntityTypes.ENDER_DRAGON, EntityTypes.WITHER);
     /*Ender dragons are not interactable and withers show a boss bar. I don't want either of those, so I'm just not
     going to make them options in the first place. Also players aren't summonable (use a mannequin instead) */
 

@@ -33,10 +33,10 @@ public class LlamaCustomizations {
             @Override
             public Item getCurrentRepresentationItem() {
                 return switch (variant) {
-                    case CREAMY -> Items.YELLOW_DYE;
-                    case WHITE -> Items.WHITE_DYE;
-                    case BROWN -> Items.BROWN_DYE;
-                    case GRAY -> Items.LIGHT_GRAY_DYE;
+                    case CREAMY -> Items.DYE.yellow();
+                    case WHITE -> Items.DYE.white();
+                    case BROWN -> Items.DYE.brown();
+                    case GRAY -> Items.DYE.lightGray();
                 };
             }
 

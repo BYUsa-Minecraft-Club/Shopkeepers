@@ -32,8 +32,8 @@ public class FoxCustomizations {
             @Override
             public Item getCurrentRepresentationItem() {
                 return switch (variant) {
-                    case RED -> Items.ORANGE_DYE;
-                    case SNOW -> Items.WHITE_DYE;
+                    case RED -> Items.DYE.orange();
+                    case SNOW -> Items.DYE.white();
                 };
             }
 
@@ -73,7 +73,7 @@ public class FoxCustomizations {
                 case STANDING -> Items.ACACIA_PLANKS;
                 case SNEAKING -> Items.ACACIA_SLAB;
                 case SITTING -> Items.SADDLE;
-                case SLEEPING -> Items.WHITE_BED;
+                case SLEEPING -> Items.BED.white();
             };
         }
 

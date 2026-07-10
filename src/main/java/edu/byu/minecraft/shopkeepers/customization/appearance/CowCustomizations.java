@@ -56,9 +56,9 @@ public class CowCustomizations {
         @Override
         public Item getCurrentRepresentationItem() {
             return switch (variant) {
-                case TEMPERATE -> Items.BROWN_DYE;
-                case WARM -> Items.RED_DYE;
-                case COLD -> Items.ORANGE_DYE;
+                case TEMPERATE -> Items.DYE.brown();
+                case WARM -> Items.DYE.red();
+                case COLD -> Items.DYE.orange();
             };
         }
 

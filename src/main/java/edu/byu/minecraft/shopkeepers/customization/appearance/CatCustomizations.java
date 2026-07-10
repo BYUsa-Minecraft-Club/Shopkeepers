@@ -67,13 +67,13 @@ public class CatCustomizations {
         @Override
         public Item getCurrentRepresentationItem() {
             return switch (variant) {
-                case TABBY -> Items.BROWN_DYE;
-                case BLACK, ALL_BLACK -> Items.BLACK_DYE;
-                case RED, CALICO -> Items.ORANGE_DYE;
-                case SIAMESE, PERSIAN -> Items.YELLOW_DYE;
-                case BRITISH_SHORTHAIR, RAGDOLL -> Items.LIGHT_GRAY_DYE;
-                case WHITE -> Items.WHITE_DYE;
-                case JELLIE -> Items.GRAY_DYE;
+                case TABBY -> Items.DYE.brown();
+                case BLACK, ALL_BLACK -> Items.DYE.black();
+                case RED, CALICO -> Items.DYE.orange();
+                case SIAMESE, PERSIAN -> Items.DYE.yellow();
+                case BRITISH_SHORTHAIR, RAGDOLL -> Items.DYE.lightGray();
+                case WHITE -> Items.DYE.white();
+                case JELLIE -> Items.DYE.gray();
             };
         }
 

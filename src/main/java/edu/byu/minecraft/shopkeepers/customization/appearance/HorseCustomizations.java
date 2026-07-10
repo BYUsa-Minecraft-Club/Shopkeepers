@@ -35,12 +35,12 @@ public class HorseCustomizations {
         @Override
         public Item getCurrentRepresentationItem() {
             return switch (baseColor) {
-                case WHITE -> Items.WHITE_DYE;
-                case CREAMY -> Items.ORANGE_DYE;
-                case CHESTNUT -> Items.RED_DYE;
-                case BROWN -> Items.BROWN_DYE;
-                case BLACK -> Items.BLACK_DYE;
-                case GRAY -> Items.GRAY_DYE;
+                case WHITE -> Items.DYE.white();
+                case CREAMY -> Items.DYE.orange();
+                case CHESTNUT -> Items.DYE.red();
+                case BROWN -> Items.DYE.brown();
+                case BLACK -> Items.DYE.black();
+                case GRAY -> Items.DYE.gray();
                 case DARK_BROWN -> Items.DARK_OAK_LOG;
             };
         }
@@ -71,9 +71,9 @@ public class HorseCustomizations {
             return switch (marking) {
                 case NONE -> Items.BARRIER;
                 case WHITE -> Items.LEATHER_BOOTS;
-                case WHITE_FIELD -> Items.WHITE_DYE;
+                case WHITE_FIELD -> Items.DYE.white();
                 case WHITE_DOTS -> Items.BONE_MEAL;
-                case BLACK_DOTS -> Items.BLACK_DYE;
+                case BLACK_DOTS -> Items.DYE.black();
             };
         }
 

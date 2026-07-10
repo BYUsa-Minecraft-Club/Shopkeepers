@@ -16,7 +16,7 @@ import net.minecraft.world.item.component.ResolvableProfile;
 
 public class GuiUtils {
 
-    static final GuiElement EMPTY_SLOT = new GuiElementBuilder(Items.BLACK_STAINED_GLASS_PANE).hideTooltip().hideDefaultTooltip().build();
+    static final GuiElement EMPTY_SLOT = new GuiElementBuilder(Items.STAINED_GLASS_PANE.black()).hideTooltip().hideDefaultTooltip().build();
 
     static boolean ensureInteractionLock(ServerPlayer player, Entity shopkeeper) {
         UUID lockedPlayer = Shopkeepers.getInteractionLocks().tryAcquireLock(shopkeeper.getUUID(), player.getUUID());

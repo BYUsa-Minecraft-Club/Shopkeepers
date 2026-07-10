@@ -8,6 +8,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 import java.util.*;
@@ -31,7 +32,7 @@ public class SaveData extends SavedData {
 
     public static final Codec<SaveData> CODEC = Codec.withAlternative(NEW_CODEC, OLD_CODEC);
 
-    private static final List<EntityType<?>> DEFAULT_ALLOWED_ENTITIES = List.of(EntityType.VILLAGER);
+    private static final List<EntityType<?>> DEFAULT_ALLOWED_ENTITIES = List.of(EntityTypes.VILLAGER);
     private static final int DEFAULT_MAX_SHOPS = 15;
 
     private final Map<UUID, ShopkeeperData> shopkeeperData;

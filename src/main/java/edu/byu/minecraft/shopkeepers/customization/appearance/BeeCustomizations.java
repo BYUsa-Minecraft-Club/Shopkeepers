@@ -31,7 +31,7 @@ public class BeeCustomizations {
 
         @Override
         public Item getCurrentRepresentationItem() {
-            return hasNectar ? Items.WILDFLOWERS : Items.RED_DYE;
+            return hasNectar ? Items.WILDFLOWERS : Items.DYE.red();
         }
 
         @Override
@@ -55,7 +55,7 @@ public class BeeCustomizations {
 
         @Override
         public Item getCurrentRepresentationItem() {
-            return hasStinger ? Items.LIME_DYE : Items.RED_DYE;
+            return hasStinger ?  Items.DYE.lime() : Items.DYE.red();
         }
 
         @Override

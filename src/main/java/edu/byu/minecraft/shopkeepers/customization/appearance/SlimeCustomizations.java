@@ -3,7 +3,7 @@ package edu.byu.minecraft.shopkeepers.customization.appearance;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 

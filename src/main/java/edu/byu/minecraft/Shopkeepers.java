@@ -3,18 +3,22 @@ package edu.byu.minecraft;
 import edu.byu.minecraft.shopkeepers.command.Commands;
 import edu.byu.minecraft.shopkeepers.data.SaveData;
 import edu.byu.minecraft.shopkeepers.lock.InteractionLocks;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Shopkeepers implements ModInitializer {
 	public static final String MOD_ID = "shopkeepers";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+	private static final Identifier ADMIN_PERMISSION = Identifier.fromNamespaceAndPath("shopkeepers","admin");
 
 	private static SaveData data;
 
@@ -42,6 +46,11 @@ public class Shopkeepers implements ModInitializer {
 	}
 
 	public static boolean isAdmin(ServerPlayer player) {
-		return Permissions.check(player, MOD_ID + ".admin", 4);
+		return player.checkPermission(ADMIN_PERMISSION, PermissionLevel.OWNERS);
+	}
+
+	public static boolean isAdmin(CommandSourceStack commandSourceStack) {
+		ServerPlayer player = commandSourceStack.getPlayer();
+		return player != null && isAdmin(player);
 	}
 }

@@ -32,7 +32,7 @@ public class SheepCustomizations {
 
         @Override
         public Item getCurrentRepresentationItem() {
-            return isSheared ? Items.SHEARS : Items.WHITE_WOOL;
+            return isSheared ? Items.SHEARS : Items.WOOL.white();
         }
 
         @Override

@@ -57,9 +57,9 @@ public class PigCustomizations {
         @Override
         public Item getCurrentRepresentationItem() {
             return switch (variant) {
-                case TEMPERATE -> Items.PINK_DYE;
-                case WARM -> Items.ORANGE_DYE;
-                case COLD -> Items.YELLOW_DYE;
+                case TEMPERATE -> Items.DYE.pink();
+                case WARM -> Items.DYE.orange();
+                case COLD -> Items.DYE.yellow();
             };
         }
 

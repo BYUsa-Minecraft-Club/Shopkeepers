@@ -70,8 +70,8 @@ public class VillagerCustomizations {
         @Override
         public Item getCurrentRepresentationItem() {
             return switch(profession) {
-                case NONE -> Items.RED_DYE;
-                case NITWIT -> Items.GREEN_DYE;
+                case NONE -> Items.DYE.red();
+                case NITWIT -> Items.DYE.green();
                 case ARMORER -> Items.BLAST_FURNACE;
                 case BUTCHER -> Items.SMOKER;
                 case CARTOGRAPHER -> Items.CARTOGRAPHY_TABLE;

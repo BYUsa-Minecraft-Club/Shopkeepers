@@ -9,7 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
-import me.lucko.fabric.api.permissions.v0.Permissions;
+import net.fabricmc.fabric.api.permission.v1.PermissionPredicates;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.ResourceArgument;
@@ -22,8 +22,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.net.URI;
@@ -50,7 +52,7 @@ public class Commands {
                             .suggests(CustomSuggestionProviders::approvedShopkeeperEntities)
                             .executes(Commands::makeNormal)))
                 .then(literal("shopentities").executes(Commands::listShopEntities))
-                .then(literal("admin").requires(Permissions.require("shopkeepers.admin", 4))
+                .then(literal("admin").requires(Shopkeepers::isAdmin)
                     .then(literal("shopentities")
                         .then(literal("list").executes(Commands::listShopEntities))
                         .then(literal("add")
@@ -92,7 +94,7 @@ public class Commands {
         builder.append(TAB).append("/shopkeepers make <approved entity type>   - Creates a new shopkeeper, owned by you\n");
         builder.append(TAB).append("/shopkeepers shopentities   - lists out the entity types approved by admins\n");
 
-        if(Permissions.check(context.getSource(), "shopkeepers.admin", 4)) {
+        if (Shopkeepers.isAdmin(context.getSource())) {
             builder.append(TAB).append("/shopkeepers admin make <approved entity type>   - Creates a new admin shop\n");
             builder.append(TAB).append("/shopkeepers admin shopentities list   - lists out the approved entity types\n");
             builder.append(TAB).append("/shopkeepers admin shopentities add <summonable entity type>   - Adds entity type to approved list\n");
@@ -308,7 +310,7 @@ public class Commands {
             Holder.Reference<EntityType<?>>
                     entity = ResourceArgument.getSummonableEntityType(context, "entity");
             if(entity == null) {
-                Identifier villagerId = BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VILLAGER);
+                Identifier villagerId = BuiltInRegistries.ENTITY_TYPE.getKey(EntityTypes.VILLAGER);
                 entity = BuiltInRegistries.ENTITY_TYPE.getValue(villagerId).builtInRegistryHolder();
             }
 

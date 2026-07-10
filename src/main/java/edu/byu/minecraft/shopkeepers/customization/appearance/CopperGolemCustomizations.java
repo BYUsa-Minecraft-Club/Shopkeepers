@@ -36,10 +36,10 @@ public class CopperGolemCustomizations {
         @Override
         public Item getCurrentRepresentationItem() {
             return switch (level) {
-                case UNAFFECTED -> Items.COPPER_BLOCK;
-                case EXPOSED -> Items.EXPOSED_COPPER;
-                case WEATHERED -> Items.WEATHERED_COPPER;
-                case OXIDIZED -> Items.OXIDIZED_COPPER;
+                case UNAFFECTED -> Items.COPPER_BLOCK.weathering().unaffected();
+                case EXPOSED -> Items.COPPER_BLOCK.weathering().exposed();
+                case WEATHERED -> Items.COPPER_BLOCK.weathering().weathered();
+                case OXIDIZED -> Items.COPPER_BLOCK.weathering().oxidized();
             };
         }
 

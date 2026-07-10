@@ -39,7 +39,7 @@ public class TameableMobCustomizations {
 
         @Override
         public Item getCurrentRepresentationItem() {
-            return isTamed ? Items.LIME_DYE : Items.RED_DYE;
+            return isTamed ? Items.DYE.lime() : Items.DYE.red();
         }
 
         @Override
@@ -72,7 +72,7 @@ public class TameableMobCustomizations {
 
         @Override
         public Item getCurrentRepresentationItem() {
-            return isSitting ? Items.LIME_DYE : Items.RED_DYE;
+            return isSitting ? Items.DYE.lime() : Items.DYE.red();
         }
 
         @Override

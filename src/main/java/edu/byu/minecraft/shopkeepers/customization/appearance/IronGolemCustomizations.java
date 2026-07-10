@@ -32,10 +32,10 @@ public class IronGolemCustomizations {
         @Override
         public Item getCurrentRepresentationItem() {
             return switch (crackLevel) {
-                case NONE -> Items.LIME_DYE;
-                case LOW -> Items.YELLOW_DYE;
-                case MEDIUM -> Items.ORANGE_DYE;
-                case HIGH -> Items.RED_DYE;
+                case NONE -> Items.DYE.lime();
+                case LOW -> Items.DYE.yellow();
+                case MEDIUM -> Items.DYE.orange();
+                case HIGH -> Items.DYE.red();
             };
         }
 

@@ -46,7 +46,7 @@ dependencies {
 	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 
 	implementation include("eu.pb4:sgui:${project.sgui_version}")
-	implementation include("me.lucko:fabric-permissions-api:${permissions_api_version}")
+	// implementation include("me.lucko:fabric-permissions-api:${permissions_api_version}")
 }
 
 processResources {

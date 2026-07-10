@@ -56,9 +56,9 @@ public class ChickenCustomizations {
         @Override
         public Item getCurrentRepresentationItem() {
             return switch (variant) {
-                case TEMPERATE -> Items.WHITE_DYE;
-                case WARM -> Items.ORANGE_DYE;
-                case COLD -> Items.GRAY_DYE;
+                case TEMPERATE -> Items.DYE.white();
+                case WARM -> Items.DYE.orange();
+                case COLD -> Items.DYE.gray();
             };
         }
 

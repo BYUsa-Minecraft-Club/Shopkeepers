@@ -22,9 +22,9 @@ public class PlayerShopTradeSetupGui extends TradeSetupGui {
             this.setSlot(i, new Slot(tradeItems, i, 0, 0));
         }
 
-        this.setSlot(8, new GuiElementBuilder(Items.YELLOW_STAINED_GLASS_PANE).setItemName(Component.nullToEmpty("← Price #1")).build());
-        this.setSlot(17, new GuiElementBuilder(Items.ORANGE_STAINED_GLASS_PANE).setItemName(Component.nullToEmpty("← Price #2 (Optional)")).build());
-        this.setSlot(26, new GuiElementBuilder(Items.LIME_STAINED_GLASS_PANE).setItemName(Component.nullToEmpty("← Product ")).build());
+        this.setSlot(8, new GuiElementBuilder(Items.STAINED_GLASS_PANE.yellow()).setItemName(Component.nullToEmpty("← Price #1")).build());
+        this.setSlot(17, new GuiElementBuilder(Items.STAINED_GLASS_PANE.orange()).setItemName(Component.nullToEmpty("← Price #2 (Optional)")).build());
+        this.setSlot(26, new GuiElementBuilder(Items.STAINED_GLASS_PANE.lime()).setItemName(Component.nullToEmpty("← Product ")).build());
 
         for(int i = 0; i < 8; i++) {
             showUses(27 + i, i, false);

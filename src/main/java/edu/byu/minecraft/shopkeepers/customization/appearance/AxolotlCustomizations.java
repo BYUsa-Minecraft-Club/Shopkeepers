@@ -32,11 +32,11 @@ public class AxolotlCustomizations {
             @Override
             public Item getCurrentRepresentationItem() {
                 return switch (variant) {
-                    case LUCY -> Items.PINK_DYE;
-                    case WILD -> Items.BROWN_DYE;
-                    case GOLD -> Items.YELLOW_DYE;
-                    case CYAN -> Items.LIGHT_BLUE_DYE;
-                    case BLUE -> Items.BLUE_DYE;
+                    case LUCY -> Items.DYE.pink();
+                    case WILD -> Items.DYE.brown();
+                    case GOLD -> Items.DYE.yellow();
+                    case CYAN -> Items.DYE.lightBlue();
+                    case BLUE -> Items.DYE.blue();
                 };
             }
 

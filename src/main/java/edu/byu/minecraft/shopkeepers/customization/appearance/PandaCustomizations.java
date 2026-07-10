@@ -32,10 +32,10 @@ public class PandaCustomizations {
         public Item getCurrentRepresentationItem() {
             return switch (gene) {
                 case NORMAL -> Items.BAMBOO;
-                case LAZY -> Items.BLACK_BED;
+                case LAZY -> Items.BED.black();
                 case WORRIED -> Items.FOX_SPAWN_EGG;
                 case PLAYFUL -> Items.BAMBOO_CHEST_RAFT;
-                case BROWN -> Items.BROWN_DYE;
+                case BROWN -> Items.DYE.brown();
                 case WEAK -> Items.LEATHER_HORSE_ARMOR;
                 case AGGRESSIVE -> Items.IRON_SWORD;
             };

@@ -29,7 +29,7 @@ public class AngerableCustomization<E extends Entity & NeutralMob> implements Ap
 
     @Override
     public Item getCurrentRepresentationItem() {
-        return isAngry ? Items.LIME_DYE : Items.RED_DYE;
+        return isAngry ? Items.DYE.lime() : Items.DYE.red();
     }
 
     @Override

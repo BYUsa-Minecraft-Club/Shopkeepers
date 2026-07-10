@@ -115,7 +115,7 @@ public abstract class TradeSetupGui extends SimpleGui {
             } else if (optionalEgg.isPresent()) {
                 egg = optionalEgg.get().value();
             } else {
-                egg = Items.LIME_DYE;
+                egg = Items.DYE.lime();
             }
             setSlot(slot, new GuiElementBuilder(egg)
                     .setItemName(Component.nullToEmpty(String.format("Edit %s Appearance Options",

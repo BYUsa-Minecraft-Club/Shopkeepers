@@ -86,7 +86,7 @@ public class ShopOwnersEditGui extends SimpleGui {
         }
 
         if(data.owners().size() < MAX_SHOP_OWNERS) {
-            setSlot(ownersMap.size(), new GuiElementBuilder(Items.LIME_DYE).setName(Component.nullToEmpty("Add Owner"))
+            setSlot(ownersMap.size(), new GuiElementBuilder(Items.DYE.lime()).setName(Component.nullToEmpty("Add Owner"))
                     .setCallback(() -> new TextInputGui(player, "username", (username) -> {
                         for (Map.Entry<UUID, String> entry : Shopkeepers.getData().getPlayers().entrySet()) {
                             if (username.equalsIgnoreCase(entry.getValue())) {

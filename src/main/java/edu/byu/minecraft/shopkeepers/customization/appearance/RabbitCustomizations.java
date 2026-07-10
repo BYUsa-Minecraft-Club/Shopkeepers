@@ -32,13 +32,13 @@ public class RabbitCustomizations {
             @Override
             public Item getCurrentRepresentationItem() {
                 return switch (variant) {
-                    case BROWN -> Items.BROWN_DYE;
-                    case WHITE -> Items.WHITE_DYE;
-                    case BLACK -> Items.BLACK_DYE;
-                    case WHITE_SPLOTCHED -> Items.GRAY_DYE;
-                    case GOLD -> Items.YELLOW_DYE;
-                    case SALT -> Items.ORANGE_DYE;
-                    case EVIL -> Items.RED_DYE;
+                    case BROWN -> Items.DYE.brown();
+                    case WHITE -> Items.DYE.white();
+                    case BLACK -> Items.DYE.black();
+                    case WHITE_SPLOTCHED -> Items.DYE.gray();
+                    case GOLD -> Items.DYE.yellow();
+                    case SALT -> Items.DYE.orange();
+                    case EVIL -> Items.DYE.red();
                 };
             }
 

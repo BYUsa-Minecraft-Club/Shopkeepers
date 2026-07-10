@@ -28,7 +28,7 @@ public class BatCustomizations {
 
         @Override
         public Item getCurrentRepresentationItem() {
-            return isRoosting ? Items.LIME_DYE : Items.RED_DYE;
+            return isRoosting ? Items.DYE.lime() : Items.DYE.red();
         }
 
         @Override
