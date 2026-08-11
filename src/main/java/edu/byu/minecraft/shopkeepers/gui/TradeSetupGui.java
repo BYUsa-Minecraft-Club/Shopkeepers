@@ -11,7 +11,6 @@ import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperInventoryEntry;
 import edu.byu.minecraft.shopkeepers.data.TradeData;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.gui.SimpleGui;
 import java.util.*;
 
 import net.minecraft.core.Holder;
@@ -33,14 +32,14 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
 
-public abstract class TradeSetupGui extends SimpleGui {
+public abstract class TradeSetupGui extends LockingGui {
 
     protected final LivingEntity shopkeeper;
     protected final SimpleContainer tradeItems;
     protected final int maxTrades;
 
     public TradeSetupGui(MenuType<?> type, ServerPlayer player, LivingEntity shopkeeper, int maxTrades) {
-        super(type, player, false);
+        super(type, player, false, shopkeeper);
         this.shopkeeper = shopkeeper;
         this.maxTrades = maxTrades;
         tradeItems = new SimpleContainer(((int) Math.ceil(maxTrades / 9.0)) * 27);
@@ -112,10 +111,8 @@ public abstract class TradeSetupGui extends SimpleGui {
             Item egg;
             if(optionalEgg.isEmpty() && shopkeeper instanceof ArmorStand) {
                 egg = Items.ARMOR_STAND;
-            } else if (optionalEgg.isPresent()) {
-                egg = optionalEgg.get().value();
             } else {
-                egg = Items.DYE.lime();
+                egg = optionalEgg.map(Holder::value).orElse(Items.DYE.lime());
             }
             setSlot(slot, new GuiElementBuilder(egg)
                     .setItemName(Component.nullToEmpty(String.format("Edit %s Appearance Options",
@@ -282,14 +279,9 @@ public abstract class TradeSetupGui extends SimpleGui {
     }
 
     @Override
-    public void onManualClose() {
+    public void onClose() {
+        super.onClose();
         save();
-    }
-
-    @Override
-    public void onRemoved() {
-        save();
-        super.onRemoved();
     }
 
     protected TradeData validateTradeOrGiveBack(int i) {

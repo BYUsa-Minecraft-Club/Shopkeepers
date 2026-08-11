@@ -3,7 +3,6 @@ package edu.byu.minecraft.shopkeepers.gui;
 import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import edu.byu.minecraft.shopkeepers.data.TradeData;
-import eu.pb4.sgui.api.gui.MerchantGui;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,7 +20,7 @@ import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 
-public class OfferGui extends MerchantGui {
+public class OfferGui extends LockingMerchantGui {
 
     private static final ItemCost adminEditTradeBuyItem;
     private static final ItemStack adminEditTradeSellItem;
@@ -40,13 +39,11 @@ public class OfferGui extends MerchantGui {
         ownerEditTradeSellItem = new ItemStack(Items.PAPER.builtInRegistryHolder(), 1, DataComponentPatch.builder().set(ownerNameComponenet).set(ownerLoreComponent).build());
     }
 
-    private final LivingEntity shopkeeper;
     private boolean isAdmin = false;
     private boolean isOwner = false;
 
     public OfferGui(ServerPlayer player, LivingEntity shopkeeper) {
-        super(player, false);
-        this.shopkeeper = shopkeeper;
+        super(player, false, shopkeeper);
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
 
         if(shopkeeperData.owners().contains(player.getUUID())) {
@@ -61,17 +58,6 @@ public class OfferGui extends MerchantGui {
             addTrade(getOfferWithCorrectMaxUses(trade, shopkeeperData));
         }
         this.setTitle(shopkeeper.getName());
-    }
-
-    @Override
-    protected boolean sendGui() {
-        if(GuiUtils.ensureInteractionLock(player, shopkeeper)) {
-            return super.sendGui();
-        }
-        else {
-            this.close();
-            return false;
-        }
     }
 
     @Override
@@ -148,8 +134,5 @@ public class OfferGui extends MerchantGui {
         return new MerchantOffer(firstTradedItem, secondTradedItem, base.sellItem(), maxUses, 0, 0);
     }
 
-    @Override
-    public void onManualClose() {
-        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUUID(), player.getUUID());
-    }
+
 }

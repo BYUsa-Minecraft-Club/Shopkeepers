@@ -4,7 +4,6 @@ import edu.byu.minecraft.Shopkeepers;
 import edu.byu.minecraft.shopkeepers.data.ShopkeeperData;
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.gui.SimpleGui;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
@@ -19,7 +18,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 
-public class MerchantInventoryGui extends SimpleGui {
+public class MerchantInventoryGui extends LockingGui {
     private static final Style INVENTORY_INFO_STYLE;
 
     static {
@@ -29,12 +28,10 @@ public class MerchantInventoryGui extends SimpleGui {
                 .withUnderlined(true);
     }
 
-    private final LivingEntity shopkeeper;
     private final SimpleContainer inventoryPage;
 
     public MerchantInventoryGui(ServerPlayer player, LivingEntity shopkeeper) {
-        super(MenuType.GENERIC_9x6, player, false);
-        this.shopkeeper = shopkeeper;
+        super(MenuType.GENERIC_9x6, player, false, shopkeeper);
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
 
         int starterSize = shopkeeperData.inventory().size();
@@ -104,17 +101,6 @@ public class MerchantInventoryGui extends SimpleGui {
         return amountHeld > giveSize;
     }
 
-    @Override
-    protected boolean sendGui() {
-        if(GuiUtils.ensureInteractionLock(player, shopkeeper)) {
-            return super.sendGui();
-        }
-        else {
-            this.close();
-            return false;
-        }
-    }
-
     private void save() {
         if (inventoryPage.isEmpty()) return;
         ShopkeeperData shopkeeperData = Shopkeepers.getData().getShopkeeperData().get(shopkeeper.getUUID());
@@ -128,14 +114,8 @@ public class MerchantInventoryGui extends SimpleGui {
     }
 
     @Override
-    public void onManualClose() {
-        save();
-    }
-
-    @Override
-    public void onRemoved() {
-        super.onRemoved();
-        Shopkeepers.getInteractionLocks().releaseLock(shopkeeper.getUUID(), player.getUUID());
+    public void onClose() {
+        super.onClose();
         save();
     }
 }
