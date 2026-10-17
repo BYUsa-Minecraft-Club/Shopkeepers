@@ -3,7 +3,7 @@ package edu.byu.minecraft.shopkeepers.customization.equipment;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enderman;
 
 public class EquipmentCustomizationManager {
 
@@ -16,7 +16,7 @@ public class EquipmentCustomizationManager {
         HeldItemCustomizations.addHeldItemCustomizations(entity, equipmentOptions);
         SaddleCustomization.addSaddleCustomization(entity, equipmentOptions);
 
-        if(entity instanceof EnderMan enderman) {
+        if(entity instanceof Enderman enderman) {
             equipmentOptions.add((EquipmentCustomization<E>) new EndermanCustomization(enderman));
         }
 
