@@ -33,7 +33,7 @@ public class ArmorStandEntityMixin extends EntityMixin {
     }
 
     @Inject(method = "kill", at = @At("HEAD"), cancellable = true)
-    public void injectKill(ServerLevel world, CallbackInfo ci) {
+    public void injectKill(ServerLevel level, Entity attributedTo, CallbackInfo ci) {
         ifShopkeeperEntity(() -> {
             ArmorStand self = (ArmorStand) (Object) this;
             ShopkeeperInteractions.warnDeathPrevented(self);
